@@ -1,0 +1,15 @@
+@use '../../../app/app.scss' as var;
+
+.reg-button {
+  margin: 0 10px;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: var.$main-color-opacity3;
+  transition: 0.1s;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var.$main-color-opacity6;
+  }
+}

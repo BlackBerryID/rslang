@@ -1,0 +1,8 @@
+@use '../../../app/app.scss' as var;
+
+.logo {
+  text-decoration: none;
+  color: var.$black;
+  font-size: 30px;
+  font-weight: 700;
+}

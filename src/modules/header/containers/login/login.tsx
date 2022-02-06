@@ -18,7 +18,7 @@ export default function Login() {
     <div>
       <Button
         variant="contained"
-        color="info"
+        color="secondary"
         sx={{ height: '40px' }}
         onClick={handleClickOpen}
       >

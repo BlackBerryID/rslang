@@ -11,6 +11,11 @@ const LoginPopup = (props: LoginPopupProps) => {
   const { onClose, open } = props;
 
   const [registration, setRegistration] = useState(false);
+  const [validation, setValidation] = useState({
+    email: true,
+    password: true,
+    name: true,
+  });
 
   const handleClose = () => {
     onClose();
@@ -19,13 +24,29 @@ const LoginPopup = (props: LoginPopupProps) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    const [email, password, name] = [
+      data.get('email'),
+      data.get('password'),
+      data.get('name'),
+    ];
     // eslint-disable-next-line no-console
     console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-      name: data.get('name'),
+      email: email,
+      password: password,
+      name: name,
+    });
+    setValidation({
+      ...validation,
+      email: validateEmail(String(email)),
+      password: validatePassword(String(password)),
     });
   };
+
+  const validateEmail = (email: string): boolean => {
+    return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
+  };
+
+  const validatePassword = (password: string): boolean => password.length >= 8;
 
   return (
     <Dialog onClose={handleClose} open={open}>
@@ -49,7 +70,7 @@ const LoginPopup = (props: LoginPopupProps) => {
             <Button
               fullWidth
               variant={registration ? 'outlined' : 'contained'}
-              color="info"
+              color="secondary"
               sx={{ mt: 3, mb: 2 }}
               onClick={() => setRegistration(false)}
             >
@@ -58,7 +79,7 @@ const LoginPopup = (props: LoginPopupProps) => {
             <Button
               fullWidth
               variant={registration ? 'contained' : 'outlined'}
-              color="info"
+              color="secondary"
               sx={{ mt: 3, mb: 2 }}
               onClick={() => setRegistration(true)}
             >
@@ -83,6 +104,7 @@ const LoginPopup = (props: LoginPopupProps) => {
               />
             )}
             <TextField
+              error={!validation.email}
               margin="normal"
               required
               fullWidth
@@ -93,6 +115,7 @@ const LoginPopup = (props: LoginPopupProps) => {
               autoFocus
             />
             <TextField
+              error={!validation.password}
               margin="normal"
               required
               fullWidth

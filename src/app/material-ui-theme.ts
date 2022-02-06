@@ -20,26 +20,32 @@ const theme = createTheme({
       },
     },
   },
-  // palette: {
-  //   primary: {
-  //     light: '#7eceef',
-  //     main: '#647295',
-  //     dark: '#029ee0',
-  //     contrastText: '#fff',
-  //   },
-  //   secondary: {
-  //     light: '#f39991',
-  //     main: '#ea7166',
-  //     dark: '#f2523d',
-  //     contrastText: '#fff',
-  //   },
-  //   info: {
-  //     light: '#ea7166',
-  //     main: '#ffcd24',
-  //     dark: '#90ccf4',
-  //     contrastText: '#fff',
-  //   },
-  // },
+  palette: {
+    primary: {
+      light: '#bacbe5',
+      main: '#8ca9d3',
+      dark: '#5989c3',
+      contrastText: '#fff',
+    },
+    secondary: {
+      light: '#fbe4e3',
+      main: '#febeb0',
+      dark: '#f89580',
+      contrastText: '#666',
+    },
+    info: {
+      light: '#ff2237',
+      main: '#f21137',
+      dark: '#e00030',
+      contrastText: '#fff',
+    },
+    error: {
+      light: '#ff2237',
+      main: '#f21137',
+      dark: '#e00030',
+      contrastText: '#fff',
+    },
+  },
 });
 
 export default theme;

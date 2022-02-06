@@ -5,6 +5,7 @@ import { AppBar, Toolbar, Container, Button, IconButton } from '@mui/material';
 import NavLink from './components/nav-link';
 import MenuIcon from '@mui/icons-material/Menu';
 import SideMenu from './components/side-menu';
+import LoginForm from './containers/login';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -44,9 +45,7 @@ const Header = () => {
           </div>
           <NavLink path="/" text="RSLang" size="h4" />
         </Toolbar>
-        <Button variant="contained" color="info" sx={{ height: '40px' }}>
-          Войти
-        </Button>
+        <LoginForm />
       </Container>
       <SideMenu isMenuOpen={isMenuOpen} toggleSideMenu={toggleSideMenu} />
     </AppBar>

@@ -20,11 +20,26 @@ const theme = createTheme({
       },
     },
   },
-  palette: {
-    primary: {
-      main: COLOR_PRIMARY,
-    },
-  },
+  // palette: {
+  //   primary: {
+  //     light: '#7eceef',
+  //     main: '#647295',
+  //     dark: '#029ee0',
+  //     contrastText: '#fff',
+  //   },
+  //   secondary: {
+  //     light: '#f39991',
+  //     main: '#ea7166',
+  //     dark: '#f2523d',
+  //     contrastText: '#fff',
+  //   },
+  //   info: {
+  //     light: '#ea7166',
+  //     main: '#ffcd24',
+  //     dark: '#90ccf4',
+  //     contrastText: '#fff',
+  //   },
+  // },
 });
 
 export default theme;

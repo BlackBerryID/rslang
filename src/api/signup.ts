@@ -13,4 +13,4 @@ const createUser = async (name: string, email: string, password: string) => {
   return content;
 };
 
-export default createUser;
+export { createUser };

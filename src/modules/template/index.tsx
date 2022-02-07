@@ -1,7 +1,7 @@
 import { Container, ThemeProvider } from '@mui/material';
 import theme from '../../app/material-ui-theme';
 import { Outlet } from 'react-router-dom';
-import Header from '../header';
+import { Header } from '../header';
 
 export const BaseTemplate = () => {
   return (

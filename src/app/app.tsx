@@ -4,6 +4,7 @@ import { ThemeProvider } from '@mui/material';
 
 import Header from '../modules/header';
 import Homepage from '../modules/homepage';
+import AudioCall from '../modules/audiocall';
 import theme from './material-ui-theme';
 
 const App = () => {
@@ -13,6 +14,7 @@ const App = () => {
         <Header />
         <Routes>
           <Route path="/" element={<Homepage />} />
+          <Route path="/audiocall" element={<AudioCall />} />
         </Routes>
       </Router>
     </ThemeProvider>

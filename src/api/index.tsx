@@ -1,3 +1,4 @@
-import { base } from "./api";
+import { base } from './api';
+import { GetWords } from './get-words';
 
-export { base }
+export { base, GetWords };

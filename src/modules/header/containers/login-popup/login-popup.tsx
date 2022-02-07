@@ -31,12 +31,6 @@ const LoginPopup = (props: LoginPopupProps) => {
       String(data.get('password')),
       String(data.get('name')),
     ];
-    // eslint-disable-next-line no-console
-    console.log({
-      email: email,
-      password: password,
-      name: name,
-    });
     setValidation({
       email: validateEmail(email),
       password: validatePassword(password),
@@ -70,6 +64,7 @@ const LoginPopup = (props: LoginPopupProps) => {
       })
     );
     setIsOnline(true);
+    handleClose();
   };
 
   return (

@@ -1,6 +1,6 @@
-import React, { BaseSyntheticEvent, useEffect, useState } from "react";
-import { Button } from "@mui/material";
-import { ShuffleArray } from "../../../../utils/shuffle-array";
+import React, { BaseSyntheticEvent, useEffect, useState } from 'react';
+import { Button } from '@mui/material';
+import { ShuffleArray } from '../../../../utils/shuffle-array';
 
 import './answers.scss';
 
@@ -26,18 +26,22 @@ const Answers = ({ w }: { w: string[] }) => {
         setIsCorrect(false);
       }
     }
-  }
+  };
   // TODO: highlight wrong answer (@saratovkin)
   return (
     <div className="answers">
-      {words.map((item, index) => {
-        return <Button
-          variant="outlined"
-          key={index}
-          onClick={checkAnswer}
-          color={isAnswered ? 'success' : 'primary'}
-          disabled={isAnswered && !(item === answer)}
-        >{item}</Button>
+      {words.map((item) => {
+        return (
+          <Button
+            variant="outlined"
+            key={item}
+            onClick={checkAnswer}
+            color={isAnswered ? 'success' : 'primary'}
+            disabled={isAnswered && !(item === answer)}
+          >
+            {item}
+          </Button>
+        );
       })}
       <p>{isCorrect}</p>
     </div>

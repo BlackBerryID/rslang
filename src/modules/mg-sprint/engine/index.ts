@@ -1,3 +1,4 @@
+import { ConstructionOutlined } from '@mui/icons-material';
 import { GetWords } from '../../../api';
 import { GetRandomNum } from '../../../utils/get-random-num';
 import { ShuffleArray } from '../../../utils/shuffle-array';
@@ -7,6 +8,7 @@ export class MGSprintEngine {
     langLevel: 0,
     bookPage: 0,
     deck: [],
+    decksSeq: new Set(),
     score: [],
     timer: undefined,
     currentRound: {
@@ -21,7 +23,7 @@ export class MGSprintEngine {
   private highs = {
     words: 19,
     pages: 29,
-    timer: 30,
+    timer: 5,
   };
 
   get timer() {
@@ -40,7 +42,12 @@ export class MGSprintEngine {
 
   private setPage(): void {
     const num = GetRandomNum(0, this.highs.pages);
-    this.game.bookPage !== num ? (this.game.bookPage = num) : this.setPage();
+    if (this.game.decksSeq.has(num)) {
+      this.setPage();
+    } else {
+      this.game.bookPage = num;
+      this.game.decksSeq.add(num);
+    }
   }
 
   private async getDeck(): Promise<boolean> {
@@ -48,7 +55,8 @@ export class MGSprintEngine {
       this.game.langLevel,
       this.game.bookPage
     );
-    this.game.deck = [...ShuffleArray(words)];
+    this.game.deck = ShuffleArray(words);
+    this.game.deck.forEach((item) => console.log(item.word));
     return new Promise((res) => res(true));
   }
 
@@ -61,6 +69,7 @@ export class MGSprintEngine {
       audio: item.audio,
       result: result,
     });
+    console.log(this.game.score);
   }
 
   private getRandomWordTranslation(round: number): string {
@@ -79,6 +88,7 @@ export class MGSprintEngine {
     this.setScore(round, result);
     const nextRound = round + 1;
     if (nextRound === this.game.deck.length) {
+      this.setPage();
       this.getDeck().then(() => {
         action(0);
       });

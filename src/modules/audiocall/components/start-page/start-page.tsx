@@ -26,11 +26,9 @@ const StartPage = () => {
             name="row-radio-buttons-group"
             onChange={(d: BaseSyntheticEvent) => setDifficulty(d.target.value)}
           >
-            <FormControlLabel value="1" control={<Radio />} label="1" />
-            <FormControlLabel value="2" control={<Radio />} label="2" />
-            <FormControlLabel value="3" control={<Radio />} label="3" />
-            <FormControlLabel value="4" control={<Radio />} label="4" />
-            <FormControlLabel value="5" control={<Radio />} label="5" />
+            {[...Array(5)].map((x, idx) =>
+              <FormControlLabel value={idx + 1} control={<Radio />} label={idx + 1} />
+            )}
           </RadioGroup>
         </FormControl>
         <Button

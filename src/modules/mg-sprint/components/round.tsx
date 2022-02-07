@@ -1,6 +1,13 @@
 import { KeyboardEvent } from 'react';
+import { MGSprintTimer } from './timer';
 
-export const MGSprintRound = ({ attempt }: { attempt: GameRound }) => {
+export const MGSprintRound = ({
+  attempt,
+  time,
+}: {
+  attempt: GameRound;
+  time: number;
+}) => {
   const keyDownHandler = (event: KeyboardEvent<HTMLDivElement>) => {
     event.preventDefault();
     switch (event.code) {
@@ -26,6 +33,7 @@ export const MGSprintRound = ({ attempt }: { attempt: GameRound }) => {
         </button>
         <button onClick={() => attempt.giveAnswer(false)}>Неверно</button>
       </div>
+      <MGSprintTimer time={time} />
     </>
   );
 };

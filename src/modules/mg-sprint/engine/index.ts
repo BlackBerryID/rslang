@@ -21,8 +21,12 @@ export class MGSprintEngine {
   private highs = {
     words: 19,
     pages: 29,
-    timer: 5,
+    timer: 30,
   };
+
+  get timer() {
+    return this.highs.timer;
+  }
 
   get statistic() {
     const wrong = this.game.score.filter((item) => !item.result);

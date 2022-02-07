@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { AppBar, Toolbar, Container, Button, IconButton } from '@mui/material';
+import { AppBar, Toolbar, Container, IconButton } from '@mui/material';
 
 import NavLink from './components/nav-link';
 import MenuIcon from '@mui/icons-material/Menu';

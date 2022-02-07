@@ -1,7 +1,7 @@
 import { createTheme } from '@mui/material';
 import type {} from '@mui/lab/themeAugmentation';
 
-const COLOR_PRIMARY = '#1976d2';
+const COLOR_PRIMARY = '#8ca9d3';
 
 const theme = createTheme({
   components: {
@@ -16,6 +16,13 @@ const theme = createTheme({
       styleOverrides: {
         label: {
           fontSize: '24px',
+        },
+      },
+    },
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          contrastText: 'green',
         },
       },
     },

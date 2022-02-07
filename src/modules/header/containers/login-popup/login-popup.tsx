@@ -6,9 +6,11 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
+import Login from '../login';
+import loginUser from '../../../../api/login';
 
 const LoginPopup = (props: LoginPopupProps) => {
-  const { onClose, open } = props;
+  const { onClose, open, setIsOnline } = props;
 
   const [registration, setRegistration] = useState(false);
   const [validation, setValidation] = useState({
@@ -25,9 +27,9 @@ const LoginPopup = (props: LoginPopupProps) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const [email, password, name] = [
-      data.get('email'),
-      data.get('password'),
-      data.get('name'),
+      String(data.get('email')),
+      String(data.get('password')),
+      String(data.get('name')),
     ];
     // eslint-disable-next-line no-console
     console.log({
@@ -36,10 +38,17 @@ const LoginPopup = (props: LoginPopupProps) => {
       name: name,
     });
     setValidation({
-      ...validation,
-      email: validateEmail(String(email)),
-      password: validatePassword(String(password)),
+      email: validateEmail(email),
+      password: validatePassword(password),
+      name: validateName(name),
     });
+    const isInputInfoCorrect = registration
+      ? validation.email && validation.password && validation.name
+      : validation.email && validation.password;
+
+    if (isInputInfoCorrect) {
+      registration ? console.log('resigstration') : login(email, password);
+    }
   };
 
   const validateEmail = (email: string): boolean => {
@@ -47,6 +56,21 @@ const LoginPopup = (props: LoginPopupProps) => {
   };
 
   const validatePassword = (password: string): boolean => password.length >= 8;
+
+  const validateName = (name: string): boolean => name.trim().length >= 2;
+
+  const login = async (email: string, password: string) => {
+    const response = await loginUser(email, password);
+    localStorage.setItem(
+      'user',
+      JSON.stringify({
+        name: response.name,
+        token: response.token,
+        refreshToken: response.refreshToken,
+      })
+    );
+    setIsOnline(true);
+  };
 
   return (
     <Dialog onClose={handleClose} open={open}>
@@ -94,13 +118,21 @@ const LoginPopup = (props: LoginPopupProps) => {
           >
             {registration && (
               <TextField
+                error={!validation.name}
                 margin="normal"
                 required
                 fullWidth
                 id="name"
                 label="Ваше имя"
                 name="name"
+                autoComplete="off"
                 autoFocus
+                onInput={() =>
+                  setValidation({
+                    ...validation,
+                    name: true,
+                  })
+                }
               />
             )}
             <TextField
@@ -113,6 +145,12 @@ const LoginPopup = (props: LoginPopupProps) => {
               name="email"
               autoComplete="email"
               autoFocus
+              onInput={() =>
+                setValidation({
+                  ...validation,
+                  email: true,
+                })
+              }
             />
             <TextField
               error={!validation.password}
@@ -124,6 +162,12 @@ const LoginPopup = (props: LoginPopupProps) => {
               type="password"
               id="password"
               autoComplete="current-password"
+              onInput={() =>
+                setValidation({
+                  ...validation,
+                  password: true,
+                })
+              }
             />
             <Button
               type="submit"

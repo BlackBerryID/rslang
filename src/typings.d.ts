@@ -67,4 +67,5 @@ type SideMenuProps = {
 interface LoginPopupProps {
   open: boolean;
   onClose: () => void;
+  setIsOnline: (param: boolean) => void;
 }

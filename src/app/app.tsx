@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { BaseTemplate } from '../modules/template';
 import { Paths } from './constants';
 import Homepage from '../modules/homepage';
-import { MiniGameAudioCall } from '../modules/mg-audio-call';
+import MiniGameAudioCall from '../modules/audiocall';
 import { MiniGameSprint } from '../modules/mg-sprint';
 import { NotFoundPage } from '../modules/404';
 

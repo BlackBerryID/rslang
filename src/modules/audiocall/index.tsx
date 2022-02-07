@@ -1,3 +1,3 @@
-import AudioCall from './auidocall';
+import AudioCall from "./components/main-view";
 
 export default AudioCall;

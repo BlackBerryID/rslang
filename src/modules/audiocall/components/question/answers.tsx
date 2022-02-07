@@ -4,15 +4,16 @@ import { ShuffleArray } from "../../../../utils/shuffle-array";
 
 import './answers.scss';
 
-const Answers = ({ w }: { w: string[] }) => {
+const Answers = ({ w, setNextQuestion, setAnsweredWords }: { w: string[], setNextQuestion: () => void, setAnsweredWords: any }) => {
   const [answer] = useState(w[0]);
   const [words, setWords] = useState<string[]>([]);
   const [isAnswered, setIsAnswered] = useState(false);
-  const [isCorrect, setIsCorrect] = useState(false);
 
   useEffect(() => {
     function showWords() {
-      setWords(ShuffleArray(w));
+      if (words.length === 0) {
+        setWords(ShuffleArray(w));
+      }
     }
     showWords();
   }, [w]);
@@ -21,25 +22,37 @@ const Answers = ({ w }: { w: string[] }) => {
     if (!isAnswered) {
       setIsAnswered(true);
       if ((e.target as HTMLElement).textContent === answer) {
-        setIsCorrect(true);
+        setAnsweredWords({ word: answer, flag: true });
       } else {
-        setIsCorrect(false);
+        setAnsweredWords({ word: answer, flag: false });
       }
     }
   }
+
   // TODO: highlight wrong answer (@saratovkin)
   return (
-    <div className="answers">
-      {words.map((item, index) => {
-        return <Button
-          variant="outlined"
-          key={index}
-          onClick={checkAnswer}
-          color={isAnswered ? 'success' : 'primary'}
-          disabled={isAnswered && !(item === answer)}
-        >{item}</Button>
-      })}
-      <p>{isCorrect}</p>
+    <div className="answers-container">
+      <div className="answers">
+        {words.map((item, index) => {
+          return <Button
+            variant="outlined"
+            key={index}
+            onClick={checkAnswer}
+            color={isAnswered ? 'success' : 'primary'}
+            disabled={isAnswered && !(item === answer)}
+          >{item}</Button>
+        })}
+      </div>
+      {isAnswered ?
+        <Button
+          variant="contained"
+          onClick={() => { setIsAnswered(true); setNextQuestion() }}
+        >{'дальше'}</Button> :
+        <Button
+          variant="contained"
+          onClick={() => { setAnsweredWords({ word: answer, flag: false }); setNextQuestion() }}
+        >{'не знаю'}</Button>
+      }
     </div>
   );
 };

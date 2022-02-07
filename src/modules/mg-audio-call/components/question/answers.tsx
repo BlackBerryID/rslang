@@ -4,9 +4,9 @@ import { ShuffleArray } from '../../../../utils/shuffle-array';
 
 import './answers.scss';
 
-const Answers = ({ w }: { w: string[] }) => {
-  const [answer] = useState(w[0]);
-  const [words, setWords] = useState<string[]>([]);
+const Answers = ({ w }: { w: Array<AnswerProp> }) => {
+  const [answer] = useState<string>(w[0].wordTranslate);
+  const [words, setWords] = useState<Array<AnswerProp>>([]);
   const [isAnswered, setIsAnswered] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
 
@@ -34,10 +34,10 @@ const Answers = ({ w }: { w: string[] }) => {
         return (
           <Button
             variant="outlined"
-            key={item}
+            key={item.id}
             onClick={checkAnswer}
             color={isAnswered ? 'success' : 'primary'}
-            disabled={isAnswered && !(item === answer)}
+            disabled={isAnswered && !(item.wordTranslate === answer)}
           >
             {item}
           </Button>

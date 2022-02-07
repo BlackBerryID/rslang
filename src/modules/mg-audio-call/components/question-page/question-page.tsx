@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CircularProgress, IconButton } from '@mui/material';
 import { GetWords } from '../../../../api/get-words';
 import { GetRandomNum } from '../../../../utils/get-random-num';
@@ -9,14 +9,16 @@ import { VolumeUp } from '@mui/icons-material';
 
 const QuestionPage = ({ difficulty }: { difficulty: number }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [words, setWords] = useState([]);
+  const [words, setWords] = useState<Array<Word>>([]);
 
   useEffect(() => {
     setIsLoading(true);
     try {
-      GetWords(difficulty, GetRandomNum(0, 29)).then((words) => {
-        setWords(words);
-      });
+      GetWords(difficulty, GetRandomNum(0, 29)).then(
+        (words: Array<Word>): void => {
+          setWords(words);
+        }
+      );
     } catch (error) {
       // TODO: add Error Boundary (@saratovkin)
       console.log(error);
@@ -26,9 +28,15 @@ const QuestionPage = ({ difficulty }: { difficulty: number }) => {
   }, [difficulty]);
 
   // TODO: get 5 random unique words (@saratovkin)
-  const displayedWords = words
+  const displayedWords: Array<AnswerProp> = words
     .slice(0, 5)
-    .map((item: Word) => item.wordTranslate);
+    .map((item: Word) => {
+      return {
+        id: item.id,
+        wordTranslate: item.wordTranslate,
+      };
+    });
+
   if (isLoading) {
     return <CircularProgress />;
   } else {
@@ -37,7 +45,7 @@ const QuestionPage = ({ difficulty }: { difficulty: number }) => {
         <IconButton aria-label="volume">
           <VolumeUp sx={{ fontSize: 80 }} />
         </IconButton>
-        <span>Правильный ответ - {displayedWords[0]}</span>
+        <span>Правильный ответ - {displayedWords[0].wordTranslate}</span>
         <Answers w={displayedWords} />
       </div>
     );

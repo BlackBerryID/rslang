@@ -10,6 +10,7 @@ import {
   Container,
 } from '@mui/material';
 import loginUser from '../../../../api/login';
+import createUser from '../../../../api/signup';
 
 const LoginPopup = (props: LoginPopupProps) => {
   const { onClose, open, setIsOnline } = props;
@@ -35,7 +36,7 @@ const LoginPopup = (props: LoginPopupProps) => {
 
     if (isInputInfoCorrect) {
       registration
-        ? console.log('resigstration')
+        ? signup(loginData.name, loginData.email, loginData.password)
         : login(loginData.email, loginData.password);
     }
   }, [loginData]);
@@ -85,6 +86,11 @@ const LoginPopup = (props: LoginPopupProps) => {
     );
     setIsOnline(true);
     handleClose();
+  };
+
+  const signup = async (name: string, email: string, password: string) => {
+    await createUser(name, email, password);
+    await login(email, password);
   };
 
   return (

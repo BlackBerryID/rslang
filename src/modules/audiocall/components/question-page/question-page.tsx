@@ -42,7 +42,7 @@ const QuestionPage = ({ difficulty }: { difficulty: number }) => {
   }, [audioLink]);
 
   // TODO: get 5 random unique words (@saratovkin) 
-  const displayedWords = words.slice(0, 5).map((item: Word) => item.wordTranslate);
+  const displayedWords = words.slice(0, 5).map((item: Word) => { return { wordTranslate: item.wordTranslate, id: item.id } });
   if (isLoading) {
     return (
       <CircularProgress />

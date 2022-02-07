@@ -5,19 +5,20 @@ import { ShuffleArray } from "../../../../utils/shuffle-array";
 import './answers.scss';
 
 // TODO: remove 'any' type on setAnsweredWords prop
-const Answers = ({ w, setNextQuestion, setAnsweredWords, }: { w: string[], setNextQuestion: () => void, setAnsweredWords: any }) => {
-  const [answer] = useState(w[0]);
-  const [words, setWords] = useState<string[]>([]);
+const Answers = ({ w, setNextQuestion, setAnsweredWords, }: { w: { wordTranslate: string, id: string }[], setNextQuestion: () => void, setAnsweredWords: any }) => {
+  const [answer, setAnswer] = useState('');
+  const [words, setWords] = useState<{ wordTranslate: string, id: string }[]>([]);
   const [isAnswered, setIsAnswered] = useState(false);
 
   useEffect(() => {
     function showWords() {
-      if (words.length === 0) {
+      if (words.length === 0 && w.length !== 0) {
+        setAnswer(w[0].wordTranslate);
         setWords(ShuffleArray(w));
       }
     }
     showWords();
-  }, [w]);
+  }, [words, w]);
 
   const checkAnswer = (e: BaseSyntheticEvent) => {
     if (!isAnswered) {
@@ -34,14 +35,14 @@ const Answers = ({ w, setNextQuestion, setAnsweredWords, }: { w: string[], setNe
   return (
     <div className="answers-container">
       <div className="answers">
-        {words.map((item, index) => {
+        {words.map((item) => {
           return <Button
             variant="outlined"
-            key={index}
+            key={item.id}
             onClick={checkAnswer}
             color={isAnswered ? 'success' : 'primary'}
-            disabled={isAnswered && !(item === answer)}
-          >{item}</Button>
+            disabled={isAnswered && !(item.wordTranslate === answer)}
+          >{item.wordTranslate}</Button>
         })}
       </div>
       {isAnswered ?

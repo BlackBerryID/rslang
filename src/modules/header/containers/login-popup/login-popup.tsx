@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { Button, ButtonGroup } from '@mui/material';
-import Dialog from '@mui/material/Dialog';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Login from '../login';
+import {
+  Button,
+  ButtonGroup,
+  Dialog,
+  CssBaseline,
+  TextField,
+  Box,
+  Container,
+} from '@mui/material';
 import loginUser from '../../../../api/login';
 
 const LoginPopup = (props: LoginPopupProps) => {
@@ -17,7 +19,26 @@ const LoginPopup = (props: LoginPopupProps) => {
     email: true,
     password: true,
     name: true,
+    isAlreadySubmit: false,
   });
+  const [loginData, setLoginData] = useState({
+    email: '',
+    password: '',
+    name: '',
+  });
+
+  useEffect(() => {
+    // prettier-ignore
+    const isInputInfoCorrect = registration
+      ? validation.email && validation.password && validation.name && validation.isAlreadySubmit
+      : validation.email && validation.password && validation.isAlreadySubmit;
+
+    if (isInputInfoCorrect) {
+      registration
+        ? console.log('resigstration')
+        : login(loginData.email, loginData.password);
+    }
+  }, [loginData]);
 
   const handleClose = () => {
     onClose();
@@ -31,18 +52,17 @@ const LoginPopup = (props: LoginPopupProps) => {
       String(data.get('password')),
       String(data.get('name')),
     ];
+    setLoginData({
+      email: email,
+      password: password,
+      name: name,
+    });
     setValidation({
       email: validateEmail(email),
       password: validatePassword(password),
       name: validateName(name),
+      isAlreadySubmit: true,
     });
-    const isInputInfoCorrect = registration
-      ? validation.email && validation.password && validation.name
-      : validation.email && validation.password;
-
-    if (isInputInfoCorrect) {
-      registration ? console.log('resigstration') : login(email, password);
-    }
   };
 
   const validateEmail = (email: string): boolean => {

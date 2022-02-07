@@ -12,11 +12,9 @@ export const MGSprintRound = ({
     event.preventDefault();
     switch (event.code) {
       case 'ArrowLeft':
-        console.log('left');
         attempt.giveAnswer(true);
         break;
       case 'ArrowRight':
-        console.log('right');
         attempt.giveAnswer(false);
         break;
     }

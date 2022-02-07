@@ -7,8 +7,7 @@ import './question-page.scss';
 import Answers from "../question/answers";
 import { VolumeUp } from "@mui/icons-material";
 
-const QuestionPage = ({ d }: { d: string }) => {
-  const [difficulty] = useState((Number.parseInt(d) - 1));
+const QuestionPage = ({ difficulty }: { difficulty: number }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [words, setWords] = useState([]);
 
@@ -27,7 +26,7 @@ const QuestionPage = ({ d }: { d: string }) => {
   }, [difficulty]);
 
   // TODO: get 5 random unique words (@saratovkin) 
-  const displayedWords = words.slice(0, 5).map((item:Word) => item.wordTranslate);
+  const displayedWords = words.slice(0, 5).map((item: Word) => item.wordTranslate);
   if (isLoading) {
     return (
       <CircularProgress />

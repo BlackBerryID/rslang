@@ -7,11 +7,11 @@ import './start-page.scss';
 const StartPage = () => {
 
   const [isGameStarted, setIsGameStarted] = useState(false);
-  const [difficulty, setDifficulty] = useState('');
+  const [difficulty, setDifficulty] = useState(-1);
 
   if (isGameStarted) {
     return (
-      <QuestionPage d={difficulty} />
+      <QuestionPage difficulty={difficulty} />
     )
   } else {
     return (
@@ -24,17 +24,17 @@ const StartPage = () => {
             row
             aria-labelledby="demo-row-radio-buttons-group-label"
             name="row-radio-buttons-group"
-            onChange={(d: BaseSyntheticEvent) => setDifficulty(d.target.value)}
+            onChange={(d: BaseSyntheticEvent) => setDifficulty(+d.target.value - 1)}
           >
             {[...Array(5)].map((x, idx) =>
-              <FormControlLabel value={idx + 1} control={<Radio />} label={idx + 1} />
+              <FormControlLabel value={idx + 1} key={idx} control={<Radio />} label={idx + 1} />
             )}
           </RadioGroup>
         </FormControl>
         <Button
           variant="contained"
           onClick={() => { setIsGameStarted(true) }}
-          disabled={difficulty.length === 0}
+          disabled={difficulty === -1}
         >Начать</Button>
       </div>
     )

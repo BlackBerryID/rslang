@@ -16,7 +16,7 @@ type Game = {
   langLevel: number;
   bookPage: number;
   deck: Array<Word>;
-  decksSeq: Set;
+  decksSeq: Set<number>;
   score: Array<GameResult>;
   timer: Timer | undefined;
   currentRound: GameRound;

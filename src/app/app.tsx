@@ -1,23 +1,25 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { ThemeProvider } from '@mui/material';
 
-import Header from '../modules/header';
+import { BaseTemplate } from '../modules/template';
+import { Paths } from './constants';
 import Homepage from '../modules/homepage';
-import AudioCall from '../modules/audiocall';
-import theme from './material-ui-theme';
+import { MiniGameAudioCall } from '../modules/mg-audio-call';
+import { MiniGameSprint } from '../modules/mg-sprint';
+import { NotFoundPage } from '../modules/404';
 
 const App = () => {
   return (
-    <ThemeProvider theme={theme}>
-      <Router>
-        <Header />
-        <Routes>
-          <Route path="/" element={<Homepage />} />
-          <Route path="/audiocall" element={<AudioCall />} />
-        </Routes>
-      </Router>
-    </ThemeProvider>
+    <Router>
+      <Routes>
+        <Route path={Paths.home} element={<BaseTemplate />}>
+          <Route index element={<Homepage />} />
+          <Route path={Paths.mgAudioCall} element={<MiniGameAudioCall />} />
+          <Route path={Paths.mgSprint} element={<MiniGameSprint />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Route>
+      </Routes>
+    </Router>
   );
 };
 

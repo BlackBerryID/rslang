@@ -5,6 +5,7 @@ import TreeItem from '@mui/lab/TreeItem';
 import ArrowRightRoundedIcon from '@mui/icons-material/ArrowRightRounded';
 import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
 import SideMenuItem from '../side-menu-item';
+import { Pages, Paths } from '../../../../app/constants';
 
 const NavGames = ({ toggleSideMenu }: NavGamesProps) => {
   return (
@@ -16,7 +17,7 @@ const NavGames = ({ toggleSideMenu }: NavGamesProps) => {
     >
       <TreeItem
         nodeId="1"
-        label="Игры"
+        label={Pages.games}
         sx={{
           color: '#fff',
           width: '100%',
@@ -24,13 +25,13 @@ const NavGames = ({ toggleSideMenu }: NavGamesProps) => {
         }}
       >
         <SideMenuItem
-          path="/sprint"
-          text="Спринт"
+          path={Paths.mgSprint}
+          text={Pages.mgSprint}
           toggleSideMenu={toggleSideMenu}
         />
         <SideMenuItem
-          path="/audiocall"
-          text="Аудиовызов"
+          path={Paths.mgAudioCall}
+          text={Pages.mgAudioCall}
           toggleSideMenu={toggleSideMenu}
         />
       </TreeItem>

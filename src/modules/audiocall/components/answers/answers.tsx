@@ -4,7 +4,8 @@ import { ShuffleArray } from "../../../../utils/shuffle-array";
 
 import './answers.scss';
 
-const Answers = ({ w, setNextQuestion, setAnsweredWords }: { w: string[], setNextQuestion: () => void, setAnsweredWords: any }) => {
+// TODO: remove 'any' type on setAnsweredWords prop
+const Answers = ({ w, setNextQuestion, setAnsweredWords, }: { w: string[], setNextQuestion: () => void, setAnsweredWords: any }) => {
   const [answer] = useState(w[0]);
   const [words, setWords] = useState<string[]>([]);
   const [isAnswered, setIsAnswered] = useState(false);
@@ -46,12 +47,16 @@ const Answers = ({ w, setNextQuestion, setAnsweredWords }: { w: string[], setNex
       {isAnswered ?
         <Button
           variant="contained"
-          onClick={() => { setIsAnswered(true); setNextQuestion() }}
-        >{'дальше'}</Button> :
+          onClick={() => { setIsAnswered(true); setNextQuestion(); }}
+        >
+          {'дальше'}
+        </Button> :
         <Button
           variant="contained"
-          onClick={() => { setAnsweredWords({ word: answer, flag: false }); setNextQuestion() }}
-        >{'не знаю'}</Button>
+          onClick={() => { setIsAnswered(true); setAnsweredWords({ word: answer, flag: false }); }}
+        >
+          {'не знаю'}
+        </Button>
       }
     </div>
   );

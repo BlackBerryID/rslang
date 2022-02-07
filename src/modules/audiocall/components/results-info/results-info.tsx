@@ -5,7 +5,8 @@ import './results-info.scss';
 const ResultsInfo = ({ answersCount }: { answersCount: number }) => {
   return (
     <div className="results-info">
-      <p>{`${answersCount}/10`}</p>
+      <p>Правильных ответов:</p>
+      <h2>{`${answersCount}/10`}</h2>
     </div>
   );
 }

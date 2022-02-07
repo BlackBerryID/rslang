@@ -4,7 +4,7 @@ import { GetWords } from "../../../../api/get-words";
 import { GetRandomNum } from "../../../../utils/get-random-num";
 
 import './question-page.scss';
-import Answers from "../question/answers";
+import Answers from "../answers/answers";
 import { VolumeUp } from "@mui/icons-material";
 import ResultsPage from "../results-page";
 
@@ -16,7 +16,7 @@ const QuestionPage = ({ difficulty }: { difficulty: number }) => {
   const [answeredWords, setAnsweredWords] = useState<{ word: string, flag: boolean }[]>([]);
 
   const playAudio = () => {
-    if (audioLink) {
+    if (audioLink && questionNum !== 10) {
       const audio = new Audio(audioLink);
       audio.play();
     }

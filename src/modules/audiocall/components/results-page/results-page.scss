@@ -1,0 +1,8 @@
+.results-page {
+  width: calc(100% - 100px);
+  height: 60vh;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

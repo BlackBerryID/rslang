@@ -1,5 +1,5 @@
-// import { base } from './api';
-const local = 'http://localhost:3007';
+import { base } from './api';
+// const local = 'http://localhost:3007';
 
 export const GetWords = async (group = 0, page = 0) => {
   try {

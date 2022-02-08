@@ -8,7 +8,6 @@ const StartPage = () => {
 
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [difficulty, setDifficulty] = useState(-1);
-
   if (isGameStarted) {
     return (
       <QuestionPage difficulty={difficulty} />

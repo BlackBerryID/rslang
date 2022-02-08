@@ -13,7 +13,7 @@ const ResultsList = ({ answeredWords }: { answeredWords: { word: string, flag: b
           return <ListItem disablePadding key={index}>
             <ListItemButton>
               <ListItemIcon>
-                {item.flag ? <CheckIcon /> : <ClearIcon />}
+                {item.flag ? <CheckIcon color="success"/> : <ClearIcon color="error"/>}
               </ListItemIcon>
               <ListItemText primary={item.word} />
             </ListItemButton>

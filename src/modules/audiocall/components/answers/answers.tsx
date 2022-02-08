@@ -5,15 +5,21 @@ import { ShuffleArray } from "../../../../utils/shuffle-array";
 import './answers.scss';
 
 // TODO: remove 'any' type on setAnsweredWords prop
-const Answers = ({ w, setNextQuestion, setAnsweredWords, }: { w: { wordTranslate: string, id: string }[], setNextQuestion: () => void, setAnsweredWords: any }) => {
-  const [answer, setAnswer] = useState('');
+const Answers = ({ w, setNextQuestion, setAnsweredWords, isAnswered, setIsAnswered }: {
+  w: { wordTranslate: string, id: string }[],
+  setNextQuestion: () => void,
+  setAnsweredWords: any,
+  isAnswered: boolean,
+  setIsAnswered: (flag: boolean) => void
+}) => {
   const [words, setWords] = useState<{ wordTranslate: string, id: string }[]>([]);
-  const [isAnswered, setIsAnswered] = useState(false);
+  const [correctAnswer, setCorrectAnswer] = useState('');
+  const [answer, setAnswer] = useState('');
 
   useEffect(() => {
     function showWords() {
       if (words.length === 0 && w.length !== 0) {
-        setAnswer(w[0].wordTranslate);
+        setCorrectAnswer(w[0].wordTranslate);
         setWords(ShuffleArray(w));
       }
     }
@@ -23,43 +29,54 @@ const Answers = ({ w, setNextQuestion, setAnsweredWords, }: { w: { wordTranslate
   const checkAnswer = (e: BaseSyntheticEvent) => {
     if (!isAnswered) {
       setIsAnswered(true);
-      if ((e.target as HTMLElement).textContent === answer) {
-        setAnsweredWords({ word: answer, flag: true });
+      if ((e.target as HTMLElement).textContent?.trim() === correctAnswer) {
+        // TODO: add request which will save answer @saratovkin
+        setAnsweredWords({ word: correctAnswer, flag: true });
       } else {
-        setAnsweredWords({ word: answer, flag: false });
+        setAnswer(e.target.textContent.trim());
+        setAnsweredWords({ word: correctAnswer, flag: false });
       }
     }
-  }
+  };
 
-  // TODO: highlight wrong answer (@saratovkin)
+  const getButtonStyle = (word: string) => {
+    if (isAnswered && (word === correctAnswer)) {
+      return 'success';
+    }
+    if (isAnswered && (word === answer)) {
+      return 'error';
+    }
+    return 'primary'
+  };
+
   return (
     <div className="answers-container">
       <div className="answers">
-        {words.map((item) => {
+        {words.map((word) => {
           return <Button
             variant="outlined"
-            key={item.id}
+            key={word.id}
             onClick={checkAnswer}
-            color={isAnswered ? 'success' : 'primary'}
-            disabled={isAnswered && !(item.wordTranslate === answer)}
-          >{item.wordTranslate}</Button>
+            color={getButtonStyle(word.wordTranslate)}
+          > {word.wordTranslate}</Button>
         })}
       </div>
-      {isAnswered ?
-        <Button
-          variant="contained"
-          onClick={() => { setIsAnswered(true); setNextQuestion(); }}
-        >
-          {'дальше'}
-        </Button> :
-        <Button
-          variant="contained"
-          onClick={() => { setIsAnswered(true); setAnsweredWords({ word: answer, flag: false }); }}
-        >
-          {'не знаю'}
-        </Button>
+      {
+        isAnswered ?
+          <Button
+            variant="contained"
+            onClick={() => { setIsAnswered(false); setNextQuestion(); }}
+          >
+            {'дальше'}
+          </Button> :
+          <Button
+            variant="contained"
+            onClick={() => { setIsAnswered(true); setAnsweredWords({ word: correctAnswer, flag: false }); }}
+          >
+            {'не знаю'}
+          </Button>
       }
-    </div>
+    </div >
   );
 };
 

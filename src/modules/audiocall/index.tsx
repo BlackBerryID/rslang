@@ -1,3 +1,3 @@
-import {AudioCallView} from "./components/main-view";
+import { StartPage } from "./components/start-page";
 
-export default AudioCallView;
+export default StartPage;

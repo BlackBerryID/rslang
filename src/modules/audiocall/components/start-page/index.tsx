@@ -1,43 +1,93 @@
 import React, { BaseSyntheticEvent, useState } from "react";
-import { Button, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from "@mui/material";
-import {QuestionPage} from "../question-page";
+import { Button, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Typography, Box } from "@mui/material";
+import { QuestionPage } from "../question-page";
+import CallIcon from '@mui/icons-material/Call';
 
 import './start-page.scss';
+import {
+  deepOrange,
+  indigo,
+  lightBlue,
+  lime,
+  purple,
+  yellow,
+} from '@mui/material/colors';
 
 const StartPage = () => {
 
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [difficulty, setDifficulty] = useState(-1);
+
+  const colors = [
+    yellow['600'],
+    lightBlue['400'],
+    lime['A400'],
+    deepOrange['400'],
+    indigo['500'],
+    purple['500'],
+  ];
+
+  const getLevel = (idx: number): string => {
+    if (idx === 0 || idx === 1) {
+      return `A${idx % 2 + 1}`;
+    }
+    if (idx === 2 || idx === 3) {
+      return `B${idx % 2 + 1}`;
+    }
+    return `C${idx % 2 + 1}`;
+  }
+
   if (isGameStarted) {
     return (
       <QuestionPage difficulty={difficulty} />
     )
   } else {
+
     return (
-      <div className="start-page">
-        <h2>Аудиовызов</h2>
-        <p>Вам необходимо выбрать правильный перевод слова основываясь на услышанном аудио</p>
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        rowGap="2em"
+      >
+        <Typography variant="h1" component="div" gutterBottom>
+          Аудиовызов
+        </Typography>
+        <Typography variant="h5" gutterBottom component="p" textAlign="center">
+          Вам необходимо выбрать правильный перевод слова основываясь на услышанном аудио
+        </Typography>
         <FormControl>
-          <FormLabel id="demo-row-radio-buttons-group-label">Сложность</FormLabel>
+          <FormLabel>Выберите уровень языка:</FormLabel>
           <RadioGroup
             row
-            aria-labelledby="demo-row-radio-buttons-group-label"
-            name="row-radio-buttons-group"
             onChange={(d: BaseSyntheticEvent) => setDifficulty(+d.target.value - 1)}
           >
-            {[...Array(5)].map((x, idx) =>
-              <FormControlLabel value={idx + 1} key={idx} control={<Radio />} label={idx + 1} />
+            {[...Array(6)].map((item, index) =>
+              <FormControlLabel
+                key={index}
+                value={index + 1}
+                label={getLevel(index)}
+                labelPlacement="bottom"
+                sx={{ color: colors[index] }}
+                control={<Radio sx={{
+                  color: colors[index],
+                  '&.Mui-checked': { color: colors[index] },
+                }} />} />
             )}
           </RadioGroup>
         </FormControl>
         <Button
-          variant="contained"
-          onClick={() => { setIsGameStarted(true) }}
+          variant="outlined"
           disabled={difficulty === -1}
-        >Начать</Button>
-      </div>
+          size="large"
+          endIcon={<CallIcon />}
+          onClick={() => setIsGameStarted(true)}
+        >
+          Начать
+        </Button>
+      </Box >
     )
   }
 };
 
-export {StartPage};
+export { StartPage };

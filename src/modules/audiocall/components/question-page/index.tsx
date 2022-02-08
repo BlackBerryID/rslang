@@ -61,6 +61,7 @@ const QuestionPage = ({ difficulty }: { difficulty: number }) => {
     const playAudio = () => {
       if (currentAnswer && questionNum !== AudioCallConst.questionsPerGame) {
         const audio = new Audio(`${base}/${currentAnswer.audio}`);
+        console.log(audio);
         audio.play();
       }
     };
@@ -96,7 +97,7 @@ const QuestionPage = ({ difficulty }: { difficulty: number }) => {
             isAnswered={isAnswered}
             setIsAnswered={setIsAnswered}
           />
-        </div>
+        </div >
       );
     }
   }

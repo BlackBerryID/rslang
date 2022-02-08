@@ -1,5 +1,5 @@
 import React, { BaseSyntheticEvent, useEffect, useState } from "react";
-import { Button } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 import { ShuffleArray } from "../../../../utils/shuffle-array";
 
 import './answers.scss';
@@ -50,34 +50,40 @@ const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnswered, setIs
   };
 
   return (
-    <div className="answers-container">
-      <div className="answers">
+    <div>
+      <Stack direction="row" spacing={2}>
         {words.map((word) => {
           return <Button
             variant="outlined"
             key={word.id}
             onClick={checkAnswer}
             color={getButtonStyle(word.wordTranslate)}
-          > {word.wordTranslate}</Button>
-        })}
-      </div>
-      {
-        isAnswered ?
-          <Button
-            variant="contained"
-            onClick={() => { setIsAnswered(false); setNextQuestion(); }}
           >
-            {'дальше'}
-          </Button> :
-          <Button
-            variant="contained"
-            onClick={() => { setIsAnswered(true); setAnsweredWords({ word: correctAnswer, flag: false }); }}
-          >
-            {'не знаю'}
+            {word.wordTranslate}
           </Button>
-      }
+        })}
+      </Stack>
+      <Box
+        sx={{ p: 4, textAlign: "center" }}
+      >
+        {
+          isAnswered ?
+            <Button
+              variant="contained"
+              onClick={() => { setIsAnswered(false); setNextQuestion(); }}
+            >
+              {'дальше'}
+            </Button> :
+            <Button
+              variant="contained"
+              onClick={() => { setIsAnswered(true); setAnsweredWords({ word: correctAnswer, flag: false }); }}
+            >
+              {'не знаю'}
+            </Button>
+        }
+      </Box>
     </div >
   );
 };
 
-export {Answers};
+export { Answers };

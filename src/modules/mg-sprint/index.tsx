@@ -12,12 +12,18 @@ export function MiniGameSprint() {
   const [gameOver, endGame] = useState<boolean>(false);
   const [seconds, setSeconds] = useState(game.timer);
 
-  const startGame = () => {
+  const startGame = (): void => {
     game.start(
       () => setGameMode(true),
       (val: number) => setSeconds(val),
       () => endGame(true)
     );
+  };
+
+  const reset = (): void => {
+    game.reset();
+    setGameMode(false);
+    endGame(false);
   };
 
   const setLevel = (val: number) => {
@@ -26,7 +32,7 @@ export function MiniGameSprint() {
 
   return gameMode ? (
     gameOver ? (
-      <MGSprintEnd statistic={game.statistic} />
+      <MGSprintEnd statistic={game.statistic} onResetAction={reset} />
     ) : (
       <MGSprintRound
         attempt={game.getRound(gameRound, (val: number) => setGameRound(val))}

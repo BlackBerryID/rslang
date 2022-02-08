@@ -1,7 +1,7 @@
-import { ConstructionOutlined } from '@mui/icons-material';
 import { GetWords } from '../../../api';
 import { GetRandomNum } from '../../../utils/get-random-num';
 import { ShuffleArray } from '../../../utils/shuffle-array';
+import { GAME_TIMER, MAX_PAGES_INDEX, MAX_WORDS_INDEX } from '../constants';
 
 export class MGSprintEngine {
   private game: Game = {
@@ -20,14 +20,10 @@ export class MGSprintEngine {
     },
   };
 
-  private highs = {
-    words: 19,
-    pages: 29,
-    timer: 5,
-  };
+  private _timer = GAME_TIMER;
 
   get timer() {
-    return this.highs.timer;
+    return this._timer;
   }
 
   get statistic() {
@@ -41,7 +37,7 @@ export class MGSprintEngine {
   }
 
   private setPage(): void {
-    const num = GetRandomNum(0, this.highs.pages);
+    const num = GetRandomNum(0, MAX_PAGES_INDEX);
     if (this.game.decksSeq.has(num)) {
       this.setPage();
     } else {
@@ -56,7 +52,6 @@ export class MGSprintEngine {
       this.game.bookPage
     );
     this.game.deck = ShuffleArray(words);
-    this.game.deck.forEach((item) => console.log(item.word));
     return new Promise((res) => res(true));
   }
 
@@ -69,12 +64,11 @@ export class MGSprintEngine {
       audio: item.audio,
       result: result,
     });
-    console.log(this.game.score);
   }
 
   private getRandomWordTranslation(round: number): string {
     const variant =
-      this.game.deck[GetRandomNum(0, this.highs.words)].wordTranslate;
+      this.game.deck[GetRandomNum(0, MAX_WORDS_INDEX)].wordTranslate;
     return variant !== this.game.deck[round].wordTranslate
       ? variant
       : this.getRandomWordTranslation(round);
@@ -102,14 +96,15 @@ export class MGSprintEngine {
     endAction: () => void
   ): void {
     this.game.timer = setInterval(() => {
-      this.highs.timer--;
-      if (this.highs.timer === 0) this.stopTimer(endAction);
-      action(this.highs.timer);
+      this._timer--;
+      if (this._timer === 0) this.stopTimer(endAction);
+      action(this._timer);
     }, 1000);
   }
 
   private stopTimer(action: () => void): void {
     clearInterval(this.game.timer);
+    this._timer = GAME_TIMER;
     action();
   }
 
@@ -150,5 +145,23 @@ export class MGSprintEngine {
           };
 
     return this.game.currentRound;
+  }
+
+  reset() {
+    this.game = {
+      langLevel: 0,
+      bookPage: 0,
+      deck: [],
+      decksSeq: new Set(),
+      score: [],
+      timer: undefined,
+      currentRound: {
+        activeWord: '',
+        translation: '',
+        giveAnswer: (val: boolean): void => {
+          throw new Error('Function not implemented.');
+        },
+      },
+    };
   }
 }

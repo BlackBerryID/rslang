@@ -1,7 +1,11 @@
 import { ListItemButton } from '@mui/material';
 import { NavLink } from '../nav-link';
 
-const SideMenuItem = ({ path, text, toggleSideMenu }: SideMenuItemProps) => {
+export const SideMenuItem = ({
+  path,
+  text,
+  toggleSideMenu,
+}: SideMenuItemProps) => {
   return (
     <ListItemButton
       sx={{
@@ -14,5 +18,3 @@ const SideMenuItem = ({ path, text, toggleSideMenu }: SideMenuItemProps) => {
     </ListItemButton>
   );
 };
-
-export { SideMenuItem };

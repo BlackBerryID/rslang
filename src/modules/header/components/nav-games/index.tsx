@@ -5,7 +5,7 @@ import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
 import { SideMenuItem } from '../side-menu-item';
 import { Pages, Paths } from '../../../../app/constants';
 
-const NavGames = ({ toggleSideMenu }: NavGamesProps) => {
+export const NavGames = ({ toggleSideMenu }: NavGamesProps) => {
   return (
     <TreeView
       defaultExpanded={['1', '2']}
@@ -36,5 +36,3 @@ const NavGames = ({ toggleSideMenu }: NavGamesProps) => {
     </TreeView>
   );
 };
-
-export { NavGames };

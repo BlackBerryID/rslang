@@ -7,7 +7,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { SideMenu } from './components/side-menu';
 import { Login } from './containers/login';
 
-const Header = () => {
+export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleSideMenu =
@@ -51,5 +51,3 @@ const Header = () => {
     </AppBar>
   );
 };
-
-export { Header };

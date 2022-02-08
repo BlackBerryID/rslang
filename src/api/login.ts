@@ -1,6 +1,6 @@
 import { base } from './api';
 
-const loginUser = async (email: string, password: string) => {
+export const loginUser = async (email: string, password: string) => {
   const rawResponse = await fetch(`${base}/signin`, {
     method: 'POST',
     headers: {
@@ -13,5 +13,3 @@ const loginUser = async (email: string, password: string) => {
 
   return content;
 };
-
-export { loginUser };

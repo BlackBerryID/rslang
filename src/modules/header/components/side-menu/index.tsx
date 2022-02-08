@@ -3,7 +3,7 @@ import { SideMenuItem } from '../side-menu-item';
 import { NavGames } from '../nav-games';
 import { Pages, Paths } from '../../../../app/constants';
 
-const SideMenu = ({ isMenuOpen, toggleSideMenu }: SideMenuProps) => {
+export const SideMenu = ({ isMenuOpen, toggleSideMenu }: SideMenuProps) => {
   return (
     <Drawer anchor="left" open={isMenuOpen} onClose={toggleSideMenu(false)}>
       <List sx={{ width: '310px', mt: '60px', padding: '10px' }}>
@@ -32,5 +32,3 @@ const SideMenu = ({ isMenuOpen, toggleSideMenu }: SideMenuProps) => {
     </Drawer>
   );
 };
-
-export { SideMenu };

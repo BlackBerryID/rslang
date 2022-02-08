@@ -1,7 +1,7 @@
 import { Link } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
-const NavLink = ({ path, text, size }: NavLinkProps) => {
+export const NavLink = ({ path, text, size }: NavLinkProps) => {
   return (
     <Link
       component={RouterLink}
@@ -14,5 +14,3 @@ const NavLink = ({ path, text, size }: NavLinkProps) => {
     </Link>
   );
 };
-
-export { NavLink };

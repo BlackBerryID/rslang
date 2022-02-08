@@ -1,6 +1,10 @@
 import { base } from './api';
 
-const createUser = async (name: string, email: string, password: string) => {
+export const createUser = async (
+  name: string,
+  email: string,
+  password: string
+) => {
   const rawResponse = await fetch(`${base}/users`, {
     method: 'POST',
     headers: {
@@ -12,5 +16,3 @@ const createUser = async (name: string, email: string, password: string) => {
   const content = await rawResponse.json();
   return content;
 };
-
-export { createUser };

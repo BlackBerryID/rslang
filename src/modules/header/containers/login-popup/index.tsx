@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { loginUser, createUser } from '../../../../api';
 
-const LoginPopup = (props: LoginPopupProps) => {
+export const LoginPopup = (props: LoginPopupProps) => {
   const { onClose, open, setIsOnline } = props;
 
   const [registration, setRegistration] = useState(false);
@@ -203,5 +203,3 @@ const LoginPopup = (props: LoginPopupProps) => {
     </Dialog>
   );
 };
-
-export { LoginPopup };

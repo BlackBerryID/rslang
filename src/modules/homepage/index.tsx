@@ -1,3 +1,5 @@
-import Homepage from './homepage';
+import './homepage.scss';
 
-export default Homepage;
+export const Homepage = () => {
+  return <div className="container home">HOMEPAGE</div>;
+};

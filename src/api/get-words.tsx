@@ -1,7 +1,7 @@
 import { base } from './api';
 // const local = 'http://localhost:3007';
 
-const GetWords = async (group = 0, page = 0) => {
+export const GetWords = async (group = 0, page = 0) => {
   try {
     const rawResponse = await fetch(
       `${base}/words?group=${group}&page=${page}`
@@ -14,5 +14,3 @@ const GetWords = async (group = 0, page = 0) => {
     if (error instanceof Error) console.error('Error caught >>>>> ' + error);
   }
 };
-
-export { GetWords };

@@ -1,5 +1,5 @@
 import { Container, ThemeProvider } from '@mui/material';
-import theme from '../../app/material-ui-theme';
+import { theme } from '../../app/material-ui-theme';
 import { Outlet } from 'react-router-dom';
 import { Header } from '../header';
 

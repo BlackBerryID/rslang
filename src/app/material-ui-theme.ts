@@ -3,7 +3,7 @@ import type {} from '@mui/lab/themeAugmentation';
 
 const COLOR_PRIMARY = '#8ca9d3';
 
-const theme = createTheme({
+export const theme = createTheme({
   components: {
     MuiDrawer: {
       styleOverrides: {
@@ -54,5 +54,3 @@ const theme = createTheme({
     },
   },
 });
-
-export default theme;

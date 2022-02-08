@@ -1,4 +1,3 @@
-import { ConstructionOutlined } from '@mui/icons-material';
 import { GetWords } from '../../../api';
 import { GetRandomNum } from '../../../utils/get-random-num';
 import { ShuffleArray } from '../../../utils/shuffle-array';
@@ -65,7 +64,6 @@ export class MGSprintEngine {
       audio: item.audio,
       result: result,
     });
-    console.log(this.game.score);
   }
 
   private getRandomWordTranslation(round: number): string {

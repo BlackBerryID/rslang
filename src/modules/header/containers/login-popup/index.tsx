@@ -69,6 +69,7 @@ export const LoginPopup = (props: LoginPopupProps) => {
         name: response.name,
         token: response.token,
         refreshToken: response.refreshToken,
+        userId: response.userId,
       })
     );
     setIsOnline(true);

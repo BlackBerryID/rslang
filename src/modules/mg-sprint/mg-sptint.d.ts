@@ -21,3 +21,5 @@ type Game = {
   timer: Timer | undefined;
   currentRound: GameRound;
 };
+
+declare module '*.scss';

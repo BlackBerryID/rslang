@@ -9,7 +9,7 @@ const WordInfo = ({ word }: { word: Word }) => {
 
   return (
     <div className="word-info">
-      <img src={`${base}/${word.image}`}></img>
+      <img src={`${base}/${word.image}`} alt={word.word}></img>
       <h3>{word.word}</h3>
       <h4>{word.transcription}</h4>
       <IconButton

@@ -4,10 +4,11 @@ import ResultsInfo from "../results-info";
 import ResultsList from "../results-list";
 import './results-page.scss';
 
-const ResultsPage = ({ answeredWords }: { answeredWords: { word: string, flag: boolean }[] }) => {
+const ResultsPage = ({ answeredWords }: { answeredWords: { word: Word, flag: boolean }[] }) => {
 
   const [resultsView, setResultsView] = useState('info');
 
+  console.log(answeredWords);
   return (
     <div className="results-page">
       <ButtonGroup variant="outlined" aria-label="outlined button group">

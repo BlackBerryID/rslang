@@ -5,31 +5,32 @@ import { ShuffleArray } from "../../../../utils/shuffle-array";
 import './answers.scss';
 
 // TODO: remove 'any' type on setAnsweredWords prop
-const Answers = ({ w, setNextQuestion, setAnsweredWords, isAnswered, setIsAnswered }: {
-  w: { wordTranslate: string, id: string }[],
+const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnswered, setIsAnswered }: {
+  options: Word[],
   setNextQuestion: () => void,
   setAnsweredWords: any,
   isAnswered: boolean,
   setIsAnswered: (flag: boolean) => void
 }) => {
   const [words, setWords] = useState<{ wordTranslate: string, id: string }[]>([]);
-  const [correctAnswer, setCorrectAnswer] = useState('');
+  const [correctAnswer, setCorrectAnswer] = useState<Word>();
   const [answer, setAnswer] = useState('');
 
   useEffect(() => {
     function showWords() {
-      if (words.length === 0 && w.length !== 0) {
-        setCorrectAnswer(w[0].wordTranslate);
-        setWords(ShuffleArray(w));
+      if (!isAnswered && options.length !== 0) {
+        console.log(options);
+        setCorrectAnswer(options[0]);
+        setWords(ShuffleArray(options));
       }
     }
     showWords();
-  }, [words, w]);
+  }, [isAnswered, options]);
 
   const checkAnswer = (e: BaseSyntheticEvent) => {
     if (!isAnswered) {
       setIsAnswered(true);
-      if ((e.target as HTMLElement).textContent?.trim() === correctAnswer) {
+      if ((e.target as HTMLElement).textContent?.trim() === (correctAnswer as Word).wordTranslate) {
         // TODO: add request which will save answer @saratovkin
         setAnsweredWords({ word: correctAnswer, flag: true });
       } else {
@@ -40,7 +41,7 @@ const Answers = ({ w, setNextQuestion, setAnsweredWords, isAnswered, setIsAnswer
   };
 
   const getButtonStyle = (word: string) => {
-    if (isAnswered && (word === correctAnswer)) {
+    if (isAnswered && (word === (correctAnswer as Word).wordTranslate)) {
       return 'success';
     }
     if (isAnswered && (word === answer)) {

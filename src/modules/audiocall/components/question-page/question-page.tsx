@@ -10,31 +10,53 @@ import ResultsPage from "../results-page";
 import WordInfo from "../word-info";
 
 import './question-page.scss';
+import { ShuffleArray } from "../../../../utils/shuffle-array";
 
 const QuestionPage = ({ difficulty }: { difficulty: number }) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [words, setWords] = useState<{ wordTranslate: string, id: string }[]>([]);
-  const [questionNum, setQuestionNum] = useState(0);
-  const [answeredWords, setAnsweredWords] = useState<{ word: string, flag: boolean }[]>([]);
-  const [currentAnswer, setCurrentAnswer] = useState<Word>();
+  const [words, setWords] = useState<Word[]>([]);
+  const [answeredWords, setAnsweredWords] = useState<{ word: Word, flag: boolean }[]>([]);
+
+  const [isLoading, setIsLoading] = useState(true);
   const [isAnswered, setIsAnswered] = useState(false);
+
+  const [questionNum, setQuestionNum] = useState<number>(0);
+  const [currentAnswer, setCurrentAnswer] = useState<Word>();
+  const [answerOptions, setAnswerOptions] = useState<Word[]>([]);
 
   useEffect(() => {
     setIsLoading(true);
     try {
-      GetWords(difficulty, GetRandomNum(0, AudioCallConst.wordsPerPage)).then((respWords: Word[]) => {
-        const startIdx = GetRandomNum(0, respWords.length - AudioCallConst.amountOfAnswers);
-        const questionWords = respWords.slice(startIdx, startIdx + AudioCallConst.amountOfAnswers);
-        setWords(questionWords.map((word) => { return { wordTranslate: word.wordTranslate, id: word.id } }));
+      GetWords(difficulty, GetRandomNum(0, AudioCallConst.pagesPerDifficulty)).then((words: Word[]) => {
+        setWords(ShuffleArray(words));
         setIsLoading(false);
-        setCurrentAnswer(questionWords[0]);
       });
     } catch (error) {
       // TODO: add Error Boundary (@saratovkin)
       console.log(error);
-      setIsLoading(false);
     }
-  }, [difficulty, questionNum]);
+  }, [difficulty]);
+
+  useEffect(() => {
+    if (words.length) {
+      setCurrentAnswer(words[0]);
+      const options: Word[] = [];
+      let option: Word;
+      while (options.length !== 4) {
+        option = words[GetRandomNum(1, words.length - 1)];
+        if (options.indexOf(option) === -1) {
+          options.push(option);
+        }
+      }
+      setAnswerOptions(options);
+    }
+  }, [words]);
+
+  useEffect(() => {
+    console.log('q effect');
+    if (words.length) {
+      setWords(words.filter((item, index) => index != 0));
+    }
+  }, [questionNum]);
 
   useEffect(() => {
     const playAudio = () => {
@@ -45,6 +67,7 @@ const QuestionPage = ({ difficulty }: { difficulty: number }) => {
     };
     playAudio();
   }, [currentAnswer]);
+
   if (isLoading) {
     return (
       <CircularProgress />
@@ -68,9 +91,9 @@ const QuestionPage = ({ difficulty }: { difficulty: number }) => {
             </IconButton>
           }
           <Answers
-            w={words}
+            options={currentAnswer ? [currentAnswer, ...answerOptions] : []}
             setNextQuestion={() => setQuestionNum((num) => num + 1)}
-            setAnsweredWords={(newWord: { word: string, flag: boolean }) => setAnsweredWords((words) => [...words, newWord])}
+            setAnsweredWords={(newWord: { word: Word, flag: boolean }) => setAnsweredWords((words) => [...words, newWord])}
             isAnswered={isAnswered}
             setIsAnswered={setIsAnswered}
           />

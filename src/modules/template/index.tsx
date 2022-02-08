@@ -17,6 +17,7 @@ export const BaseTemplate = () => {
               alignItems: 'center',
               flexDirection: 'column',
               minHeight: '80vh', // Until we haven't footer, after fluid its height between header and footer.
+              marginTop: '5em',
             }}
           >
             <Outlet />

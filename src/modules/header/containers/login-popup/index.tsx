@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import {
   Button,
@@ -21,24 +21,6 @@ export const LoginPopup = (props: LoginPopupProps) => {
     name: true,
     isAlreadySubmit: false,
   });
-  const [loginData, setLoginData] = useState({
-    email: '',
-    password: '',
-    name: '',
-  });
-
-  useEffect(() => {
-    // prettier-ignore
-    const isInputInfoCorrect = registration
-      ? validation.email && validation.password && validation.name && validation.isAlreadySubmit
-      : validation.email && validation.password && validation.isAlreadySubmit;
-
-    if (isInputInfoCorrect) {
-      registration
-        ? signup(loginData.name, loginData.email, loginData.password)
-        : login(loginData.email, loginData.password);
-    }
-  }, [loginData]);
 
   const handleClose = () => {
     onClose();
@@ -52,21 +34,27 @@ export const LoginPopup = (props: LoginPopupProps) => {
       String(data.get('password')),
       String(data.get('name')),
     ];
-    setLoginData({
-      email: email,
-      password: password,
-      name: name,
-    });
-    setValidation({
+    const isValid = {
       email: validateEmail(email),
       password: validatePassword(password),
       name: validateName(name),
+    };
+    setValidation({
+      ...validation,
       isAlreadySubmit: true,
     });
+    // prettier-ignore
+    const isInputInfoCorrect = registration
+      ? isValid.email && isValid.password && isValid.name
+      : isValid.email && isValid.password
+
+    if (isInputInfoCorrect) {
+      registration ? signup(name, email, password) : login(email, password);
+    }
   };
 
   const validateEmail = (email: string): boolean => {
-    return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
+    return /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email);
   };
 
   const validatePassword = (password: string): boolean => password.length >= 8;
@@ -138,7 +126,7 @@ export const LoginPopup = (props: LoginPopupProps) => {
           >
             {registration && (
               <TextField
-                error={!validation.name}
+                error={!validation.name && validation.isAlreadySubmit}
                 margin="normal"
                 required
                 fullWidth
@@ -147,16 +135,16 @@ export const LoginPopup = (props: LoginPopupProps) => {
                 name="name"
                 autoComplete="off"
                 autoFocus
-                onInput={() =>
+                onInput={(e) =>
                   setValidation({
                     ...validation,
-                    name: true,
+                    name: validateName((e.target as HTMLInputElement).value),
                   })
                 }
               />
             )}
             <TextField
-              error={!validation.email}
+              error={!validation.email && validation.isAlreadySubmit}
               margin="normal"
               required
               fullWidth
@@ -165,15 +153,15 @@ export const LoginPopup = (props: LoginPopupProps) => {
               name="email"
               autoComplete="email"
               autoFocus
-              onInput={() =>
+              onInput={(e) =>
                 setValidation({
                   ...validation,
-                  email: true,
+                  email: validateEmail((e.target as HTMLInputElement).value),
                 })
               }
             />
             <TextField
-              error={!validation.password}
+              error={!validation.password && validation.isAlreadySubmit}
               margin="normal"
               required
               fullWidth
@@ -182,10 +170,12 @@ export const LoginPopup = (props: LoginPopupProps) => {
               type="password"
               id="password"
               autoComplete="current-password"
-              onInput={() =>
+              onInput={(e) =>
                 setValidation({
                   ...validation,
-                  password: true,
+                  password: validatePassword(
+                    (e.target as HTMLInputElement).value
+                  ),
                 })
               }
             />

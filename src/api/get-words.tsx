@@ -4,7 +4,7 @@ import { base } from './api';
 const GetWords = async (group = 0, page = 0) => {
   try {
     const rawResponse = await fetch(
-      `${local}/words?group=${group}&page=${page}`
+      `${base}/words?group=${group}&page=${page}`
     );
     const words = await rawResponse.json();
     if (words.length === 0)

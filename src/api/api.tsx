@@ -1,3 +1,1 @@
-const base = 'https://rslang-react.herokuapp.com'
-
-export { base }
+export const base = 'https://rslang-react.herokuapp.com';

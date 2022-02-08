@@ -63,3 +63,11 @@ type SideMenuProps = {
     open: boolean
   ) => (event: React.KeyboardEvent | React.MouseEvent) => void;
 };
+
+interface LoginPopupProps {
+  open: boolean;
+  onClose: () => void;
+  setIsOnline: (param: boolean) => void;
+}
+
+type ErrorMessage = string | null;

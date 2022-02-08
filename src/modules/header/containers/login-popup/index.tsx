@@ -8,6 +8,7 @@ import {
   TextField,
   Box,
   Container,
+  Typography,
 } from '@mui/material';
 import { loginUser, createUser } from '../../../../api';
 
@@ -21,6 +22,7 @@ export const LoginPopup = (props: LoginPopupProps) => {
     name: true,
     isAlreadySubmit: false,
   });
+  const [errorMessage, setErrorMessage] = useState<ErrorMessage>(null);
 
   const handleClose = () => {
     onClose();
@@ -63,6 +65,13 @@ export const LoginPopup = (props: LoginPopupProps) => {
 
   const login = async (email: string, password: string) => {
     const response = await loginUser(email, password);
+    if (response === 404) {
+      setErrorMessage('Неверный электронный адрес');
+      return;
+    } else if (response === 403) {
+      setErrorMessage('Неверный пароль');
+      return;
+    }
     localStorage.setItem(
       'user',
       JSON.stringify({
@@ -80,6 +89,12 @@ export const LoginPopup = (props: LoginPopupProps) => {
     await createUser(name, email, password);
     await login(email, password);
   };
+
+  const message = errorMessage ? (
+    <Typography variant="h6" component="div" sx={{ textAlign: 'center' }}>
+      {errorMessage}
+    </Typography>
+  ) : null;
 
   return (
     <Dialog onClose={handleClose} open={open}>
@@ -114,7 +129,10 @@ export const LoginPopup = (props: LoginPopupProps) => {
               variant={registration ? 'contained' : 'outlined'}
               color="secondary"
               sx={{ mt: 3, mb: 2 }}
-              onClick={() => setRegistration(true)}
+              onClick={() => {
+                setRegistration(true);
+                setErrorMessage(null);
+              }}
             >
               Регистрация
             </Button>
@@ -180,6 +198,7 @@ export const LoginPopup = (props: LoginPopupProps) => {
                 })
               }
             />
+            <Box sx={{ height: '25px' }}>{message}</Box>
             <Button
               type="submit"
               fullWidth

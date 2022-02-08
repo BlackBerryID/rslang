@@ -69,3 +69,5 @@ interface LoginPopupProps {
   onClose: () => void;
   setIsOnline: (param: boolean) => void;
 }
+
+type ErrorMessage = string | null;

@@ -8,8 +8,8 @@ export const loginUser = async (email: string, password: string) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ email, password }),
-  });
-  const content = await rawResponse.json();
-
-  return content;
+  }).catch();
+  return rawResponse.status !== 200
+    ? rawResponse.status
+    : { ...(await rawResponse.json()) };
 };

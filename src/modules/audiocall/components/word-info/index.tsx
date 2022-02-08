@@ -1,3 +1,25 @@
-import WordInfo from "./word-info";
+import { VolumeUp } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
+import React from "react";
+import { base } from "../../../../api";
 
-export default WordInfo;
+import './word-info.scss';
+
+const WordInfo = ({ word }: { word: Word }) => {
+
+  return (
+    <div className="word-info">
+      <img src={`${base}/${word.image}`} alt={word.word}></img>
+      <h3>{word.word}</h3>
+      <h4>{word.transcription}</h4>
+      <IconButton
+        aria-label="volume"
+        onClick={() => (new Audio(`${base}/${word.audio}`).play())}
+      >
+        <VolumeUp sx={{ fontSize: 40 }} />
+      </IconButton>
+    </div>
+  );
+}
+
+export {WordInfo};

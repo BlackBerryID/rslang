@@ -1,5 +1,5 @@
 const enum AudioCallConst {
-  questionsPerGame = 2,
+  questionsPerGame = 10,
   pagesPerDifficulty = 29,
   wordsPerPage = 19,
   amountOfAnswers = 5,

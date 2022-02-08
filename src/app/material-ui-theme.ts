@@ -1,5 +1,6 @@
 import { createTheme } from '@mui/material';
 import type {} from '@mui/lab/themeAugmentation';
+import { deepOrange } from '@mui/material/colors';
 
 const COLOR_PRIMARY = '#8ca9d3';
 
@@ -35,10 +36,10 @@ export const theme = createTheme({
       contrastText: '#fff',
     },
     secondary: {
-      light: '#fbe4e3',
-      main: '#febeb0',
-      dark: '#f89580',
-      contrastText: '#666',
+      light: deepOrange['200'],
+      main: deepOrange['A100'],
+      dark: deepOrange['A200'],
+      contrastText: '#fff',
     },
     info: {
       light: '#ff2237',

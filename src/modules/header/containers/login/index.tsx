@@ -1,9 +1,8 @@
 import { useState } from 'react';
 
-import Button from '@mui/material/Button';
+import { Button, Avatar, Menu, MenuItem } from '@mui/material';
 import { LoginPopup } from '../login-popup';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import { deepOrange } from '@mui/material/colors';
 
 export function Login() {
   const [open, setOpen] = useState(false);
@@ -50,8 +49,11 @@ export function Login() {
         onClick={handleClick}
         variant="text"
         color="secondary"
-        sx={{ height: '40px' }}
+        sx={{ height: '40px', fontSize: '18px' }}
       >
+        <Avatar sx={{ bgcolor: deepOrange['A100'], mr: '10px' }}>
+          {getUserName()[0]}
+        </Avatar>
         {getUserName()}
       </Button>
       <Menu

@@ -10,11 +10,11 @@ const enum Pages {
 
 const enum Paths {
   home = '/',
-  textBook = 'textbook',
-  mgSprint = 'sprint',
-  mgAudioCall = 'audio-call',
-  statistic = 'statistic',
-  team = 'team',
+  textBook = '/textbook',
+  mgSprint = '/sprint',
+  mgAudioCall = '/audio-call',
+  statistic = '/statistic',
+  team = '/team',
 }
 
 enum CEFR {

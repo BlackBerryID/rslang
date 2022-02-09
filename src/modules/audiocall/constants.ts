@@ -1,8 +1,8 @@
 const enum AudioCallConst {
-  questionsPerGame = 10,
-  pagesPerDifficulty = 29,
-  wordsPerPage = 19,
-  amountOfAnswers = 5,
+  QUESTIONS_AMOUNT = 10,
+  MAX_PAGES_INDEX = 29,
+  MAX_WORDS_INDEX = 19,
+  ANSWERS_AMOUNT = 5,
 }
 
 export default AudioCallConst;

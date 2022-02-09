@@ -1,26 +1,61 @@
-import { Button, ButtonGroup } from "@mui/material";
 import React, { useState } from "react";
-import {ResultsInfo} from "../results-info";
-import {ResultsList} from "../results-list";
+import { Box, Button} from "@mui/material";
+import { ResultsInfo } from "../results-info";
+import { ResultsList } from "../results-list";
+import { Paths } from "../../../../app/constants"
+import { NavLink } from "react-router-dom";
+import ReplayIcon from '@mui/icons-material/Replay';
+import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
+
 import './results-page.scss';
 
-const ResultsPage = ({ answeredWords }: { answeredWords: { word: Word, flag: boolean }[] }) => {
+const ResultsPage = ({ answeredWords, setIsGameStarted }: {
+  answeredWords: { word: Word, flag: boolean }[],
+  setIsGameStarted: (flag: boolean) => void
+}) => {
 
-  const [resultsView, setResultsView] = useState('info');
+  const [isInfoView, setIsInfoView] = useState(true);
 
   return (
+
     <div className="results-page">
-      <ButtonGroup variant="outlined" aria-label="outlined button group">
-        <Button onClick={() => setResultsView('info')}>Результаты</Button>
-        <Button onClick={() => setResultsView('stats')}>Статистика</Button>
-      </ButtonGroup>
+      <Box sx={{ display: 'flex', columnGap: '20px' }}>
+        <Button
+          variant={isInfoView ? "contained" : "outlined"}
+          onClick={() => setIsInfoView(true)}
+        >Результаты
+        </Button>
+        <Button
+          variant={isInfoView ? "outlined" : "contained"}
+          onClick={() => setIsInfoView(false)}
+        >
+          Статистика
+        </Button>
+      </Box>
       {
-        resultsView === 'info' ?
-          <ResultsInfo answersCount={answeredWords.filter((word) => word.flag).length} /> :
+        isInfoView ?
+          <ResultsInfo answersCount={answeredWords.length} correctAnswers={answeredWords.filter((word) => word.flag).length} /> :
           <ResultsList answeredWords={answeredWords} />
       }
+      <Box sx={{ display: 'flex', flexDirection: 'column', rowGap: '20px' }}>
+        <Button
+          variant="outlined"
+          startIcon={<ReplayIcon />}
+          onClick={() => { setIsGameStarted(false) }}
+        >
+          Заново
+        </Button>
+        <NavLink to={Paths.textBook}>
+          <Button
+            variant="outlined"
+            startIcon={<LocalLibraryIcon />}
+          >
+            В учебник
+          </Button>
+        </NavLink>
+      </Box>
     </div>
   )
 };
 
-export {ResultsPage};
+export { ResultsPage };

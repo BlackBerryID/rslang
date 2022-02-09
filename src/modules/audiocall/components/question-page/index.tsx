@@ -7,12 +7,15 @@ import { VolumeUp } from "@mui/icons-material";
 import AudioCallConst from "../../constants";
 import { ResultsPage } from "../results-page";
 import { WordInfo } from "../word-info";
-
-import './question-page.scss';
 import { ShuffleArray } from "../../../../utils/shuffle-array";
 import { Answers } from "../answers";
 
-const QuestionPage = ({ difficulty }: { difficulty: number }) => {
+import './question-page.scss';
+
+const QuestionPage = ({ difficulty, setIsGameStarted }: {
+  difficulty: number,
+  setIsGameStarted: (flag: boolean) => void
+}) => {
   const [words, setWords] = useState<Word[]>([]);
   const [answeredWords, setAnsweredWords] = useState<{ word: Word, flag: boolean }[]>([]);
 
@@ -26,7 +29,7 @@ const QuestionPage = ({ difficulty }: { difficulty: number }) => {
   useEffect(() => {
     setIsLoading(true);
     try {
-      GetWords(difficulty, GetRandomNum(0, AudioCallConst.pagesPerDifficulty)).then((words: Word[]) => {
+      GetWords(difficulty, GetRandomNum(0, AudioCallConst.MAX_PAGES_INDEX)).then((words: Word[]) => {
         setWords(ShuffleArray(words));
         setIsLoading(false);
       });
@@ -37,11 +40,11 @@ const QuestionPage = ({ difficulty }: { difficulty: number }) => {
   }, [difficulty]);
 
   useEffect(() => {
-    if (words.length) {
+    if (words.length && questionNum !== AudioCallConst.QUESTIONS_AMOUNT) {
       setCurrentAnswer(words[0]);
       const options: Word[] = [];
       let option: Word;
-      while (options.length !== 4) {
+      while (options.length !== AudioCallConst.ANSWERS_AMOUNT - 1) {
         option = words[GetRandomNum(1, words.length - 1)];
         if (options.indexOf(option) === -1) {
           options.push(option);
@@ -49,19 +52,16 @@ const QuestionPage = ({ difficulty }: { difficulty: number }) => {
       }
       setAnswerOptions(options);
     }
-  }, [words]);
+  }, [words, questionNum]);
 
   useEffect(() => {
-    if (words.length) {
-      setWords(words.filter((item, index) => index !== 0));
-    }
+    setWords((words) => words.filter((item, index) => index !== 0));
   }, [questionNum]);
 
   useEffect(() => {
     const playAudio = () => {
-      if (currentAnswer && questionNum !== AudioCallConst.questionsPerGame) {
+      if (currentAnswer) {
         const audio = new Audio(`${base}/${currentAnswer.audio}`);
-        console.log(audio);
         audio.play();
       }
     };
@@ -73,9 +73,9 @@ const QuestionPage = ({ difficulty }: { difficulty: number }) => {
       <CircularProgress />
     );
   } else {
-    if (questionNum === AudioCallConst.questionsPerGame) {
+    if (questionNum === AudioCallConst.QUESTIONS_AMOUNT) {
       return (
-        <ResultsPage answeredWords={answeredWords} />
+        <ResultsPage answeredWords={answeredWords} setIsGameStarted={setIsGameStarted} />
       )
     } else {
       return (

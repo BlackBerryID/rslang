@@ -1,7 +1,6 @@
-import { VolumeUp } from "@mui/icons-material";
-import { Card, CardContent, CardMedia, Container, IconButton, Typography } from "@mui/material";
-import { flexbox } from "@mui/system";
 import React from "react";
+import { VolumeUp } from "@mui/icons-material";
+import { Card, CardMedia, Container, IconButton, Typography } from "@mui/material";
 import { base } from "../../../../api";
 
 import './word-info.scss';
@@ -9,22 +8,26 @@ import './word-info.scss';
 const WordInfo = ({ word }: { word: Word }) => {
 
   return (
-    <Card >
+    <Card sx={{ width: 400 }}>
       <CardMedia
         component="img"
-        height="140"
+        height="200"
         image={`${base}/${word.image}`}
         alt={word.word}
       />
-      <CardContent>
+      <Container sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        columnGap: '20px',
+        p: '10px'
+      }}>
         <Typography variant="h3">
           {word.word}
         </Typography>
-      </CardContent>
-      <Container sx={{ display:'flex', justifyContent:'center' }}>
         <IconButton
           aria-label="volume"
-          sx={{margin:"0 auto"}}
+          sx={{ p: 2 }}
           onClick={() => (new Audio(`${base}/${word.audio}`).play())}
         >
           <VolumeUp sx={{ fontSize: 40 }} />

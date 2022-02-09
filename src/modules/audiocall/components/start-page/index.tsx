@@ -35,11 +35,11 @@ const StartPage = () => {
       return `B${idx % 2 + 1}`;
     }
     return `C${idx % 2 + 1}`;
-  }
+  };
 
   if (isGameStarted) {
     return (
-      <QuestionPage difficulty={difficulty} />
+      <QuestionPage difficulty={difficulty} setIsGameStarted={setIsGameStarted} />
     )
   } else {
 
@@ -50,7 +50,7 @@ const StartPage = () => {
         alignItems="center"
         rowGap="2em"
       >
-        <Typography variant="h1" component="div" gutterBottom>
+        <Typography variant="h1" component="h1" textAlign="center">
           Аудиовызов
         </Typography>
         <Typography variant="h5" gutterBottom component="p" textAlign="center">
@@ -66,6 +66,7 @@ const StartPage = () => {
               <FormControlLabel
                 key={index}
                 value={index + 1}
+                checked={index === difficulty}
                 label={getLevel(index)}
                 labelPlacement="bottom"
                 sx={{ color: colors[index] }}

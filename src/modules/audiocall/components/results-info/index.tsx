@@ -1,14 +1,16 @@
+import { Typography } from "@mui/material";
 import React from "react";
 
 import './results-info.scss';
 
-const ResultsInfo = ({ answersCount }: { answersCount: number }) => {
+const ResultsInfo = ({ answersCount, correctAnswers }: { answersCount: number, correctAnswers: number }) => {
   return (
     <div className="results-info">
-      <p>Правильных ответов:</p>
-      <h2>{`${answersCount}/10`}</h2>
+      <Typography variant="h1" component="h1" textAlign="center">
+        {`${correctAnswers}/${answersCount}`}
+      </Typography>
     </div>
   );
-}
+};
 
-export {ResultsInfo};
+export { ResultsInfo };

@@ -4,13 +4,12 @@ import { ShuffleArray } from "../../../../utils/shuffle-array";
 
 import './answers.scss';
 
-// TODO: remove 'any' type on setAnsweredWords prop
 const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnswered, setIsAnswered }: {
   options: Word[],
   setNextQuestion: () => void,
-  setAnsweredWords: any,
+  setAnsweredWords: (word: { word: Word, flag: boolean }) => void,
   isAnswered: boolean,
-  setIsAnswered: (flag: boolean) => void
+  setIsAnswered: (flag: boolean) => void,
 }) => {
   const [words, setWords] = useState<{ wordTranslate: string, id: string }[]>([]);
   const [correctAnswer, setCorrectAnswer] = useState<Word>();
@@ -31,12 +30,17 @@ const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnswered, setIs
       setIsAnswered(true);
       if ((e.target as HTMLElement).textContent?.trim() === (correctAnswer as Word).wordTranslate) {
         // TODO: add request which will save answer @saratovkin
-        setAnsweredWords({ word: correctAnswer, flag: true });
+        setAnsweredWords({ word: (correctAnswer as Word), flag: true });
       } else {
         setAnswer(e.target.textContent.trim());
-        setAnsweredWords({ word: correctAnswer, flag: false });
+        setAnsweredWords({ word: (correctAnswer as Word), flag: false });
       }
     }
+  };
+
+  const skipQuestion = (): void => {
+    setIsAnswered(true);
+    setAnsweredWords({ word: (correctAnswer as Word), flag: false });
   };
 
   const getButtonStyle = (word: string) => {
@@ -52,7 +56,7 @@ const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnswered, setIs
   return (
     <div>
       <Stack direction="row" spacing={2}>
-        {words.map((word) => {
+        {words.map((word, idx) => {
           return <Button
             variant="outlined"
             key={word.id}
@@ -76,7 +80,7 @@ const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnswered, setIs
             </Button> :
             <Button
               variant="contained"
-              onClick={() => { setIsAnswered(true); setAnsweredWords({ word: correctAnswer, flag: false }); }}
+              onClick={skipQuestion}
             >
               {'не знаю'}
             </Button>

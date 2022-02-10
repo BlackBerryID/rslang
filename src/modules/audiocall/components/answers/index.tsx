@@ -16,6 +16,10 @@ const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnswered, setIs
   const [answer, setAnswer] = useState('');
 
   useEffect(() => {
+    console.log('component is re-rendered');
+  })
+
+  useEffect(() => {
     function showWords() {
       if (!isAnswered && options.length !== 0) {
         setCorrectAnswer(options[0]);
@@ -24,6 +28,10 @@ const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnswered, setIs
     }
     showWords();
   }, [isAnswered, options]);
+
+  useEffect(() => {
+    setAnswer('');
+  }, [correctAnswer]);
 
   const checkAnswer = (e: BaseSyntheticEvent) => {
     if (!isAnswered) {
@@ -56,7 +64,7 @@ const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnswered, setIs
   return (
     <div>
       <Stack direction="row" spacing={2}>
-        {words.map((word, idx) => {
+        {words.map((word) => {
           return <Button
             variant="outlined"
             key={word.id}

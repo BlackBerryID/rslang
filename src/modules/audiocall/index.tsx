@@ -1,3 +1,3 @@
-import AudioCall from './auidocall';
+import { StartPage } from "./components/start-page";
 
-export default AudioCall;
+export default StartPage;

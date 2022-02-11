@@ -1,4 +1,4 @@
-import React, { BaseSyntheticEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, Stack } from "@mui/material";
 import { ShuffleArray } from "../../../../utils/shuffle-array";
 
@@ -16,31 +16,24 @@ const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnswered, setIs
   const [answer, setAnswer] = useState('');
 
   useEffect(() => {
-    console.log('component is re-rendered');
-  })
-
-  useEffect(() => {
-    function showWords() {
-      if (!isAnswered && options.length !== 0) {
-        setCorrectAnswer(options[0]);
-        setWords(ShuffleArray(options));
-      }
+    if (!isAnswered && options.length !== 0) {
+      setCorrectAnswer(options[0]);
+      setWords(ShuffleArray(options));
     }
-    showWords();
   }, [isAnswered, options]);
 
   useEffect(() => {
     setAnswer('');
   }, [correctAnswer]);
 
-  const checkAnswer = (e: BaseSyntheticEvent) => {
+  const checkAnswer = (word: string) => {
     if (!isAnswered) {
       setIsAnswered(true);
-      if ((e.target as HTMLElement).textContent?.trim() === (correctAnswer as Word).wordTranslate) {
+      if (word === (correctAnswer as Word).wordTranslate) {
         // TODO: add request which will save answer @saratovkin
         setAnsweredWords({ word: (correctAnswer as Word), flag: true });
       } else {
-        setAnswer(e.target.textContent.trim());
+        setAnswer(word);
         setAnsweredWords({ word: (correctAnswer as Word), flag: false });
       }
     }
@@ -68,7 +61,7 @@ const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnswered, setIs
           return <Button
             variant="outlined"
             key={word.id}
-            onClick={checkAnswer}
+            onClick={() => checkAnswer(word.wordTranslate)}
             color={getButtonStyle(word.wordTranslate)}
           >
             {word.wordTranslate}

@@ -13,19 +13,19 @@ import {
   yellow,
 } from '@mui/material/colors';
 
+const colors = [
+  yellow['600'],
+  lightBlue['400'],
+  lime['A400'],
+  deepOrange['400'],
+  indigo['500'],
+  purple['500'],
+];
+
 const StartPage = () => {
 
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [difficulty, setDifficulty] = useState(-1);
-
-  const colors = [
-    yellow['600'],
-    lightBlue['400'],
-    lime['A400'],
-    deepOrange['400'],
-    indigo['500'],
-    purple['500'],
-  ];
 
   const getLevel = (idx: number): string => {
     if (idx === 0 || idx === 1) {

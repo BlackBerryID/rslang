@@ -13,7 +13,7 @@ export const Textbook = () => {
   return (
     <Container className="textbook_container">
       <TextbookHeader color={currentColor} />
-      <TextbookLevels />
+      <TextbookLevels setColor={setCurrentColor} />
       <div className="textbook_words__title">Слова</div>
       <Box sx={{ pt: '20px' }}>
         <Box>

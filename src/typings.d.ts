@@ -75,3 +75,17 @@ type ErrorMessage = string | null;
 type TextbookHeaderProps = {
   color: string;
 };
+
+type TextbookLevelsProps = {
+  setColor: React.Dispatch<
+    React.SetStateAction<
+      | '#fdd835'
+      | '#29b6f6'
+      | '#c6ff00'
+      | '#ff7043'
+      | '#3f51b5'
+      | '#9c27b0'
+      | '#4db6ac'
+    >
+  >;
+};

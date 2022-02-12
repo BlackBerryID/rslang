@@ -5,6 +5,7 @@ import { colors } from '../../app/constants';
 import './textbook.scss';
 import { TextbookHeader } from './components/textbook-header';
 import { TextbookLevels } from './components/textbook-levels';
+import { TextbookWords } from './containers/textbook-words';
 
 export const Textbook = () => {
   const [currentColor, setCurrentColor] = useState(colors[0]);
@@ -15,36 +16,9 @@ export const Textbook = () => {
       <TextbookLevels />
       <div className="textbook_words__title">Слова</div>
       <Box sx={{ pt: '20px' }}>
-        <Grid
-          container
-          spacing={{ xs: 1, md: 1.5 }}
-          sx={{ maxWidth: '70%' }}
-          onClick={(e) => console.log(e.target)}
-        >
-          {Array.from(Array(20)).map((_, index) => (
-            <Grid
-              className="textbook_words__item"
-              item
-              xs={12}
-              sm={6}
-              md={4}
-              lg={3}
-              key={index}
-            >
-              <Typography
-                component="button"
-                className="textbook_words__button active"
-                sx={{
-                  '&:hover': { backgroundColor: currentColor },
-                  '&.active': { backgroundColor: currentColor },
-                }}
-              >
-                <h4>biodegradeble</h4>
-                <p>биоразлагаемый</p>
-              </Typography>
-            </Grid>
-          ))}
-        </Grid>
+        <Box>
+          <TextbookWords color={currentColor} />
+        </Box>
       </Box>
     </Container>
   );

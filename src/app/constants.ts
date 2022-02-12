@@ -1,3 +1,13 @@
+import {
+  deepOrange,
+  indigo,
+  lightBlue,
+  lime,
+  purple,
+  yellow,
+  teal,
+} from '@mui/material/colors';
+
 const enum Pages {
   home = 'Главная',
   textBook = 'Учебник',
@@ -26,4 +36,14 @@ enum CEFR {
   c2 = 'C2',
 }
 
-export { Pages, Paths, CEFR };
+const colors = [
+  yellow['600'],
+  lightBlue['400'],
+  lime['A400'],
+  deepOrange['400'],
+  indigo['500'],
+  purple['500'],
+  teal['300'],
+];
+
+export { Pages, Paths, CEFR, colors };

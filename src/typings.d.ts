@@ -71,3 +71,7 @@ interface LoginPopupProps {
 }
 
 type ErrorMessage = string | null;
+
+type TextbookHeaderProps = {
+  color: string;
+};

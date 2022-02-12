@@ -1,8 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Grid, Typography } from '@mui/material';
 
 export const TextbookWords = ({ color }: TextbookColorProp) => {
   const [activeCardIndex, setActiveCardIndex] = useState(0);
+
+  useEffect(() => {
+    setActiveCardIndex(0);
+  }, [color]);
 
   const findCardIndex = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const target = e.target as HTMLElement;

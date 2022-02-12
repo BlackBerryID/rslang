@@ -1,8 +1,14 @@
-import { Typography } from '@mui/material';
+import { Stack, Typography, Divider } from '@mui/material';
 
 export const TextbookHeader = ({ color }: TextbookColorProp) => {
   return (
-    <div className="textbook_header">
+    <Stack
+      className="textbook_header"
+      divider={
+        <Divider orientation="vertical" flexItem sx={{ margin: '0 5px' }} />
+      }
+      direction="row"
+    >
       <Typography
         variant="h4"
         component="button"
@@ -11,9 +17,6 @@ export const TextbookHeader = ({ color }: TextbookColorProp) => {
         onClick={() => console.log('textbook')}
       >
         Учебник
-      </Typography>
-      <Typography component="div" variant="h4" className="textbook_line">
-        |
       </Typography>
       <Typography
         variant="h4"
@@ -24,6 +27,6 @@ export const TextbookHeader = ({ color }: TextbookColorProp) => {
       >
         Словарь
       </Typography>
-    </div>
+    </Stack>
   );
 };

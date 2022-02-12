@@ -57,13 +57,6 @@ type MUIVariant =
   | 'overline'
   | undefined;
 
-type SideMenuProps = {
-  isMenuOpen: boolean;
-  toggleSideMenu: (
-    open: boolean
-  ) => (event: React.KeyboardEvent | React.MouseEvent) => void;
-};
-
 interface LoginPopupProps {
   open: boolean;
   onClose: () => void;
@@ -78,15 +71,5 @@ type TextbookColorProp = {
 
 type TextbookLevelsProps = {
   color: string;
-  setColor: React.Dispatch<
-    React.SetStateAction<
-      | '#fdd835'
-      | '#29b6f6'
-      | '#c6ff00'
-      | '#ff7043'
-      | '#3f51b5'
-      | '#9c27b0'
-      | '#4db6ac'
-    >
-  >;
+  setColor: React.Dispatch<React.SetStateAction<string>>;
 };

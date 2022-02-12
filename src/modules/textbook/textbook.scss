@@ -3,18 +3,9 @@
     height: 80vh;
   }
 
-  &_header {
-    display: flex;
-  }
-
   &_button {
     font-weight: 500;
     transition: 0.2s;
-  }
-
-  &_line {
-    font-weight: 700;
-    padding: 0 5px;
   }
 
   &_levels-list {
@@ -35,6 +26,8 @@
     width: 300px;
   }
 
+  &_level__avatar { color: white; font-weight: 700; }
+
   &_words__button {
     display: flex;
     flex-direction: column;
@@ -45,6 +38,7 @@
     border-radius: 15px;
     background-color: rgb(241, 241, 241);
     transition: 0.2s;
+
 
     h4 {
       margin-bottom: 3px;
@@ -65,8 +59,4 @@ button {
 
 p {
   user-select: none;
-}
-
-.level__avatar {
-  color: #fff;
 }

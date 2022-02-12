@@ -3,6 +3,10 @@ import { colors } from '../../../app/constants';
 import { levels, shortLevels } from '../constants';
 
 export const TextbookLevels = ({ setColor, color }: TextbookLevelsProps) => {
+  const changeColor = (num: number) => {
+    setColor(colors[num]);
+  };
+
   const chipList = levels.map((level, index) => {
     return (
       <Chip
@@ -22,34 +26,15 @@ export const TextbookLevels = ({ setColor, color }: TextbookLevelsProps) => {
           cursor: 'pointer',
           transition: '0.2s',
         }}
-      ></Chip>
+        onClick={() => changeColor(index)}
+      />
     );
   });
-
-  const changeColor = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    const target = e.target as HTMLElement;
-    let result = null;
-    if (target.classList.contains('textbook_chip')) result = target.id;
-    if (target.parentElement) {
-      if (target.parentElement.classList.contains('textbook_chip'))
-        result = target.parentElement.id;
-      if (
-        target.parentElement.parentElement?.classList.contains('textbook_chip')
-      )
-        result = target.parentElement.parentElement.id;
-    }
-    if (result) setColor(colors[Number(result)]);
-  };
 
   return (
     <div className="textbook_levels">
       <Typography>Уровни сложности слов</Typography>
-      <Stack
-        className="textbook_levels-list"
-        direction="row"
-        spacing={1}
-        onClick={changeColor}
-      >
+      <Stack className="textbook_levels-list" direction="row" spacing={1}>
         {chipList}
       </Stack>
     </div>

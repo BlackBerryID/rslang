@@ -10,6 +10,7 @@ import { Homepage } from '../modules/homepage';
 import MiniGameAudioCall from '../modules/audiocall';
 import { MiniGameSprint } from '../modules/mg-sprint';
 import { NotFoundPage } from '../modules/404';
+import { Textbook } from '../modules/textbook';
 
 export const App = () => {
   return (

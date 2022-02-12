@@ -44,10 +44,6 @@ type ToggleSideMenuFunc = (
   open: boolean
 ) => (event: React.KeyboardEvent | React.MouseEvent) => void;
 
-type NavGamesProps = {
-  toggleSideMenu: ToggleSideMenuFunc;
-};
-
 type MUIVariant =
   | 'button'
   | 'caption'
@@ -64,18 +60,3 @@ type MUIVariant =
   | 'body2'
   | 'overline'
   | undefined;
-
-type SideMenuProps = {
-  isMenuOpen: boolean;
-  toggleSideMenu: (
-    open: boolean
-  ) => (event: React.KeyboardEvent | React.MouseEvent) => void;
-};
-
-interface LoginPopupProps {
-  open: boolean;
-  onClose: () => void;
-  setIsOnline: (param: boolean) => void;
-}
-
-type ErrorMessage = string | null;

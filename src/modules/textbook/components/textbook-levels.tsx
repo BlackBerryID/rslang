@@ -2,7 +2,7 @@ import { Stack, Typography, Chip, Avatar } from '@mui/material';
 import { colors } from '../../../app/constants';
 import { levels, shortLevels } from '../constants';
 
-export const TextbookLevels = ({ setColor }: TextbookLevelsProps) => {
+export const TextbookLevels = ({ setColor, color }: TextbookLevelsProps) => {
   const chipList = levels.map((level, index) => {
     return (
       <Chip
@@ -16,6 +16,7 @@ export const TextbookLevels = ({ setColor }: TextbookLevelsProps) => {
         }
         label={level}
         sx={{
+          backgroundColor: color === colors[index] ? colors[index] : null,
           '&:hover': { backgroundColor: colors[index] },
           fontSize: '14px',
           cursor: 'pointer',

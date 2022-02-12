@@ -72,11 +72,12 @@ interface LoginPopupProps {
 
 type ErrorMessage = string | null;
 
-type TextbookHeaderProps = {
+type TextbookColorProp = {
   color: string;
 };
 
 type TextbookLevelsProps = {
+  color: string;
   setColor: React.Dispatch<
     React.SetStateAction<
       | '#fdd835'

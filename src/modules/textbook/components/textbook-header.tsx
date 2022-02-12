@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material';
 
-export const TextbookHeader = ({ color }: TextbookHeaderProps) => {
+export const TextbookHeader = ({ color }: TextbookColorProp) => {
   return (
     <div className="textbook_header">
       <Typography

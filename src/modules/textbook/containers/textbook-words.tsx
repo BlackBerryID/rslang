@@ -8,29 +8,8 @@ export const TextbookWords = ({ color }: TextbookColorProp) => {
     setActiveCardIndex(0);
   }, [color]);
 
-  const findCardIndex = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    const target = e.target as HTMLElement;
-    let result = null;
-    if (target.parentElement) {
-      if (target.parentElement.classList.contains('textbook_words__item'))
-        result = target.parentElement.id;
-      if (
-        target.parentElement.parentElement?.classList.contains(
-          'textbook_words__item'
-        )
-      )
-        result = target.parentElement.parentElement.id;
-    }
-    if (result) setActiveCardIndex(Number(result));
-  };
-
   return (
-    <Grid
-      container
-      spacing={{ xs: 1, md: 1.5 }}
-      sx={{ maxWidth: '70%' }}
-      onClick={findCardIndex}
-    >
+    <Grid container spacing={{ xs: 1, md: 1.5 }} sx={{ maxWidth: '70%' }}>
       {Array.from(Array(20)).map((_, index) => {
         const addActiveClass = index === activeCardIndex ? ' active' : '';
         return (
@@ -43,6 +22,7 @@ export const TextbookWords = ({ color }: TextbookColorProp) => {
             md={4}
             lg={3}
             key={index}
+            onClick={() => setActiveCardIndex(index)}
           >
             <Typography
               component="button"

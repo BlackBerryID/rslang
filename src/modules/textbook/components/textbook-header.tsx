@@ -14,7 +14,6 @@ export const TextbookHeader = ({ color }: TextbookColorProp) => {
         component="button"
         className="textbook_button"
         sx={{ '&:hover': { color: color } }}
-        onClick={() => console.log('textbook')}
       >
         Учебник
       </Typography>
@@ -23,7 +22,6 @@ export const TextbookHeader = ({ color }: TextbookColorProp) => {
         component="button"
         className="textbook_button"
         sx={{ '&:hover': { color: color } }}
-        onClick={() => console.log('textbook')}
       >
         Словарь
       </Typography>

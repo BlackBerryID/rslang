@@ -15,30 +15,9 @@ type Word = {
   textExampleTranslate: string;
 };
 
-type NavLinkProps = {
-  path: string;
-  text: string;
-  size: MUIVariant;
-};
-
-type SideMenuItemProps = {
-  path: string;
-  text: string;
-  toggleSideMenu: ToggleSideMenuFunc;
-};
-
-type SideMenuProps = {
-  isMenuOpen: boolean;
-  toggleSideMenu: ToggleSideMenuFunc;
-};
-
 type ToggleSideMenuFunc = (
   open: boolean
 ) => (event: React.KeyboardEvent | React.MouseEvent) => void;
-
-type NavGamesProps = {
-  toggleSideMenu: ToggleSideMenuFunc;
-};
 
 type MUIVariant =
   | 'button'
@@ -56,20 +35,3 @@ type MUIVariant =
   | 'body2'
   | 'overline'
   | undefined;
-
-interface LoginPopupProps {
-  open: boolean;
-  onClose: () => void;
-  setIsOnline: (param: boolean) => void;
-}
-
-type ErrorMessage = string | null;
-
-type TextbookColorProp = {
-  color: string;
-};
-
-type TextbookLevelsProps = {
-  color: string;
-  setColor: React.Dispatch<React.SetStateAction<string>>;
-};

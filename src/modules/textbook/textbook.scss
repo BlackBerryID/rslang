@@ -28,6 +28,29 @@
 
   &_level__avatar { color: white; font-weight: 700; }
 
+  &_games {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    margin: 30px 0;
+
+    &__button {
+      display: flex;
+      flex-direction: column;
+      text-align: start;
+      width: 45%;
+      padding: 10px 20px;
+      border: 1px solid grey;
+      border-radius: 15px;
+      transition: 0.2s;
+    }
+    
+    &__image {
+      align-self: center;
+      height: 12vw;
+    }
+  }
+
   &_main {
     display: flex;
   }
@@ -57,6 +80,14 @@
 
     p {
       font-size: 14px;
+    }
+  }
+
+  &_main {
+    &__left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
   }
 }

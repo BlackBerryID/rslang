@@ -1,3 +1,5 @@
+// ===== 1. WORDS ===== //
+
 type Word = {
   id: string;
   group: number;
@@ -14,6 +16,23 @@ type Word = {
   textMeaningTranslate: string;
   textExampleTranslate: string;
 };
+
+type WordOptional = {
+  difficulty?: string;
+  optional?: {
+    audioStreak?: string;
+    sprintStreak?: string;
+  };
+};
+
+type AdditionUserWord = {
+  userId: string;
+  userToken: string;
+  wordId: string;
+  updateReq: WordOptionalType;
+};
+
+// ===== ===== ===== //
 
 type User = {
   message: string;

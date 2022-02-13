@@ -9,7 +9,7 @@ export const TextbookWords = ({ color }: TextbookColorProp) => {
   }, [color]);
 
   return (
-    <Grid container spacing={{ xs: 1, md: 1.5 }} sx={{ maxWidth: '70%' }}>
+    <Grid container spacing={{ xs: 1, md: 1.5 }}>
       {Array.from(Array(20)).map((_, index) => {
         const addActiveClass = index === activeCardIndex ? ' active' : '';
         return (

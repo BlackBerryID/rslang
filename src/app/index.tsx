@@ -19,6 +19,7 @@ export const App = () => {
         <Routes>
           <Route path={Paths.home} element={<BaseTemplate />}>
             <Route index element={<Homepage />} />
+            <Route path={Paths.textBook} element={<Textbook />} />
             <Route path={Paths.mgAudioCall} element={<MiniGameAudioCall />} />
             <Route path={Paths.mgSprint} element={<MiniGameSprint />} />
             <Route path="*" element={<NotFoundPage />} />

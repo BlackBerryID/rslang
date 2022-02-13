@@ -28,6 +28,17 @@
 
   &_level__avatar { color: white; font-weight: 700; }
 
+  &_main {
+    display: flex;
+  }
+
+  &_card {
+    display: block;
+    height: fit-content;
+    width: 350px;
+    flex-shrink: 0;
+  }
+
   &_words__button {
     display: flex;
     flex-direction: column;
@@ -57,6 +68,10 @@ button {
   cursor: pointer;
 }
 
-p {
-  user-select: none;
+.card {
+  &_games {
+    width: 165px;
+    display: flex;
+    justify-content: space-between;
+  }
 }

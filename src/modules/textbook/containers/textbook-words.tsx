@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Grid, Typography } from '@mui/material';
+import { Grid, Typography, Box } from '@mui/material';
+
+import FlashOnOutlinedIcon from '@mui/icons-material/FlashOnOutlined';
+import SchoolIcon from '@mui/icons-material/School';
 
 export const TextbookWords = ({ color }: TextbookColorProp) => {
   const [activeCardIndex, setActiveCardIndex] = useState(0);
@@ -34,6 +37,10 @@ export const TextbookWords = ({ color }: TextbookColorProp) => {
             >
               <h4>biodegradeble</h4>
               <p>биоразлагаемый</p>
+              <Box className="textbook_words__icon">
+                {/* <FlashOnOutlinedIcon color="action"/> */}
+                <SchoolIcon color="action" />
+              </Box>
             </Typography>
           </Grid>
         );

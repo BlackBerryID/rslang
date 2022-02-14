@@ -12,6 +12,7 @@ import {
   purple,
   yellow,
 } from '@mui/material/colors';
+import { getLevel } from "../../helpers/get-english-level";
 
 const colors = [
   yellow['600'],
@@ -24,19 +25,9 @@ const colors = [
 
 const StartPage = () => {
   // TODO get words from redux @saratovkin
-  const [words, setWords] = useState<Word[]>([{} as Word]);
+  const [words, setWords] = useState<Word[]>([]);
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [difficulty, setDifficulty] = useState(-1);
-
-  const getLevel = (idx: number): string => {
-    if (idx === 0 || idx === 1) {
-      return `A${idx % 2 + 1}`;
-    }
-    if (idx === 2 || idx === 3) {
-      return `B${idx % 2 + 1}`;
-    }
-    return `C${idx % 2 + 1}`;
-  };
 
   useEffect(() => {
     if (words.length) {

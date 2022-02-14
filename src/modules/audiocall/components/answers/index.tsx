@@ -19,11 +19,12 @@ const answerStats = {
   },
 }
 
-const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnswered, setIsAnswered }: {
+const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnswered, isAnonimStart, setIsAnswered }: {
   options: Word[],
   setNextQuestion: () => void,
   setAnsweredWords: (word: { word: Word, flag: boolean }) => void,
   isAnswered: boolean,
+  isAnonimStart: boolean,
   setIsAnswered: (flag: boolean) => void,
 }) => {
   const [words, setWords] = useState<Word[]>([]);
@@ -46,11 +47,11 @@ const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnswered, setIs
       setIsAnswered(true);
       if (word === (correctAnswer as Word).wordTranslate) {
         setAnsweredWords({ word: (correctAnswer as Word), flag: true });
-        saveAnswer('1');
+        if (!isAnonimStart) saveAnswer('1');
       } else {
         setAnswer(word);
         setAnsweredWords({ word: (correctAnswer as Word), flag: false });
-        saveAnswer('0');
+        if (!isAnonimStart) saveAnswer('0');
       }
     }
   };
@@ -76,7 +77,7 @@ const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnswered, setIs
 
   const skipQuestion = (): void => {
     setIsAnswered(true);
-    saveAnswer('0');
+    if (!isAnonimStart) saveAnswer('0');
     setAnsweredWords({ word: (correctAnswer as Word), flag: false });
   };
 

@@ -4,9 +4,12 @@ import { Grid, Typography, Box, CircularProgress } from '@mui/material';
 import FlashOnOutlinedIcon from '@mui/icons-material/FlashOnOutlined';
 import SchoolIcon from '@mui/icons-material/School';
 
-export const TextbookWords = ({ color, words }: TextbookWordsProps) => {
-  const [activeCardIndex, setActiveCardIndex] = useState(0);
-
+export const TextbookWords = ({
+  color,
+  words,
+  activeCardIndex,
+  setActiveCardIndex,
+}: TextbookWordsProps) => {
   useEffect(() => {
     setActiveCardIndex(0);
   }, [color]);

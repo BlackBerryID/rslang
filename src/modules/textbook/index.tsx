@@ -11,6 +11,7 @@ import { GetWords } from '../../api';
 
 export const Textbook = () => {
   const [currentColor, setCurrentColor] = useState('#fdd835');
+  const [activeCardIndex, setActiveCardIndex] = useState(0);
   const [group, setGroup] = useState(
     localStorage.getItem('group')
       ? JSON.parse(localStorage.getItem('group') as string)
@@ -25,6 +26,7 @@ export const Textbook = () => {
 
   const getWords = useCallback(async () => {
     let response = await GetWords(group, page);
+    console.log(response);
     setWords(response);
   }, [group, page]);
 
@@ -43,7 +45,12 @@ export const Textbook = () => {
       <div className="textbook_words__title">Слова</div>
       <Box className="textbook_main" sx={{ pt: '20px' }}>
         <Box className="textbook_main__left">
-          <TextbookWords color={currentColor} words={words} />
+          <TextbookWords
+            color={currentColor}
+            words={words}
+            activeCardIndex={activeCardIndex}
+            setActiveCardIndex={setActiveCardIndex}
+          />
           <Pagination
             count={30}
             color="primary"
@@ -52,7 +59,7 @@ export const Textbook = () => {
           />
           <TextbookGames color={currentColor} />
         </Box>
-        <TextbookCard />
+        <TextbookCard words={words} activeCardIndex={activeCardIndex} />
       </Box>
     </Container>
   );

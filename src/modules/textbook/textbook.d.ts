@@ -12,6 +12,8 @@ declare module '*.jpg';
 type TextbookWordsProps = {
   color: string;
   words: Array<GetWord> | null;
+  activeCardIndex: number;
+  setActiveCardIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 
 type GetWord = {
@@ -29,4 +31,9 @@ type GetWord = {
   wordTranslate: string;
   textMeaningTranslate: string;
   textExampleTranslate: string;
+};
+
+type TextbookCardProps = {
+  words: Array<GetWord> | null;
+  activeCardIndex: number;
 };

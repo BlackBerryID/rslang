@@ -8,6 +8,7 @@ import { TextbookWords } from './containers/textbook-words';
 import { TextbookCard } from './components/textbook-card';
 import { TextbookGames } from './components/textbook-games';
 import { GetWords } from '../../api';
+import { GetUserAgrWords } from '../../api/get-user_words';
 
 export const Textbook = () => {
   const [currentColor, setCurrentColor] = useState('#fdd835');
@@ -26,7 +27,6 @@ export const Textbook = () => {
 
   const getWords = useCallback(async () => {
     let response = await GetWords(group, page);
-    console.log(response);
     setWords(response);
   }, [group, page]);
 
@@ -46,6 +46,24 @@ export const Textbook = () => {
   useEffect(() => {
     setPage(0);
   }, [group]);
+
+  // const getUserWords = useCallback(async () => {
+  //   const user = JSON.parse(localStorage.getItem('user')!);
+  //   const userToken = user.token;
+  //   const userId = user.userId;
+  //   const response = await GetUserAgrWords({
+  //     group: 3,
+  //     page: 3,
+  //     userId,
+  //     userToken,
+  //     wpp: 20,
+  //   });
+  //   console.log('RESPONSE', response);
+  // }, []);
+
+  // useEffect(() => {
+  //   getUserWords();
+  // }, [getUserWords]);
 
   return (
     <Container className="textbook_container">

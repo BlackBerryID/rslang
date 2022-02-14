@@ -34,6 +34,7 @@ export const TextbookGames = ({ color }: TextbookColorProp) => {
 
     return (
       <Typography
+        key={gameName}
         className="textbook_games__button"
         component="button"
         sx={{

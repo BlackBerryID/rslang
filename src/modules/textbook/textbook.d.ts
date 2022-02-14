@@ -5,6 +5,8 @@ type TextbookColorProp = {
 type TextbookLevelsProps = {
   color: string;
   setColor: React.Dispatch<React.SetStateAction<string>>;
+  group: number;
+  changeGroup: (number) => void;
 };
 
 declare module '*.jpg';

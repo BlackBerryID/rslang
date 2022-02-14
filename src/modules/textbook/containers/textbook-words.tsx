@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Grid, Typography, Box, CircularProgress } from '@mui/material';
 
 import FlashOnOutlinedIcon from '@mui/icons-material/FlashOnOutlined';
@@ -12,7 +12,7 @@ export const TextbookWords = ({
 }: TextbookWordsProps) => {
   useEffect(() => {
     setActiveCardIndex(0);
-  }, [color]);
+  }, [color, setActiveCardIndex]);
 
   if (!words) {
     return <CircularProgress />;

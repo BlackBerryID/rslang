@@ -2,7 +2,12 @@ import { Stack, Typography, Chip, Avatar } from '@mui/material';
 import { colors } from '../../../app/constants';
 import { levels, shortLevels } from '../constants';
 
-export const TextbookLevels = ({ setColor, color }: TextbookLevelsProps) => {
+export const TextbookLevels = ({
+  setColor,
+  color,
+  group,
+  changeGroup,
+}: TextbookLevelsProps) => {
   const changeColor = (num: number) => {
     setColor(colors[num]);
   };
@@ -26,7 +31,12 @@ export const TextbookLevels = ({ setColor, color }: TextbookLevelsProps) => {
           cursor: 'pointer',
           transition: '0.2s',
         }}
-        onClick={() => changeColor(index)}
+        onClick={() => {
+          if (index !== group) {
+            changeColor(index);
+            changeGroup(index);
+          }
+        }}
       />
     );
   });

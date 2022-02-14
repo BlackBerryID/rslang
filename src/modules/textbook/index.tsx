@@ -34,14 +34,28 @@ export const Textbook = () => {
     getWords();
   }, [getWords]);
 
+  const changeGroup = (group: number) => {
+    setGroup(group);
+    setPage(0);
+  };
+
   const changePage = (e: React.ChangeEvent<unknown>, page: number) => {
     setPage(page - 1);
   };
 
+  useEffect(() => {
+    setPage(0);
+  }, [group]);
+
   return (
     <Container className="textbook_container">
       <TextbookHeader color={currentColor} />
-      <TextbookLevels color={currentColor} setColor={setCurrentColor} />
+      <TextbookLevels
+        color={currentColor}
+        setColor={setCurrentColor}
+        group={group}
+        changeGroup={changeGroup}
+      />
       <div className="textbook_words__title">Слова</div>
       <Box className="textbook_main" sx={{ pt: '20px' }}>
         <Box className="textbook_main__left">
@@ -53,6 +67,7 @@ export const Textbook = () => {
           />
           <Pagination
             count={30}
+            page={page + 1}
             color="primary"
             sx={{ mt: '30px' }}
             onChange={changePage}

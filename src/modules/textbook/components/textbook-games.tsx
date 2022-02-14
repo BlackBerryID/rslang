@@ -1,15 +1,16 @@
 import sprint from '../assets/sprint.jpg';
 import audiocall from '../assets/audiocall.jpg';
 import { Box, Typography } from '@mui/material';
+import { Pages } from '../../../app/constants';
 
 export const TextbookGames = ({ color }: TextbookColorProp) => {
-  const games = ['Спринт', 'Аудиовызов'].map((item) => {
+  const games = [Pages.mgSprint, Pages.mgAudioCall].map((item) => {
     let gameName = item;
     let gameText;
     let gameImg;
 
     switch (item) {
-      case 'Спринт':
+      case Pages.mgSprint:
         gameText = 'Как можно быстрее определи верный перевод слова или нет.';
         gameImg = (
           <img
@@ -19,7 +20,7 @@ export const TextbookGames = ({ color }: TextbookColorProp) => {
           ></img>
         );
         break;
-      case 'Аудиовызов':
+      case Pages.mgAudioCall:
         gameText = 'Попробуйте понять, какое слово было произнесено.';
         gameImg = (
           <img

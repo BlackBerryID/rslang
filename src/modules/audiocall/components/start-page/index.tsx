@@ -37,7 +37,10 @@ const StartPage = () => {
 
   if (isGameStarted) {
     return (
-      <QuestionPage difficulty={difficulty} setIsGameStarted={setIsGameStarted} />
+      <QuestionPage
+        difficulty={difficulty}
+        setIsGameStarted={setIsGameStarted}
+      />
     )
   }
   return (

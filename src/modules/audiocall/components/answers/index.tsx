@@ -19,17 +19,18 @@ const answerStats = {
   },
 }
 
-const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnswered, isAnonimStart, setIsAnswered }: {
+const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnonimStart, isAnswered, setIsAnswered }: {
   options: Word[],
   setNextQuestion: () => void,
   setAnsweredWords: (word: { word: Word, flag: boolean }) => void,
-  isAnswered: boolean,
   isAnonimStart: boolean,
+  isAnswered: boolean,
   setIsAnswered: (flag: boolean) => void,
 }) => {
   const [words, setWords] = useState<Word[]>([]);
   const [correctAnswer, setCorrectAnswer] = useState<Word>();
   const [answer, setAnswer] = useState('');
+  const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
     if (!isAnswered && options.length !== 0) {
@@ -37,6 +38,23 @@ const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnswered, isAno
       setWords(ShuffleArray(options));
     }
   }, [isAnswered, options]);
+
+  useEffect(() => {
+    if (correctAnswer) {
+      if (collapsed) {
+        return;
+      }
+      const handleKeyUp = (event: KeyboardEvent) => {
+        const selectedIdx = Number.parseInt(event.key)
+        if (selectedIdx > 0 && selectedIdx < 6) {
+          setCollapsed(true);
+          checkAnswer(options[selectedIdx - 1].wordTranslate);
+        }
+      }
+      window.addEventListener("keyup", handleKeyUp);
+      return () => window.removeEventListener("keyup", handleKeyUp);
+    }
+  }, [correctAnswer, collapsed]);
 
   useEffect(() => {
     setAnswer('');
@@ -81,6 +99,12 @@ const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnswered, isAno
     setAnsweredWords({ word: (correctAnswer as Word), flag: false });
   };
 
+  const showNextQuestion = (): void => {
+    setIsAnswered(false);
+    setNextQuestion();
+    setCollapsed(false);
+  };
+
   const getButtonStyle = (word: string) => {
     if (isAnswered && (word === (correctAnswer as Word).wordTranslate)) {
       return 'success';
@@ -112,11 +136,12 @@ const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnswered, isAno
           isAnswered ?
             <Button
               variant="contained"
-              onClick={() => { setIsAnswered(false); setNextQuestion(); }}
+              onClick={showNextQuestion}
             >
               {'дальше'}
             </Button> :
             <Button
+              autoFocus={true}
               variant="contained"
               onClick={skipQuestion}
             >

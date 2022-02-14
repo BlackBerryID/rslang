@@ -5,14 +5,18 @@ import React from "react";
 
 import './results-list.scss';
 import { base } from "../../../../api";
+import { AudioPlayer } from "../../helpers/audio-player";
 
 const ResultsList = ({ answeredWords }: { answeredWords: { word: Word, flag: boolean }[] }) => {
+
+  const audio = new AudioPlayer();
+
   return (
     <div className="results-list">
       <List>
         {answeredWords.map((item, index) => {
           return <ListItem disablePadding key={index}>
-            <ListItemButton onClick={() => new Audio(`${base}/${item.word.audio}`).play()}>
+            <ListItemButton onClick={() => { audio.playEffect(`${base}/${item.word.audio}`) }}>
               <ListItemIcon>
                 {item.flag ? <CheckIcon color="success" /> : <ClearIcon color="error" />}
               </ListItemIcon>
@@ -25,4 +29,4 @@ const ResultsList = ({ answeredWords }: { answeredWords: { word: Word, flag: boo
   );
 }
 
-export {ResultsList};
+export { ResultsList };

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { CircularProgress, IconButton } from "@mui/material";
 import { GetWords } from "../../../../api/get-words";
 import { GetRandomNum } from "../../../../utils/get-random-num";
@@ -16,10 +16,10 @@ import { AudioPlayer } from "../../helpers/audio-player";
 
 const QuestionPage = ({ difficulty, setIsGameStarted }: {
   difficulty: number,
-  setIsGameStarted: (flag: boolean) => void
+  setIsGameStarted: (flag: boolean) => void,
 }) => {
 
-  const audio = new AudioPlayer();
+  const audio = useMemo(() => new AudioPlayer(), []);
 
   const [words, setWords] = useState<Word[]>([]);
   const [answeredWords, setAnsweredWords] = useState<{ word: Word, flag: boolean }[]>([]);
@@ -84,7 +84,7 @@ const QuestionPage = ({ difficulty, setIsGameStarted }: {
     if (currentAnswer) {
       audio.playEffect(`${base}/${currentAnswer.audio}`);
     }
-  }, [currentAnswer]);
+  }, [audio, currentAnswer]);
 
   if (isLoading) {
     return (
@@ -97,7 +97,6 @@ const QuestionPage = ({ difficulty, setIsGameStarted }: {
       <ResultsPage answeredWords={answeredWords} setIsGameStarted={setIsGameStarted} />
     )
   }
-
   return (
     <div className="question-page">
       {isAnswered ?
@@ -115,8 +114,8 @@ const QuestionPage = ({ difficulty, setIsGameStarted }: {
         setNextQuestion={() => setQuestionNum((num) => num + 1)}
         setAnsweredWords={(newWord: { word: Word, flag: boolean }) => setAnsweredWords((words) => [...words, newWord])}
         isAnswered={isAnswered}
-        isAnonimStart={isAnonimStart}
         setIsAnswered={setIsAnswered}
+        isAnonimStart={isAnonimStart}
       />
     </div >
   );

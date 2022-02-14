@@ -6,3 +6,5 @@ type TextbookLevelsProps = {
   color: string;
   setColor: React.Dispatch<React.SetStateAction<string>>;
 };
+
+declare module '*.jpg';

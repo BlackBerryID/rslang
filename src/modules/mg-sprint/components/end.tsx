@@ -18,7 +18,9 @@ export const MGSprintEnd = ({
 }) => {
   return (
     <Box className={s['statistic-container']}>
-      <Box className={s['statistic-container__column']}>
+      <Box
+        className={`${s['statistic-container__column']} ${s['statistic-container__column_wrong']}`}
+      >
         <Box className={s['statistic-container__column__header']}>
           <Chip
             icon={<DangerousIcon />}
@@ -32,7 +34,9 @@ export const MGSprintEnd = ({
         </Box>
         <MGSprintStatTable elements={statistic.wrong} />
       </Box>
-      <Box className={s['statistic-container__column']}>
+      <Box
+        className={`${s['statistic-container__column']} ${s['statistic-container__column_right']}`}
+      >
         <Box className={s['statistic-container__column__header']}>
           <Chip
             icon={<SchoolIcon />}
@@ -46,7 +50,7 @@ export const MGSprintEnd = ({
         </Box>
         <MGSprintStatTable elements={statistic.right} />
       </Box>
-      <Box className={s['statistic-container__actions']}>
+      <Box className={`${s['statistic-container__actions']}`}>
         <Button
           variant="outlined"
           size="large"

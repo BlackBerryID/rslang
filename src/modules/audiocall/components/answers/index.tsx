@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Box, Button, Stack } from "@mui/material";
 import { ShuffleArray } from "../../../../utils/shuffle-array";
 import { checkIsLearned } from "../../../../utils/check-is-learned";
-
-import './answers.scss';
 import { UpdateUserWord } from "../../../../api/update-user_word";
 import { AddUserWord } from "../../../../api/add-user_word";
+import { RootState } from "../../../../store";
+import './answers.scss';
 
 const answerStats = {
   userId: '',
@@ -19,14 +20,19 @@ const answerStats = {
   },
 }
 
-const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnonimStart, isAnswered, setIsAnswered }: {
+const Answers = ({ options, isAnswered, setNextQuestion, setAnsweredWords, setIsAnswered }: {
   options: Word[],
+  isAnswered: boolean,
   setNextQuestion: () => void,
   setAnsweredWords: (word: { word: Word, flag: boolean }) => void,
-  isAnonimStart: boolean,
-  isAnswered: boolean,
   setIsAnswered: (flag: boolean) => void,
 }) => {
+
+  const { mode } = useSelector((state: RootState) => state.appStatus);
+  const { userId, token } = useSelector((state: RootState) => state.user);
+  answerStats.userId = userId;
+  answerStats.userToken = token;
+
   const [words, setWords] = useState<Word[]>([]);
   const [correctAnswer, setCorrectAnswer] = useState<Word>();
   const [answer, setAnswer] = useState('');
@@ -65,11 +71,11 @@ const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnonimStart, is
       setIsAnswered(true);
       if (word === (correctAnswer as Word).wordTranslate) {
         setAnsweredWords({ word: (correctAnswer as Word), flag: true });
-        if (!isAnonimStart) saveAnswer('1');
+        if (mode === 'textbook') saveAnswer('1');
       } else {
         setAnswer(word);
         setAnsweredWords({ word: (correctAnswer as Word), flag: false });
-        if (!isAnonimStart) saveAnswer('0');
+        if (mode === 'textbook') saveAnswer('0');
       }
     }
   };
@@ -95,7 +101,7 @@ const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnonimStart, is
 
   const skipQuestion = (): void => {
     setIsAnswered(true);
-    if (!isAnonimStart) saveAnswer('0');
+    if (mode === 'textbook') saveAnswer('0');
     setAnsweredWords({ word: (correctAnswer as Word), flag: false });
   };
 

@@ -2,7 +2,6 @@ import { GetWords } from '../../../api';
 import { GetRandomNum } from '../../../utils/get-random-num';
 import { ShuffleArray } from '../../../utils/shuffle-array';
 import { GAME_TIMER, MAX_PAGES_INDEX, MAX_WORDS_INDEX } from '../constants';
-
 export class MGSprintEngine {
   private game: Game = {
     langLevel: 0,
@@ -18,6 +17,7 @@ export class MGSprintEngine {
         throw new Error('Function not implemented.');
       },
     },
+    isAuth: false,
   };
 
   private _timer = GAME_TIMER;
@@ -34,6 +34,14 @@ export class MGSprintEngine {
 
   set langLevel(val: number) {
     this.game.langLevel = val;
+  }
+
+  set page(val: number) {
+    this.game.bookPage = val;
+  }
+
+  set authGM(val: boolean) {
+    this.game.isAuth = val;
   }
 
   private setPage(): void {
@@ -96,8 +104,11 @@ export class MGSprintEngine {
     endAction: () => void
   ): void {
     this.game.timer = setInterval(() => {
-      this._timer--;
-      if (this._timer === 0) this.stopTimer(endAction);
+      this._timer -= 1;
+      if (this._timer === 0) {
+        this.stopTimer(endAction);
+        return;
+      }
       action(this._timer);
     }, 1000);
   }
@@ -108,12 +119,18 @@ export class MGSprintEngine {
     action();
   }
 
-  start(
-    switchMode: () => void,
-    timerAction: (val: number) => void,
-    endAction: () => void
-  ): void {
-    this.setPage();
+  start({
+    anonGame,
+    switchMode,
+    timerAction,
+    endAction,
+  }: {
+    anonGame: boolean;
+    switchMode: () => void;
+    timerAction: (val: number) => void;
+    endAction: () => void;
+  }): void {
+    if (anonGame) this.setPage();
     this.getDeck().then(() => {
       switchMode();
       this.startTimer(timerAction, endAction);
@@ -162,6 +179,7 @@ export class MGSprintEngine {
           throw new Error('Function not implemented.');
         },
       },
+      isAuth: false,
     };
   }
 }

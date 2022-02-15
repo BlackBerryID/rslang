@@ -3,6 +3,8 @@ import { MGSprintEngine } from './engine';
 import { MGSprintStart } from './components/start';
 import { MGSprintRound } from './components/round';
 import { MGSprintEnd } from './components/end';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
 
 const game = new MGSprintEngine();
 
@@ -12,12 +14,24 @@ export function MiniGameSprint() {
   const [gameOver, endGame] = useState<boolean>(false);
   const [seconds, setSeconds] = useState(game.timer);
 
+  const gameStatus = useSelector((state: RootState) => state.appStatus);
+
+  const user = useSelector((state: RootState) => state.user);
+  if (user.userId) game.authGM = true;
+
+  const isAnonimGame = gameStatus.mode === 'anon';
+  if (!isAnonimGame) {
+    game.langLevel = gameStatus.langLevel;
+    game.page = gameStatus.deckPage;
+  }
+
   const startGame = (): void => {
-    game.start(
-      () => setGameMode(true),
-      (val: number) => setSeconds(val),
-      () => endGame(true)
-    );
+    game.start({
+      anonGame: isAnonimGame,
+      switchMode: () => setGameMode(true),
+      timerAction: (val: number) => setSeconds(val),
+      endAction: () => endGame(true),
+    });
   };
 
   const reset = (): void => {
@@ -40,6 +54,10 @@ export function MiniGameSprint() {
       />
     )
   ) : (
-    <MGSprintStart selectLangAction={setLevel} onStartAction={startGame} />
+    <MGSprintStart
+      anonGame={isAnonimGame}
+      selectLangAction={setLevel}
+      onStartAction={startGame}
+    />
   );
 }

@@ -2,9 +2,9 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type GameStatus = {
   mode?: 'anon' | 'textbook';
-  deck: Array<Word> | undefined;
-  langLevel: number;
-  deckPage: number;
+  deck?: Array<Word> | undefined;
+  langLevel?: number;
+  deckPage?: number;
 };
 
 export const WatchStatus = createSlice({
@@ -16,11 +16,11 @@ export const WatchStatus = createSlice({
     deckPage: 0,
   } as GameStatus,
   reducers: {
-    setDeck: (state, action: PayloadAction<{ deck: Array<Word> }>) => {
-      state.deck = action.payload.deck;
+    setStatus: (state, action: PayloadAction<GameStatus>) => {
+      state = { ...action.payload };
     },
   },
 });
 
-export const { setDeck } = WatchStatus.actions;
+export const { setStatus } = WatchStatus.actions;
 export default WatchStatus.reducer;

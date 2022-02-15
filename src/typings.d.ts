@@ -2,6 +2,7 @@
 
 type Word = {
   id: string;
+  _id?: string;
   group: number;
   page: number;
   word: string;
@@ -15,6 +16,7 @@ type Word = {
   wordTranslate: string;
   textMeaningTranslate: string;
   textExampleTranslate: string;
+  userWord?: WordOptional;
 };
 
 type WordOptional = {

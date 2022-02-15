@@ -1,4 +1,4 @@
-import React, { BaseSyntheticEvent, useState } from "react";
+import React, { BaseSyntheticEvent, useEffect, useState } from "react";
 import { Button, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Typography, Box } from "@mui/material";
 import { QuestionPage } from "../question-page";
 import CallIcon from '@mui/icons-material/Call';
@@ -12,6 +12,7 @@ import {
   purple,
   yellow,
 } from '@mui/material/colors';
+import { getLevel } from "../../helpers/get-english-level";
 
 const colors = [
   yellow['600'],
@@ -23,39 +24,39 @@ const colors = [
 ];
 
 const StartPage = () => {
-
+  // TODO get words from redux @saratovkin
+  const [words, setWords] = useState<Word[]>([]);
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [difficulty, setDifficulty] = useState(-1);
 
-  const getLevel = (idx: number): string => {
-    if (idx === 0 || idx === 1) {
-      return `A${idx % 2 + 1}`;
+  useEffect(() => {
+    if (words.length) {
+      setDifficulty(6);
     }
-    if (idx === 2 || idx === 3) {
-      return `B${idx % 2 + 1}`;
-    }
-    return `C${idx % 2 + 1}`;
-  };
+  }, [words]);
 
   if (isGameStarted) {
     return (
-      <QuestionPage difficulty={difficulty} setIsGameStarted={setIsGameStarted} />
+      <QuestionPage
+        difficulty={difficulty}
+        setIsGameStarted={setIsGameStarted}
+      />
     )
-  } else {
-
-    return (
-      <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        rowGap="2em"
-      >
-        <Typography variant="h1" component="h1" textAlign="center">
-          Аудиовызов
-        </Typography>
-        <Typography variant="h5" gutterBottom component="p" textAlign="center">
-          Вам необходимо выбрать правильный перевод слова основываясь на услышанном аудио
-        </Typography>
+  }
+  return (
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      rowGap="2em"
+    >
+      <Typography variant="h1" component="h1" textAlign="center">
+        Аудиовызов
+      </Typography>
+      <Typography variant="h5" gutterBottom component="p" textAlign="center">
+        Вам необходимо выбрать правильный перевод слова основываясь на услышанном аудио
+      </Typography>
+      {difficulty !== 6 ?
         <FormControl>
           <FormLabel>Выберите уровень языка:</FormLabel>
           <RadioGroup
@@ -76,19 +77,21 @@ const StartPage = () => {
                 }} />} />
             )}
           </RadioGroup>
-        </FormControl>
-        <Button
-          variant="outlined"
-          disabled={difficulty === -1}
-          size="large"
-          endIcon={<CallIcon />}
-          onClick={() => setIsGameStarted(true)}
-        >
-          Начать
-        </Button>
-      </Box >
-    )
-  }
+        </FormControl> :
+        <Typography variant="h5" gutterBottom component="p" textAlign="center">
+          Игра начнется со словами из учебника
+        </Typography>}
+      <Button
+        variant="outlined"
+        disabled={difficulty === -1}
+        size="large"
+        endIcon={<CallIcon />}
+        onClick={() => setIsGameStarted(true)}
+      >
+        Начать
+      </Button>
+    </Box >
+  )
 };
 
 export { StartPage };

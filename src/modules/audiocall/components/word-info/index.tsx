@@ -4,11 +4,13 @@ import { Card, CardMedia, Container, IconButton, Typography } from "@mui/materia
 import { base } from "../../../../api";
 
 import './word-info.scss';
+import { AudioPlayer } from "../../helpers/audio-player";
 
 const WordInfo = ({ word }: { word: Word }) => {
 
+  const audio = new AudioPlayer()
   return (
-    <Card sx={{ width: 400 }}>
+    <Card sx={{ width: 400, height: 300 }}>
       <CardMedia
         component="img"
         height="200"
@@ -28,7 +30,7 @@ const WordInfo = ({ word }: { word: Word }) => {
         <IconButton
           aria-label="volume"
           sx={{ p: 2 }}
-          onClick={() => (new Audio(`${base}/${word.audio}`).play())}
+          onClick={() => { audio.playEffect(`${base}/${word.audio}`) }}
         >
           <VolumeUp sx={{ fontSize: 40 }} />
         </IconButton>

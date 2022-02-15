@@ -1,10 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import WatchAuth from './reducers/watch-auth';
-import WatchDeck from './reducers/watch-deck';
+import WatchStatus from './reducers/watch-status';
 
-export default configureStore({
+export const store = configureStore({
   reducer: {
-    userWarden: WatchAuth,
-    userActiveDeck: WatchDeck,
+    user: WatchAuth,
+    appStatus: WatchStatus,
   },
 });
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

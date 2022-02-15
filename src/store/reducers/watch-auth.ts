@@ -5,7 +5,6 @@ const localData = localStorage.user ? JSON.parse(localStorage.user) : undefined;
 export const WatchAuth = createSlice({
   name: 'auth',
   initialState: localData || {
-    message: '',
     userId: '',
     token: '',
     refreshToken: '',

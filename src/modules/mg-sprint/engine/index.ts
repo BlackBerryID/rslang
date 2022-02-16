@@ -130,7 +130,11 @@ export class MGSprintEngine {
     timerAction: (val: number) => void;
     endAction: () => void;
   }): void {
-    if (anonGame) this.setPage();
+    if (anonGame) {
+      this.setPage();
+    } else {
+      this.game.decksSeq.add(this.game.bookPage);
+    }
     this.getDeck().then(() => {
       switchMode();
       this.startTimer(timerAction, endAction);
@@ -160,7 +164,6 @@ export class MGSprintEngine {
             giveAnswer: (clickedAnswer: boolean) =>
               switcher(clickedAnswer === true),
           };
-
     return this.game.currentRound;
   }
 

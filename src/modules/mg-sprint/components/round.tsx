@@ -1,4 +1,4 @@
-import { KeyboardEvent, useEffect, useState } from 'react';
+import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { MGSprintTimer } from './timer';
 import {
   Box,
@@ -20,11 +20,11 @@ export const MGSprintRound = ({
 }) => {
   const [isTrueSelected, selectTrueBtn] = useState<boolean>(false);
   const [isFalseSelected, selectFalseBtn] = useState<boolean>(false);
+  const mounted = useRef(false);
 
   let settedTimeOut: undefined | ReturnType<typeof setTimeout>;
 
   const keyDownHandler = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (time < 1) return;
     switch (event.code) {
       case 'ArrowLeft':
         selectTrueBtn(true);
@@ -44,10 +44,15 @@ export const MGSprintRound = ({
   };
 
   useEffect(() => {
-    if (time === 0) {
-      if (!settedTimeOut) clearTimeout(settedTimeOut);
-    }
-  }, [isTrueSelected, isFalseSelected]);
+    mounted.current = true;
+
+    return () => {
+      if (!settedTimeOut) {
+        clearTimeout(settedTimeOut);
+      }
+      mounted.current = false;
+    };
+  }, []);
 
   return (
     <>

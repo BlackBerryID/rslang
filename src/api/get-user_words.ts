@@ -6,18 +6,28 @@ type AgregatedFilter = {
 };
 
 type AgregatedReq = {
-  group: number;
-  page: number;
+  group?: number;
+  page?: number;
   userId: string;
   userToken: string;
   wpp: number;
   filter?: AgregatedFilter;
 };
 
-// {"$and": [{ "userWord.difficulty": "hard", "userWord.optional.key": "value" }]}
-// {"$or": [{"userWord.difficulty":"easy"}, {"userWord":null}]}
+// Request example:
+// GetUserAgrWords({
+//   // group: 0 - optional!,
+//   // page: 0 - optional!,
+//   userId: 'id',
+//   userToken: 'token',
+//   wpp: 20,
+//   filter: {
+//     $and: [{ ['userWord.difficulty']: 'learning' }],
+//   },
+// })
 
 // Pages and groups http-query parameters don't work correctly, they must be passed with filters..
+
 export const GetUserAgrWords = async ({
   group,
   page,
@@ -26,12 +36,21 @@ export const GetUserAgrWords = async ({
   wpp,
   filter,
 }: AgregatedReq) => {
-  const paginated = { $and: [{ page }, { group }] };
-  const filtResult = filter
-    ? JSON.stringify(Object.values(filter)[0].push(paginated))
-    : JSON.stringify(paginated);
-  const url = `${base}/users/${userId}/aggregatedWords?wordsPerPage=${wpp}&filter=${filtResult}`;
-  const rawResponse = await fetch(encodeURI(url), {
+  const paginated = page && group ? { $and: [{ page }, { group }] } : null;
+  let filtResult = '&filter=';
+
+  if (filter && paginated) {
+    filtResult += encodeURIComponent(
+      JSON.stringify({
+        [Object.keys(filter)[0]]: [...Object.values(filter)[0], paginated],
+      })
+    );
+  } else if (paginated || filter) {
+    filtResult += encodeURIComponent(JSON.stringify(paginated || filter));
+  }
+
+  const url = `${base}/users/${userId}/aggregatedWords?wordsPerPage=${wpp}${filtResult}`;
+  const rawResponse = await fetch(url, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${userToken}`,

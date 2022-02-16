@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MGSprintEngine } from './engine';
 import { MGSprintStart } from './components/start';
 import { MGSprintRound } from './components/round';
@@ -20,7 +20,7 @@ export function MiniGameSprint() {
   if (user.userId) game.authGM = true;
 
   const isAnonimGame = gameStatus.mode === 'anon';
-  if (!isAnonimGame) {
+  if (!isAnonimGame && gameStatus.langLevel && gameStatus.deckPage) {
     game.langLevel = gameStatus.langLevel;
     game.page = gameStatus.deckPage;
   }
@@ -43,6 +43,10 @@ export function MiniGameSprint() {
   const setLevel = (val: number) => {
     game.langLevel = val;
   };
+
+  useEffect(() => {
+    if (gameOver) setGameRound(0);
+  }, [gameOver]);
 
   return gameMode ? (
     gameOver ? (

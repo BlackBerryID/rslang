@@ -27,6 +27,7 @@ const QuestionPage = ({ difficulty, setIsGameStarted }: {
   const [words, setWords] = useState<Word[]>([]);
   const [answeredWords, setAnsweredWords] = useState<{ word: Word, flag: boolean }[]>([]);
 
+  const [isGameEnded, setIsGameEnded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isAnswered, setIsAnswered] = useState(false);
@@ -57,36 +58,46 @@ const QuestionPage = ({ difficulty, setIsGameStarted }: {
         });
       }
     } catch (error) {
-      console.log(error);
       setIsError(true);
       setIsLoading(false);
     }
-  }, [difficulty]);
+  }, [difficulty, deck, mode]);
 
   useEffect(() => {
-    if (words.length && questionNum !== AudioCallConst.QUESTIONS_AMOUNT) {
-      setCurrentAnswer(words[0]);
+    if (words.length && answeredWords.length !== AudioCallConst.QUESTIONS_AMOUNT) {
       const options: Word[] = [];
+      let answer = words[GetRandomNum(0, words.length - 1)];
       let option: Word;
+      while (answeredWords.map(item => item.word).indexOf(answer) !== -1) {
+        answer = words[GetRandomNum(0, words.length - 1)];
+      }
       while (options.length !== AudioCallConst.ANSWERS_AMOUNT - 1) {
-        option = words[GetRandomNum(1, words.length - 1)];
-        if (options.indexOf(option) === -1) {
+        option = words[GetRandomNum(0, words.length - 1)];
+        if (options.indexOf(option) === -1 && option.word !== answer.word) {
           options.push(option);
         }
       }
+      setCurrentAnswer(answer);
       setAnswerOptions(options);
     }
   }, [words, questionNum]);
 
   useEffect(() => {
-    setWords((words) => words.filter((item, index) => index !== 0));
-  }, [questionNum]);
-
-  useEffect(() => {
-    if (currentAnswer) {
+    if (currentAnswer && !isGameEnded) {
       audio.playEffect(`${base}/${currentAnswer.audio}`);
     }
-  }, [audio, currentAnswer]);
+  }, [audio, currentAnswer, isGameEnded]);
+
+  useEffect(() => {
+    if (words.length) {
+      const amount = AudioCallConst.QUESTIONS_AMOUNT > words.length ?
+        words.length :
+        AudioCallConst.QUESTIONS_AMOUNT;
+      if (questionNum === amount) {
+        setIsGameEnded(true);
+      }
+    }
+  }, [questionNum, words])
 
   if (isLoading) {
     return (
@@ -100,7 +111,7 @@ const QuestionPage = ({ difficulty, setIsGameStarted }: {
     );
   }
 
-  if (questionNum === AudioCallConst.QUESTIONS_AMOUNT) {
+  if (isGameEnded) {
     return (
       <ResultsPage answeredWords={answeredWords} setIsGameStarted={setIsGameStarted} />
     )

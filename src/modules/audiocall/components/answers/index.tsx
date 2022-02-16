@@ -54,7 +54,7 @@ const Answers = ({ options, isAnswered, setNextQuestion, setAnsweredWords, setIs
         const selectedIdx = Number.parseInt(event.key)
         if (selectedIdx > 0 && selectedIdx < 6) {
           setCollapsed(true);
-          checkAnswer(options[selectedIdx - 1].wordTranslate);
+          checkAnswer(words[selectedIdx - 1].wordTranslate);
         }
       }
       window.addEventListener("keyup", handleKeyUp);

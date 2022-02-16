@@ -43,8 +43,7 @@ const StartPage = () => {
       display="flex"
       flexDirection="column"
       alignItems="center"
-      rowGap="2em"
-    >
+      rowGap="2em">
       <Typography variant="h1" component="h1" textAlign="center">
         Аудиовызов
       </Typography>

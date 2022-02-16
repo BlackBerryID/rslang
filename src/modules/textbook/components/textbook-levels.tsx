@@ -2,16 +2,7 @@ import { Stack, Typography, Chip, Avatar } from '@mui/material';
 import { colors } from '../../../app/constants';
 import { levels, shortLevels } from '../constants';
 
-export const TextbookLevels = ({
-  setColor,
-  color,
-  group,
-  changeGroup,
-}: TextbookLevelsProps) => {
-  const changeColor = (num: number) => {
-    setColor(colors[num]);
-  };
-
+export const TextbookLevels = ({ group, changeGroup }: TextbookLevelsProps) => {
   const chipList = levels.map((level, index) => {
     return (
       <Chip
@@ -25,7 +16,8 @@ export const TextbookLevels = ({
         }
         label={level}
         sx={{
-          backgroundColor: color === colors[index] ? colors[index] : null,
+          backgroundColor:
+            colors[group] === colors[index] ? colors[index] : null,
           '&:hover': { backgroundColor: colors[index] },
           fontSize: '14px',
           cursor: 'pointer',
@@ -33,7 +25,6 @@ export const TextbookLevels = ({
         }}
         onClick={() => {
           if (index !== group) {
-            changeColor(index);
             changeGroup(index);
           }
         }}

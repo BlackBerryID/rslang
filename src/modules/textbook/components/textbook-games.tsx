@@ -2,8 +2,9 @@ import sprint from '../assets/sprint.jpg';
 import audiocall from '../assets/audiocall.jpg';
 import { Box, Typography } from '@mui/material';
 import { Pages } from '../../../app/constants';
+import { colors } from '../../../app/constants';
 
-export const TextbookGames = ({ color }: TextbookColorProp) => {
+export const TextbookGames = ({ group }: TextbookHeaderProp) => {
   const games = [Pages.mgSprint, Pages.mgAudioCall].map((item) => {
     let gameName = item;
     let gameText;
@@ -38,7 +39,7 @@ export const TextbookGames = ({ color }: TextbookColorProp) => {
         className="textbook_games__button"
         component="button"
         sx={{
-          '&:hover': { color: color, borderColor: color },
+          '&:hover': { color: colors[group], borderColor: colors[group] },
         }}
       >
         <Typography variant="h5" component="h3" sx={{ fontWeight: '700' }}>

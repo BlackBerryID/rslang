@@ -25,18 +25,18 @@ export const TextbookCard = ({ words, activeCardIndex }: TextbookCardProps) => {
       <Card className="textbook_card" sx={{ ml: '10px' }}>
         <CardMedia
           component="img"
-          image={`${base}/${wordItem.image}`}
+          image={`${base}/${wordItem?.image}`}
           alt="image of active card"
         />
         <CardContent>
           <Typography variant="h5" component="h2" sx={{ fontWeight: '700' }}>
-            {wordItem.word}
+            {wordItem?.word}
           </Typography>
           <Typography variant="h6" component="h3">
-            {wordItem.wordTranslate}
+            {wordItem?.wordTranslate}
           </Typography>
           <Typography variant="h6" component="span" sx={{ fontWeight: '400' }}>
-            {wordItem.transcription}
+            {wordItem?.transcription}
           </Typography>
           <IconButton
             size="large"
@@ -65,10 +65,10 @@ export const TextbookCard = ({ words, activeCardIndex }: TextbookCardProps) => {
             <Typography
               variant="body2"
               component="p"
-              dangerouslySetInnerHTML={{ __html: `${wordItem.textMeaning}` }}
+              dangerouslySetInnerHTML={{ __html: `${wordItem?.textMeaning}` }}
             />
             <Typography variant="body2" component="p" sx={{ mt: '5px' }}>
-              {wordItem.textMeaningTranslate}
+              {wordItem?.textMeaningTranslate}
             </Typography>
             <Typography
               variant="h6"
@@ -80,10 +80,10 @@ export const TextbookCard = ({ words, activeCardIndex }: TextbookCardProps) => {
             <Typography
               variant="body2"
               component="p"
-              dangerouslySetInnerHTML={{ __html: `${wordItem.textExample}` }}
+              dangerouslySetInnerHTML={{ __html: `${wordItem?.textExample}` }}
             />
             <Typography variant="body2" component="p" sx={{ mt: '5px' }}>
-              {wordItem.textExampleTranslate}
+              {wordItem?.textExampleTranslate}
             </Typography>
           </Stack>
           <Typography

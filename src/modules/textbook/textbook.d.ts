@@ -1,10 +1,8 @@
-type TextbookColorProp = {
-  color: string;
+type TextbookHeaderProp = {
+  group: number;
 };
 
 type TextbookLevelsProps = {
-  color: string;
-  setColor: React.Dispatch<React.SetStateAction<string>>;
   group: number;
   changeGroup: (number) => void;
 };
@@ -12,7 +10,7 @@ type TextbookLevelsProps = {
 declare module '*.jpg';
 
 type TextbookWordsProps = {
-  color: string;
+  group: number;
   words: Array<GetWord> | null;
   activeCardIndex: number;
   setActiveCardIndex: React.Dispatch<React.SetStateAction<number>>;

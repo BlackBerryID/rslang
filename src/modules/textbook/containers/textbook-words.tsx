@@ -1,18 +1,19 @@
 import { useEffect } from 'react';
 import { Grid, Typography, Box, CircularProgress } from '@mui/material';
+import { colors } from '../../../app/constants';
 
 import FlashOnOutlinedIcon from '@mui/icons-material/FlashOnOutlined';
 import SchoolIcon from '@mui/icons-material/School';
 
 export const TextbookWords = ({
-  color,
+  group,
   words,
   activeCardIndex,
   setActiveCardIndex,
 }: TextbookWordsProps) => {
   useEffect(() => {
     setActiveCardIndex(0);
-  }, [color, setActiveCardIndex]);
+  }, [group, setActiveCardIndex]);
 
   if (!words) {
     return <CircularProgress />;
@@ -37,8 +38,8 @@ export const TextbookWords = ({
                 component="button"
                 className={`textbook_words__button${addActiveClass}`}
                 sx={{
-                  '&:hover': { backgroundColor: color },
-                  '&.active': { backgroundColor: color },
+                  '&:hover': { backgroundColor: colors[group] },
+                  '&.active': { backgroundColor: colors[group] },
                 }}
               >
                 <h4>{wordItem.word}</h4>

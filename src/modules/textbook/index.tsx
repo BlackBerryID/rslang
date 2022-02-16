@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Container, Box, Pagination } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
 
 import './textbook.scss';
 import { TextbookHeader } from './components/textbook-header';
@@ -10,8 +11,9 @@ import { TextbookGames } from './components/textbook-games';
 import { GetWords } from '../../api';
 import { GetUserAgrWords } from '../../api/get-user_words';
 
+import type { RootState, AppDispatch } from '../../store';
+
 export const Textbook = () => {
-  const [currentColor, setCurrentColor] = useState('#fdd835');
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const [group, setGroup] = useState(
     localStorage.getItem('group')
@@ -25,60 +27,57 @@ export const Textbook = () => {
   );
   const [words, setWords] = useState(null);
 
+  const reducer = useDispatch();
+  const user = useSelector((state: RootState) => state.user);
+
   const getWords = useCallback(async () => {
     let response = await GetWords(group, page);
     setWords(response);
   }, [group, page]);
 
+  const getUserWords = useCallback(async () => {
+    const userToken = user.token;
+    const userId = user.userId;
+    const wpp = 20;
+    const response = await GetUserAgrWords({
+      group,
+      page,
+      userId,
+      userToken,
+      wpp,
+    });
+    setWords(response[0].paginatedResults);
+  }, [group, page, user]);
+
   useEffect(() => {
-    getWords();
-  }, [getWords]);
+    if (user.userId) {
+      getUserWords();
+    } else {
+      getWords();
+    }
+  }, [getWords, getUserWords, user]);
 
   const changeGroup = (group: number) => {
+    localStorage.setItem('group', JSON.stringify(group));
+    localStorage.setItem('page', JSON.stringify(0));
     setGroup(group);
     setPage(0);
   };
 
   const changePage = (e: React.ChangeEvent<unknown>, page: number) => {
+    localStorage.setItem('page', JSON.stringify(page - 1));
     setPage(page - 1);
   };
 
-  useEffect(() => {
-    setPage(0);
-  }, [group]);
-
-  // const getUserWords = useCallback(async () => {
-  //   const user = JSON.parse(localStorage.getItem('user')!);
-  //   const userToken = user.token;
-  //   const userId = user.userId;
-  //   const response = await GetUserAgrWords({
-  //     group: 3,
-  //     page: 3,
-  //     userId,
-  //     userToken,
-  //     wpp: 20,
-  //   });
-  //   console.log('RESPONSE', response);
-  // }, []);
-
-  // useEffect(() => {
-  //   getUserWords();
-  // }, [getUserWords]);
-
   return (
     <Container className="textbook_container">
-      <TextbookHeader color={currentColor} />
-      <TextbookLevels
-        color={currentColor}
-        setColor={setCurrentColor}
-        group={group}
-        changeGroup={changeGroup}
-      />
+      <TextbookHeader group={group} />
+      <TextbookLevels group={group} changeGroup={changeGroup} />
       <div className="textbook_words__title">Слова</div>
       <Box className="textbook_main" sx={{ pt: '20px' }}>
         <Box className="textbook_main__left">
           <TextbookWords
-            color={currentColor}
+            group={group}
             words={words}
             activeCardIndex={activeCardIndex}
             setActiveCardIndex={setActiveCardIndex}
@@ -90,7 +89,7 @@ export const Textbook = () => {
             sx={{ mt: '30px' }}
             onChange={changePage}
           />
-          <TextbookGames color={currentColor} />
+          <TextbookGames group={group} />
         </Box>
         <TextbookCard words={words} activeCardIndex={activeCardIndex} />
       </Box>

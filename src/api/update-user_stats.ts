@@ -9,8 +9,6 @@ export const UpdateUserStats = async (
   try {
     const stats = await GetUserStats(userId, userToken);
     const userWords = await GetUserAgrWords({
-      group: 0,
-      page: 0,
       userId: userId,
       userToken: userToken,
       wpp: 20,

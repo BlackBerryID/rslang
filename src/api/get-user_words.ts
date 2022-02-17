@@ -36,7 +36,10 @@ export const GetUserAgrWords = async ({
   wpp,
   filter,
 }: AgregatedReq) => {
-  const paginated = page && group ? { $and: [{ page }, { group }] } : null;
+  const paginated =
+    page !== undefined && group !== undefined
+      ? { $and: [{ page }, { group }] }
+      : null;
   let filtResult = '&filter=';
 
   if (filter && paginated) {

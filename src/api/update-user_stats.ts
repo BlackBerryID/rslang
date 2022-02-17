@@ -3,6 +3,12 @@ import { formatDate } from '../utils/format-date';
 import { GetUserStats } from './get-user_stats';
 import { GetUserAgrWords } from './get-user_words';
 
+
+    // uncomment for testing
+    // const totalLearned = 26;
+    // const today = '03.02.22';
+
+
 export const UpdateUserStats = async (
   userId: string,
   userToken: string) => {
@@ -14,11 +20,6 @@ export const UpdateUserStats = async (
       wpp: 20,
       filter: { "$or": [{ "userWord.difficulty": "learning" }, { "userWord.difficulty": "learned" }] }
     });
-
-    // uncomment for testing
-    // const totalLearned = 26;
-    // const today = '03.02.22';
-
     const today = formatDate(new Date());
     const totalLearned = userWords[0].totalCount[0].count;
     const body = {
@@ -73,11 +74,18 @@ export const UpdateUserStats = async (
       },
       body: JSON.stringify(body),
     });
-    return rawResponse.status > 299
-      ? rawResponse.status
-      : { ...(await rawResponse.json()) };
+    switch (rawResponse.status) {
+      case 400:
+        throw new Error('Bad request');
+      case 401:
+        throw new Error('Access token is missing or invalid');
+    }
   }
   catch (err) {
-    console.log(err);
+    if (err instanceof Error)
+      console.log(
+        `%c Caught >>>> ${err.message}`,
+        'font-size: 18px; font-weight: bold; color: orange;'
+      );
   }
 };

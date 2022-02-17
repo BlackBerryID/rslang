@@ -27,6 +27,7 @@ export const TextbookCard = ({ words, activeCardIndex }: TextbookCardProps) => {
     return <CircularProgress />;
   } else {
     const wordItem = words[activeCardIndex];
+    const difficulty = wordItem?.userWord?.difficulty;
     const optional = wordItem?.userWord?.optional;
     const gameSprint = optional?.sprintStreak?.trim();
     const gameAudioCall = optional?.audioStreak?.trim();
@@ -82,12 +83,24 @@ export const TextbookCard = ({ words, activeCardIndex }: TextbookCardProps) => {
           >
             <VolumeUpIcon />
           </IconButton>
-          <Stack spacing={1} direction="row">
-            <Button variant="contained" sx={{ fontSize: '11px', p: '7px' }}>
-              Добавить в сложные
-            </Button>
-            <Button variant="contained" sx={{ fontSize: '11px', p: '7px' }}>
-              Добавить в изученные
+          <Stack spacing={1} direction="row" sx={{ display: 'flex' }}>
+            {difficulty !== 'learned' && (
+              <Button
+                variant="contained"
+                sx={{ fontSize: '11px', p: '5px', flex: '1 0 50%' }}
+              >
+                {difficulty === undefined || difficulty === 'learning'
+                  ? 'Добавить в сложные'
+                  : 'Удалить из сложных'}
+              </Button>
+            )}
+            <Button
+              variant="contained"
+              sx={{ fontSize: '11px', p: '5px', flex: '1 0 50%' }}
+            >
+              {difficulty === 'learned'
+                ? 'Удалить из изученных'
+                : 'Добавить в изученные'}
             </Button>
           </Stack>
           <Stack>

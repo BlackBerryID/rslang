@@ -21,7 +21,12 @@ export const TextbookWords = ({
     return (
       <Grid container spacing={{ xs: 1, md: 1.5 }}>
         {words.map((wordItem, index) => {
+          const wordItemUserInfo = wordItem.userWord;
           const addActiveClass = index === activeCardIndex ? ' active' : '';
+          const style =
+            wordItemUserInfo?.difficulty === 'learned'
+              ? { opacity: '0.3' }
+              : null;
           return (
             <Grid
               id={String(index)}
@@ -33,6 +38,7 @@ export const TextbookWords = ({
               lg={3}
               key={index}
               onClick={() => setActiveCardIndex(index)}
+              sx={style}
             >
               <Typography
                 component="button"
@@ -45,8 +51,12 @@ export const TextbookWords = ({
                 <h4>{wordItem.word}</h4>
                 <p>{wordItem.wordTranslate}</p>
                 <Box className="textbook_words__icon">
-                  {/* <FlashOnOutlinedIcon color="action"/> */}
-                  <SchoolIcon color="action" />
+                  {wordItemUserInfo?.difficulty === 'difficult' && (
+                    <FlashOnOutlinedIcon color="action" />
+                  )}
+                  {wordItemUserInfo?.difficulty === 'learned' && (
+                    <SchoolIcon color="action" />
+                  )}
                 </Box>
               </Typography>
             </Grid>

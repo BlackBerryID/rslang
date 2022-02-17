@@ -17,10 +17,46 @@ import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 import CallIcon from '@mui/icons-material/Call';
 
 export const TextbookCard = ({ words, activeCardIndex }: TextbookCardProps) => {
+  const prepareGameResults = (result: string) => {
+    console.log(result);
+    // prettier-ignore
+    return `${result.split('').filter((item) => item === '1').length} / ${result.length}`;
+  };
+
   if (!words) {
     return <CircularProgress />;
   } else {
     const wordItem = words[activeCardIndex];
+    const optional = wordItem?.userWord?.optional;
+    const gameSprint = optional?.sprintStreak?.trim();
+    const gameAudioCall = optional?.audioStreak?.trim();
+    const gamesInfoTemplate = wordItem.userWord ? (
+      <>
+        <Typography
+          variant="h6"
+          component="h3"
+          sx={{ m: '15px 0 10px', fontSize: '18px' }}
+        >
+          Правильные ответы в играх
+        </Typography>
+        <Box className="card_games">
+          {gameSprint && (
+            <Chip
+              icon={<DirectionsRunIcon />}
+              label={prepareGameResults(gameSprint)}
+              variant="outlined"
+            />
+          )}
+          {gameAudioCall && (
+            <Chip
+              icon={<CallIcon />}
+              label={prepareGameResults(gameAudioCall)}
+              variant="outlined"
+            />
+          )}
+        </Box>
+      </>
+    ) : null;
     return (
       <Card className="textbook_card" sx={{ ml: '10px' }}>
         <CardMedia
@@ -86,21 +122,7 @@ export const TextbookCard = ({ words, activeCardIndex }: TextbookCardProps) => {
               {wordItem?.textExampleTranslate}
             </Typography>
           </Stack>
-          <Typography
-            variant="h6"
-            component="h3"
-            sx={{ m: '15px 0 10px', fontSize: '18px' }}
-          >
-            Правильные ответы в играх
-          </Typography>
-          <Box className="card_games">
-            <Chip
-              icon={<DirectionsRunIcon />}
-              label={'1 / 2'}
-              variant="outlined"
-            />
-            <Chip icon={<CallIcon />} label={'1 / 2'} variant="outlined" />
-          </Box>
+          {gamesInfoTemplate}
         </CardContent>
       </Card>
     );

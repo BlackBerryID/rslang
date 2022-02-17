@@ -46,7 +46,8 @@ export const Textbook = () => {
       userToken,
       wpp,
     });
-    setWords(response[0].paginatedResults);
+    console.log(response[0]?.paginatedResults);
+    setWords(response[0]?.paginatedResults);
   }, [group, page, user]);
 
   useEffect(() => {

@@ -31,6 +31,13 @@ type GetWord = {
   wordTranslate: string;
   textMeaningTranslate: string;
   textExampleTranslate: string;
+  userWord?: {
+    difficulty: string;
+    optional: {
+      audioStreak: string;
+      sprintStreak: string;
+    };
+  };
 };
 
 type TextbookCardProps = {

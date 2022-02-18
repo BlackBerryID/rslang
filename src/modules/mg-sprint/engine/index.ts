@@ -223,6 +223,7 @@ export class MGSprintEngine {
             giveAnswer: (clickedAnswer: boolean) =>
               switcher(clickedAnswer === true),
           };
+
     return this.game.currentRound;
   }
 

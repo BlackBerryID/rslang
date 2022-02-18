@@ -31,7 +31,6 @@ export const AddUserWord = async ({
     defCreqationReq.optional = patchOptional;
   }
 
-  console.log(defCreqationReq);
   try {
     const rawResponse = await fetch(url, {
       method: 'POST',

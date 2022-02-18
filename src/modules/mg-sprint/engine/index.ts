@@ -1,4 +1,8 @@
 import { GetWords } from '../../../api';
+import { AddUserWord } from '../../../api/add-user_word';
+import { GetUserAgrWords } from '../../../api/get-user_words';
+import { UpdateUserWord } from '../../../api/update-user_word';
+import { checkIsLearnedRed } from '../../../utils/check-is-learned';
 import { GetRandomNum } from '../../../utils/get-random-num';
 import { ShuffleArray } from '../../../utils/shuffle-array';
 import { GAME_TIMER, MAX_PAGES_INDEX, MAX_WORDS_INDEX } from '../constants';
@@ -17,7 +21,10 @@ export class MGSprintEngine {
         throw new Error('Function not implemented.');
       },
     },
-    isAuth: false,
+    auth: {
+      userId: '',
+      userToken: '',
+    },
   };
 
   private _timer = GAME_TIMER;
@@ -40,8 +47,12 @@ export class MGSprintEngine {
     this.game.bookPage = val;
   }
 
-  set authGM(val: boolean) {
-    this.game.isAuth = val;
+  set auth(user: { userId: string; userToken: string }) {
+    this.game.auth = user;
+  }
+
+  set deck(arr: Array<Word>) {
+    this.game.deck = arr;
   }
 
   private setPage(): void {
@@ -63,10 +74,47 @@ export class MGSprintEngine {
     return new Promise((res) => res(true));
   }
 
+  private sendWordToDB(item: Word, result: boolean): void {
+    if (this.game.auth.userId && item._id) {
+      const base = {
+        userId: this.game.auth.userId,
+        userToken: this.game.auth.userToken,
+        wordId: item._id,
+      };
+      if (item.hasOwnProperty('userWord')) {
+        const streakResult =
+          item.userWord?.optional?.sprintStreak + (result ? '1' : '0');
+        const isLearned = checkIsLearnedRed(
+          streakResult,
+          <string>item.userWord?.difficulty
+        );
+        UpdateUserWord({
+          ...base,
+          updateReq: {
+            difficulty: isLearned ? 'learned' : 'learning',
+            optional: {
+              sprintStreak: isLearned ? ' ' : streakResult,
+            },
+          },
+        });
+      } else {
+        AddUserWord({
+          ...base,
+          updateReq: {
+            optional: {
+              sprintStreak: result ? '1' : '0',
+            },
+          },
+        });
+      }
+    }
+  }
+
   private setScore(round: number, result: boolean): void {
     const item = this.game.deck[round];
+    this.sendWordToDB(item, result);
     this.game.score.push({
-      id: item.id,
+      id: item._id || item.id,
       word: item.word,
       translate: item.wordTranslate,
       audio: item.audio,
@@ -107,7 +155,6 @@ export class MGSprintEngine {
       this._timer -= 1;
       if (this._timer === 0) {
         this.stopTimer(endAction);
-        return;
       }
       action(this._timer);
     }, 1000);
@@ -132,17 +179,29 @@ export class MGSprintEngine {
   }): void {
     if (anonGame) {
       this.setPage();
+      this.getDeck().then(() => {
+        switchMode();
+        this.startTimer(timerAction, endAction);
+      });
     } else {
       this.game.decksSeq.add(this.game.bookPage);
+      GetUserAgrWords({
+        group: 0,
+        page: 0,
+        userId: this.game.auth.userId,
+        userToken: this.game.auth.userToken,
+        wpp: 20,
+      }).then((data) => {
+        this.game.deck = data['0'].paginatedResults;
+        switchMode();
+        this.startTimer(timerAction, endAction);
+      });
     }
-    this.getDeck().then(() => {
-      switchMode();
-      this.startTimer(timerAction, endAction);
-    });
   }
 
   getRound(round: number, action: (val: number) => void): GameRound {
     const word = this.game.deck[round].word;
+
     if (word === this.game.currentRound.activeWord)
       return this.game.currentRound;
 
@@ -164,6 +223,7 @@ export class MGSprintEngine {
             giveAnswer: (clickedAnswer: boolean) =>
               switcher(clickedAnswer === true),
           };
+
     return this.game.currentRound;
   }
 
@@ -182,7 +242,10 @@ export class MGSprintEngine {
           throw new Error('Function not implemented.');
         },
       },
-      isAuth: false,
+      auth: {
+        userId: '',
+        userToken: '',
+      },
     };
   }
 }

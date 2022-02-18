@@ -12,6 +12,10 @@ export const AddUserWord = async ({
     optional: {
       audioStreak: ' ',
       sprintStreak: ' ',
+      learned: {
+        date: ' ',
+        game: ' ',
+      },
     },
   };
 

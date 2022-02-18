@@ -24,6 +24,10 @@ type WordOptional = {
   optional?: {
     audioStreak?: string;
     sprintStreak?: string;
+    learnedInfo?: {
+      date: string;
+      game: string;
+    };
   };
 };
 

@@ -15,9 +15,10 @@ export function MiniGameSprint() {
   const [seconds, setSeconds] = useState(game.timer);
 
   const gameStatus = useSelector((state: RootState) => state.appStatus);
-
   const user = useSelector((state: RootState) => state.user);
-  if (user.userId) game.authGM = true;
+  if (user.userId) {
+    game.auth = { userId: user.userId, userToken: user.token };
+  }
 
   const isAnonimGame = gameStatus.mode === 'anon';
   if (!isAnonimGame && gameStatus.langLevel && gameStatus.deckPage) {

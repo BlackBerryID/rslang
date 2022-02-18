@@ -20,7 +20,10 @@ type Game = {
   score: Array<GameResult>;
   timer: Timer | undefined;
   currentRound: GameRound;
-  isAuth: boolean;
+  auth: {
+    userId: string;
+    userToken: string;
+  };
 };
 
 declare module '*.scss';

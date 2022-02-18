@@ -20,37 +20,36 @@ export const MGSprintRound = ({
 }) => {
   const [isTrueSelected, selectTrueBtn] = useState<boolean>(false);
   const [isFalseSelected, selectFalseBtn] = useState<boolean>(false);
-  const mounted = useRef(false);
 
   let settedTimeOut: undefined | ReturnType<typeof setTimeout>;
+
+  const btnActivator = (
+    action: React.Dispatch<React.SetStateAction<boolean>>,
+    param: boolean
+  ) => {
+    action(true);
+    settedTimeOut = setTimeout(() => {
+      action(false);
+    }, 70);
+    attempt.giveAnswer(param);
+  };
 
   const keyDownHandler = (event: KeyboardEvent<HTMLDivElement>) => {
     switch (event.code) {
       case 'ArrowLeft':
-        selectTrueBtn(true);
-        settedTimeOut = setTimeout(() => {
-          selectTrueBtn(false);
-        }, 100);
-        attempt.giveAnswer(true);
+        btnActivator(selectTrueBtn, true);
         break;
       case 'ArrowRight':
-        selectFalseBtn(true);
-        settedTimeOut = setTimeout(() => {
-          selectFalseBtn(false);
-        }, 100);
-        attempt.giveAnswer(false);
+        btnActivator(selectFalseBtn, false);
         break;
     }
   };
 
   useEffect(() => {
-    mounted.current = true;
-
     return () => {
-      if (!settedTimeOut) {
+      if (settedTimeOut) {
         clearTimeout(settedTimeOut);
       }
-      mounted.current = false;
     };
   }, []);
 

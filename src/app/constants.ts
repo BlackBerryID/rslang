@@ -46,4 +46,9 @@ const colors = [
   teal['300'],
 ];
 
-export { Pages, Paths, CEFR, colors };
+const AnswersToChangeStatus = {
+  simple: 3,
+  hard: 5,
+};
+
+export { Pages, Paths, CEFR, colors, AnswersToChangeStatus };

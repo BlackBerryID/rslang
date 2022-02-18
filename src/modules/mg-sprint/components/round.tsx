@@ -20,7 +20,6 @@ export const MGSprintRound = ({
 }) => {
   const [isTrueSelected, selectTrueBtn] = useState<boolean>(false);
   const [isFalseSelected, selectFalseBtn] = useState<boolean>(false);
-  const mounted = useRef(false);
 
   let settedTimeOut: undefined | ReturnType<typeof setTimeout>;
 

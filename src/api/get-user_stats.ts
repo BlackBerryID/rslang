@@ -15,7 +15,7 @@ export const GetUserStats = async (userId: string, userToken: string) => {
       case 401:
         throw new Error('Access token is missing or invalid');
       case 404:
-        throw new Error('Statistics not found');
+        return {};
     }
     return await rawResponse.json();
   }

@@ -4,24 +4,26 @@ import { GetUserStats } from './get-user_stats';
 import { GetUserAgrWords } from './get-user_words';
 
 
-    // uncomment for testing
-    // const totalLearned = 26;
-    // const today = '03.02.22';
-
-
 export const UpdateUserStats = async (
   userId: string,
   userToken: string) => {
   try {
     const stats = await GetUserStats(userId, userToken);
-    const userWords = await GetUserAgrWords({
+    const learningWords = await GetUserAgrWords({
       userId: userId,
       userToken: userToken,
       wpp: 20,
-      filter: { "$or": [{ "userWord.difficulty": "learning" }, { "userWord.difficulty": "learned" }] }
+      filter: { "$or": [{ "userWord.difficulty": "learning" }] }
     });
-    const today = formatDate(new Date());
-    const totalLearned = userWords[0].totalCount[0].count;
+    const learnedWords = await GetUserAgrWords({
+      userId: userId,
+      userToken: userToken,
+      wpp: 20,
+      filter: { "$or": [{ "userWord.difficulty": "learned" }] }
+    });
+    const today = formatDate();
+    const totalLearning = learningWords[0].totalCount[0].count;
+    const totalLearned = learnedWords[0].totalCount[0].count;
     const body = {
       learnedWords: totalLearned,
       optional: stats.optional,
@@ -33,20 +35,26 @@ export const UpdateUserStats = async (
             date: today,
             learnedToday: totalLearned,
             totalLearned: totalLearned,
+            learningToday: totalLearning,
+            totalLearning: totalLearning,
           }
         }
       }
     } else {
-      const days: any[] = Object.values(body.optional.stats);
+      const days: DayStats[] = (Object.values(body.optional.stats) as DayStats[]);
       if (days.length === 1) {
         if (days[0].date === today) {
           days[0].learnedToday = totalLearned;
           days[0].totalLearned = totalLearned;
+          days[0].learningToday = totalLearning;
+          days[0].totalLearning = totalLearning;
         } else {
           days.push({
             date: today,
             learnedToday: totalLearned - days[0].totalLearned,
             totalLearned: totalLearned,
+            learningToday: totalLearning - days[0].totalLearning,
+            totalLearning: totalLearned,
           });
         }
       } else {
@@ -54,11 +62,15 @@ export const UpdateUserStats = async (
         if (lastDay.date === today) {
           days[days.length - 1].learnedToday = totalLearned - days[days.length - 2].totalLearned;
           days[days.length - 1].totalLearned = totalLearned;
+          days[days.length - 1].learningToday = totalLearning - days[days.length - 2].learningToday;
+          days[days.length - 1].totalLearning = totalLearning;
         } else {
           days.push({
             date: today,
             learnedToday: totalLearned - days[days.length - 1].totalLearned,
             totalLearned: totalLearned,
+            learningToday: totalLearning - days[days.length - 1].totalLearning,
+            totalLearning: totalLearning,
           });
         }
       }

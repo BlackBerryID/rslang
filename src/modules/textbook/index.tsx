@@ -10,8 +10,10 @@ import { TextbookCard } from './containers/textbook-card';
 import { TextbookGames } from './components/textbook-games';
 import { GetWords } from '../../api';
 import { GetUserAgrWords } from '../../api/get-user_words';
+import { DIFFICULTY } from './constants';
 
 import type { RootState, AppDispatch } from '../../store';
+import { setStatus } from '../../store/reducers/watch-status';
 
 export const Textbook = () => {
   const [activeCardIndex, setActiveCardIndex] = useState(0);
@@ -27,7 +29,7 @@ export const Textbook = () => {
   );
   const [words, setWords] = useState<Array<GetWord> | null>(null);
 
-  const reducer = useDispatch();
+  const reducer: AppDispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user);
 
   // we use this method only to avoid calling 'GetUserAgrWords' after each 'word difficulty' update. Instead we work with local state variable 'words'.
@@ -58,24 +60,29 @@ export const Textbook = () => {
     });
   };
 
-  const getWords = useCallback(async () => {
-    let response = await GetWords(group, page);
-    setWords(response);
-  }, [group, page]);
+  const getWords = useCallback(
+    async (isDataToWrite = false, pageNumber = page) => {
+      let response = await GetWords(group, pageNumber);
+      if (isDataToWrite) return response;
+      setWords(response);
+    },
+    [group, page]
+  );
 
-  const getUserWords = useCallback(async () => {
-    const userToken = user.token;
-    const userId = user.userId;
-    const wpp = 20;
-    const response = await GetUserAgrWords({
-      group,
-      page,
-      userId,
-      userToken,
-      wpp,
-    });
-    setWords(response[0]?.paginatedResults);
-  }, [group, page, user]);
+  const getUserWords = useCallback(
+    async (isDataToWrite = false, pageNumber = page) => {
+      const response = await GetUserAgrWords({
+        group,
+        page: pageNumber,
+        userId: user.userId,
+        userToken: user.token,
+        wpp: 20,
+      });
+      if (isDataToWrite) return response[0]?.paginatedResults;
+      setWords(response[0]?.paginatedResults);
+    },
+    [group, page, user]
+  );
 
   useEffect(() => {
     if (user.userId) {
@@ -95,6 +102,46 @@ export const Textbook = () => {
   const changePage = (e: React.ChangeEvent<unknown>, page: number) => {
     localStorage.setItem('page', JSON.stringify(page - 1));
     setPage(page - 1);
+  };
+
+  const prepareGameData = async () => {
+    let gameWords: Array<GetWord> = [];
+    let wordsArray = words;
+    let isLoop = false;
+    let currentSearchPage = page;
+
+    while (gameWords.length < 20) {
+      if (isLoop && currentSearchPage === page) break;
+      if (currentSearchPage < 0) {
+        currentSearchPage = 29;
+        isLoop = true;
+      }
+      currentSearchPage -= 1;
+
+      const tempArray =
+        wordsArray?.filter((wordItem) => {
+          if (
+            wordItem.userWord === undefined ||
+            wordItem.userWord.difficulty !== DIFFICULTY.learned
+          ) {
+            return true;
+          } else {
+            return false;
+          }
+        }) || [];
+      gameWords = gameWords.concat(tempArray);
+      if (gameWords.length < 20) {
+        user.userId
+          ? await getUserWords(true, currentSearchPage).then(
+              (data) => (wordsArray = data)
+            )
+          : await getWords(true, currentSearchPage).then(
+              (data) => (wordsArray = data)
+            );
+      }
+    }
+    gameWords = gameWords.slice(0, 20);
+    reducer(setStatus({ mode: 'textbook', deck: gameWords, langLevel: group }));
   };
 
   return (
@@ -117,7 +164,7 @@ export const Textbook = () => {
             sx={{ mt: '30px' }}
             onChange={changePage}
           />
-          <TextbookGames group={group} />
+          <TextbookGames group={group} prepareGameData={prepareGameData} />
         </Box>
         <TextbookCard
           words={words}

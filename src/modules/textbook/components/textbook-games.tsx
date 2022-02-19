@@ -4,7 +4,10 @@ import { Box, Typography } from '@mui/material';
 import { Pages } from '../../../app/constants';
 import { colors } from '../../../app/constants';
 
-export const TextbookGames = ({ group }: TextbookHeaderProp) => {
+export const TextbookGames = ({
+  group,
+  prepareGameData,
+}: TextbookGamesProp) => {
   const games = [Pages.mgSprint, Pages.mgAudioCall].map((item) => {
     let gameName = item;
     let gameText;
@@ -41,6 +44,7 @@ export const TextbookGames = ({ group }: TextbookHeaderProp) => {
         sx={{
           '&:hover': { color: colors[group], borderColor: colors[group] },
         }}
+        onClick={prepareGameData}
       >
         <Typography variant="h5" component="h3" sx={{ fontWeight: '700' }}>
           {gameName}

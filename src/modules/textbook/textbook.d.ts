@@ -2,6 +2,11 @@ type TextbookHeaderProp = {
   group: number;
 };
 
+type TextbookGamesProp = {
+  group: number;
+  prepareGameData: () => void;
+};
+
 type TextbookLevelsProps = {
   group: number;
   changeGroup: (number) => void;

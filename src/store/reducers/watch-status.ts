@@ -17,7 +17,7 @@ export const WatchStatus = createSlice({
   } as GameStatus,
   reducers: {
     setStatus: (state, action: PayloadAction<GameStatus>) => {
-      state = { ...action.payload };
+      return (state = { ...action.payload });
     },
   },
 });

@@ -24,13 +24,27 @@ export const UpdateGameStats = async ({
 }: newStats
 ) => {
   try {
+    const today = formatDate();
     const stats = await GetUserStats(userId, userToken);
-    console.log(stats);
+    const gameStats = await GetUserAgrWords({
+      userId: userId,
+      userToken: userToken,
+      wpp: 20,
+      filter: {
+        "$and": [
+          { "userWord.optional.learned.game": `${game}` }, 
+          { "userWord.optional.learned.date": `${today}` },
+          { "userWord.difficulty": "learned" }
+        ]
+      }
+    });
+    const gameLearned = gameStats[0].totalCount.length ?
+      gameStats[0].totalCount[0].count :
+      0;
     const body = {
       learnedWords: stats.learnedWords,
       optional: { ...stats.optional }
     };
-    const today = formatDate();
     if (!body.optional.today || body.optional.today.date !== today) {
       body.optional.today = {
         date: today,
@@ -54,7 +68,7 @@ export const UpdateGameStats = async ({
         body.optional.today[game].amount += amount;
       }
     }
-    console.log(body);
+    body.optional.today[game].learned = gameLearned;
     const url = `${base}/users/${userId}/statistics`;
     const rawResponse = await fetch(url, {
       method: 'PUT',

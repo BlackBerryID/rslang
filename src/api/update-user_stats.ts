@@ -8,6 +8,7 @@ export const UpdateUserStats = async (
   userId: string,
   userToken: string) => {
   try {
+    const today = formatDate();
     const stats = await GetUserStats(userId, userToken);
     const learningWords = await GetUserAgrWords({
       userId: userId,
@@ -21,9 +22,10 @@ export const UpdateUserStats = async (
       wpp: 20,
       filter: { "$or": [{ "userWord.difficulty": "learned" }] }
     });
-    const today = formatDate();
-    const totalLearning = learningWords[0].totalCount[0].count;
-    const totalLearned = learnedWords[0].totalCount[0].count;
+
+    const totalLearning = learningWords[0].totalCount[0] ? learningWords[0].totalCount[0].count : 0;
+    const totalLearned = learnedWords[0].totalCount[0] ? learnedWords[0].totalCount[0].count : 0;
+
     const body = {
       learnedWords: totalLearned,
       optional: stats.optional,

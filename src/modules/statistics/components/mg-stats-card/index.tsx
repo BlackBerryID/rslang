@@ -4,19 +4,21 @@ import { calcPersentage } from "../../helpers/calc-percentage";
 
 const MgStats = ({ title, stats }: { title: string, stats: GameStats }) => {
   return (
-    <Card>
+    <Card
+      sx={{ width: 300 }}
+    >
       <CardContent>
-        <Typography variant="h5">
+        <Typography variant="h5" sx={{ mb: 1 }}>
           {title}
         </Typography>
         <Typography variant="subtitle1">
           {`Изучено: ${stats.learned}`}
         </Typography>
         <Typography variant="subtitle1">
-          {`Процент ответов: ${calcPersentage(stats.correct, stats.amount)}`}
+          {`Верных ответов: ${calcPersentage(stats.correct, stats.amount)}`}
         </Typography>
         <Typography variant="subtitle1">
-          {`Cерия: ${stats.streak}`}
+          {`Лучшая серия: ${stats.streak}`}
         </Typography>
       </CardContent>
     </Card>

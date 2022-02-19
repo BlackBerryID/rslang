@@ -17,16 +17,16 @@ const TodayStats = ({ stats, today }: {
 
   const [learnedToday, setLearnedToday] = useState(0);
   const [learningToday, setLearningToday] = useState(0);
-  
+
   const [sprintStats, setSpintStats] = useState({
     learned: 0,
-    streak:0,
+    streak: 0,
     correct: 0,
     amount: 0,
   });
   const [audiocallStats, setAudiocallStats] = useState({
     learned: 0,
-    streak:0,
+    streak: 0,
     correct: 0,
     amount: 0,
   });
@@ -56,7 +56,7 @@ const TodayStats = ({ stats, today }: {
       <Typography variant="h2" >Статистика за сегодня</Typography>
       <Box sx={{ display: "flex", columnGap: 5, justifyContent: "center" }}>
         <Card
-          sx={{ width: 200 }}
+          sx={{ width: 300 }}
         >
           <CardContent>
             <Typography variant="h5" >
@@ -68,7 +68,7 @@ const TodayStats = ({ stats, today }: {
           </CardContent>
         </Card>
         <Card
-          sx={{ width: 200 }}
+          sx={{ width: 300 }}
         >
           <CardContent>
             <Typography variant="h5" >
@@ -80,13 +80,13 @@ const TodayStats = ({ stats, today }: {
           </CardContent>
         </Card>
         <Card
-          sx={{ width: 200 }}
+          sx={{ width: 300 }}
         >
           <CardContent>
             <Typography variant="h5" >
               Верных ответов:
             </Typography>
-            <Typography variant="h2" >
+            <Typography variant="h2">
               {`${calcPersentage(
                 audiocallStats.correct + sprintStats.correct,
                 audiocallStats.amount + sprintStats.amount
@@ -94,10 +94,13 @@ const TodayStats = ({ stats, today }: {
             </Typography>
           </CardContent>
         </Card>
+      </Box >
+      <Typography variant="h2" >Игры</Typography>
+      <Box sx={{ display: "flex", columnGap: 5, justifyContent: "center" }}>
         <MgStats title="Спринт" stats={sprintStats} />
         <MgStats title="Аудиовызов" stats={audiocallStats} />
       </Box >
-    </Container>
+    </Container >
   );
 };
 

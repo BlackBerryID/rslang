@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Grid, Switch, Typography } from "@mui/material";
 import {
   ResponsiveContainer,
@@ -14,29 +14,49 @@ import {
 
 import './long-stats.scss';
 
-// TODO: add correct type of data @saratovkin
-const LongStats = ({ data }: { data: any }) => {
-  const [graphType, setGraphType] = useState(true);
 
+const LongStats = ({ stats }: { stats: DayStats[] }) => {
+
+  const [learned, setLearned] = useState<LearnedStats[]>([]);
+  const [learning, setLearning] = useState<LearningStats[]>([]);
+
+  useEffect(() => {
+    if (stats.length) {
+      setLearned(([...stats].map((day: DayStats) => {
+        return {
+          date: day.date,
+          "Всего изучено": day.totalLearned,
+        }
+      })));
+      setLearning(([...stats].map((day: DayStats) => {
+        return {
+          date: day.date,
+          "Новых слов": day.learningToday,
+        }
+      })));
+    }
+  }, [stats]);
+
+  const [graphType, setGraphType] = useState(true);
   return (
     <Container sx={{ textAlign: "center", mt: 10, mb: 5 }}>
       <Typography variant="h2" sx={{ mb: 5 }} >Статистика за всё время</Typography>
       <Grid container alignItems="center" justifyContent="center" sx={{ mb: 5 }}>
-        <Grid item>Количество слов</Grid>
+        <Grid item>Изученные слова</Grid>
         <Grid item>
           <Switch
             onChange={() => setGraphType(type => !type)}
             color="default"
           />
         </Grid>
-        <Grid item>Прогресс</Grid>
+        <Grid item>Новые слова</Grid>
       </Grid>
       {graphType ?
         <ResponsiveContainer width="95%" height={400} >
           <LineChart
             width={1000}
             height={300}
-            data={data}
+            data={learned}
             margin={{
               top: 5,
               right: 30,
@@ -50,18 +70,17 @@ const LongStats = ({ data }: { data: any }) => {
             <Tooltip />
             <Line
               type="monotone"
-              dataKey="totalLearned"
+              dataKey="Всего изучено"
               stroke="#8ca9d3"
               activeDot={{ r: 8 }}
             />
           </LineChart>
         </ResponsiveContainer> :
         <ResponsiveContainer width="95%" height={400} >
-
           <BarChart
             width={500}
             height={300}
-            data={data}
+            data={learning}
             margin={{
               top: 5,
               right: 30,
@@ -73,7 +92,7 @@ const LongStats = ({ data }: { data: any }) => {
             <XAxis dataKey="date" />
             <YAxis />
             <Tooltip />
-            <Bar dataKey="learnedToday" fill="#8ca9d3" />
+            <Bar dataKey="Новых слов" fill="#8ca9d3" />
           </BarChart>
         </ResponsiveContainer>
       }

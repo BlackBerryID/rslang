@@ -1,22 +1,22 @@
 import React from "react";
 import { Card, CardContent, Typography } from "@mui/material";
+import { calcPersentage } from "../../helpers/calc-percentage";
 
 const MgStats = ({ title, stats }: { title: string, stats: GameStats }) => {
-
   return (
     <Card>
       <CardContent>
-        <Typography variant="h4">
+        <Typography variant="h5">
           {title}
         </Typography>
         <Typography variant="subtitle1">
-          {`Изучено слов: ${stats.wordsAmount}`}
+          {`Изучено: ${stats.learned}`}
         </Typography>
         <Typography variant="subtitle1">
-          {`Правильных ответов: ${stats.percentage}`}
+          {`Процент ответов: ${calcPersentage(stats.correct, stats.amount)}`}
         </Typography>
         <Typography variant="subtitle1">
-          {`Самая длинная серия: ${stats.streak}`}
+          {`Cерия: ${stats.streak}`}
         </Typography>
       </CardContent>
     </Card>

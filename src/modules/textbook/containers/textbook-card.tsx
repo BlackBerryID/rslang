@@ -20,12 +20,17 @@ import type { RootState } from '../../../store';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 import CallIcon from '@mui/icons-material/Call';
+import { useEffect, useState } from 'react';
 
 export const TextbookCard = ({
   words,
   activeCardIndex,
   updateWords,
+  page,
+  group,
 }: TextbookCardProps) => {
+  const [audio] = useState(new Audio());
+
   const prepareGameResults = (result: string) => {
     // prettier-ignore
     return `${result.split('').filter((item) => item === '1').length} / ${result.length}`;
@@ -63,6 +68,27 @@ export const TextbookCard = ({
     await UpdateUserWord(body(difficultyLevel));
     updateWords(wordItem.word, difficultyLevel);
   };
+
+  const runAudio = (wordItem: GetWord) => {
+    const strings = 'audio audioMeaning audioExample'.split(' ');
+    let index = 1;
+
+    audio.src = `${base}/${wordItem[strings[0]]}`;
+    audio.play();
+
+    audio.onended = function () {
+      if (index < strings.length) {
+        audio.src = `${base}/${wordItem[strings[index]]}`;
+        audio.play();
+        index++;
+      }
+    };
+  };
+
+  useEffect(() => {
+    audio.pause();
+    audio.currentTime = 0;
+  }, [activeCardIndex, page, group, audio]);
 
   if (!words) {
     return <CircularProgress />;
@@ -121,6 +147,7 @@ export const TextbookCard = ({
             edge="start"
             color="inherit"
             sx={{ mr: 2, mt: -1, opacity: '0.5', ml: '5px' }}
+            onClick={() => runAudio(wordItem)}
           >
             <VolumeUpIcon />
           </IconButton>

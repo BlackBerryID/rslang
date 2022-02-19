@@ -17,6 +17,7 @@ type TextbookWordsProps = {
 };
 
 type GetWord = {
+  [key: string];
   id: string;
   group: number;
   page: number;
@@ -45,4 +46,6 @@ type TextbookCardProps = {
   words: Array<GetWord> | null;
   activeCardIndex: number;
   updateWords: (wordName: string, difficultyLevel: string) => void;
+  page: number;
+  group: number;
 };

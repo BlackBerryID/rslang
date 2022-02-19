@@ -6,7 +6,7 @@ import './textbook.scss';
 import { TextbookHeader } from './components/textbook-header';
 import { TextbookLevels } from './components/textbook-levels';
 import { TextbookWords } from './containers/textbook-words';
-import { TextbookCard } from './components/textbook-card';
+import { TextbookCard } from './containers/textbook-card';
 import { TextbookGames } from './components/textbook-games';
 import { GetWords } from '../../api';
 import { GetUserAgrWords } from '../../api/get-user_words';
@@ -123,6 +123,8 @@ export const Textbook = () => {
           words={words}
           activeCardIndex={activeCardIndex}
           updateWords={updateWords}
+          page={page}
+          group={group}
         />
       </Box>
     </Container>

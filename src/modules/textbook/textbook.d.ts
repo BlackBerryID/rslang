@@ -4,6 +4,7 @@ type TextbookHeaderProp = {
 
 type TextbookGamesProp = {
   group: number;
+  words: Array<GetWord> | null;
   prepareGameData: () => void;
 };
 
@@ -53,4 +54,6 @@ type TextbookCardProps = {
   updateWords: (wordName: string, difficultyLevel: string) => void;
   page: number;
   group: number;
+  getUserWords: (isDataToWrite?: boolean, pageNumber?: number) => Promise<any>;
+  setActiveCardIndex: React.Dispatch<React.SetStateAction<number>>;
 };

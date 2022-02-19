@@ -18,6 +18,13 @@ export const TextbookWords = ({
 
   if (!words) {
     return <CircularProgress />;
+  } else if (group === 6 && words.length === 0) {
+    return (
+      <Typography variant="h5" component="h2" sx={{ textAlign: 'center' }}>
+        Здесь нет слов. Вы не добавили ни одного слова <br /> в категорию
+        "сложные".
+      </Typography>
+    );
   } else {
     return (
       <Grid container spacing={{ xs: 1, md: 1.5 }}>

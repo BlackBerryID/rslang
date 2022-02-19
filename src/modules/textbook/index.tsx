@@ -15,6 +15,8 @@ import { DIFFICULTY } from './constants';
 import type { RootState, AppDispatch } from '../../store';
 import { setStatus } from '../../store/reducers/watch-status';
 
+import type { AgregatedReq } from '../../api/get-user_words';
+
 export const Textbook = () => {
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const [group, setGroup] = useState(
@@ -70,14 +72,26 @@ export const Textbook = () => {
   );
 
   const getUserWords = useCallback(
-    async (isDataToWrite = false, pageNumber = page) => {
-      const response = await GetUserAgrWords({
+    async (isDataToWrite: boolean = false, pageNumber: number = page) => {
+      let body: AgregatedReq = {
         group,
         page: pageNumber,
         userId: user.userId,
         userToken: user.token,
         wpp: 20,
-      });
+      };
+      if (group === 6) {
+        body = {
+          userId: user.userId,
+          userToken: user.token,
+          wpp: 3600,
+          filter: {
+            $and: [{ ['userWord.difficulty']: DIFFICULTY.difficult }],
+          },
+        };
+      }
+      const response = await GetUserAgrWords(body);
+      console.log(response);
       if (isDataToWrite) return response[0]?.paginatedResults;
       setWords(response[0]?.paginatedResults);
     },
@@ -105,6 +119,12 @@ export const Textbook = () => {
   };
 
   const prepareGameData = async () => {
+    if (group === 6) {
+      reducer(
+        setStatus({ mode: 'textbook', deck: words || [], langLevel: group })
+      );
+      return;
+    }
     let gameWords: Array<GetWord> = [];
     let wordsArray = words;
     let isLoop = false;
@@ -157,14 +177,20 @@ export const Textbook = () => {
             activeCardIndex={activeCardIndex}
             setActiveCardIndex={setActiveCardIndex}
           />
-          <Pagination
-            count={30}
-            page={page + 1}
-            color="primary"
-            sx={{ mt: '30px' }}
-            onChange={changePage}
+          {group !== 6 && (
+            <Pagination
+              count={30}
+              page={page + 1}
+              color="primary"
+              sx={{ mt: '30px' }}
+              onChange={changePage}
+            />
+          )}
+          <TextbookGames
+            group={group}
+            words={words}
+            prepareGameData={prepareGameData}
           />
-          <TextbookGames group={group} prepareGameData={prepareGameData} />
         </Box>
         <TextbookCard
           words={words}
@@ -172,6 +198,8 @@ export const Textbook = () => {
           updateWords={updateWords}
           page={page}
           group={group}
+          getUserWords={getUserWords}
+          setActiveCardIndex={setActiveCardIndex}
         />
       </Box>
     </Container>

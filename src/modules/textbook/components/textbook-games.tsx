@@ -8,6 +8,7 @@ import { Paths } from '../../../app/constants';
 
 export const TextbookGames = ({
   group,
+  words,
   prepareGameData,
 }: TextbookGamesProp) => {
   const games = [Pages.mgSprint, Pages.mgAudioCall].map((item) => {
@@ -42,26 +43,28 @@ export const TextbookGames = ({
     }
 
     return (
-      <Link
-        to={path || '/'}
-        className="textbook_games__button"
-        key={gameName}
-        onClick={prepareGameData}
-      >
-        <Typography
-          component="button"
-          className="textbook_games__title"
-          sx={{ '&:hover': { color: colors[group] } }}
+      ((group === 6 && words?.length !== 0) || group !== 6) && (
+        <Link
+          to={path || '/'}
+          className="textbook_games__button"
+          key={gameName}
+          onClick={prepareGameData}
         >
-          <Typography variant="h5" component="h3" sx={{ fontWeight: '700' }}>
-            {gameName}
+          <Typography
+            component="button"
+            className="textbook_games__title"
+            sx={{ '&:hover': { color: colors[group] } }}
+          >
+            <Typography variant="h5" component="h3" sx={{ fontWeight: '700' }}>
+              {gameName}
+            </Typography>
+            <Typography variant="body2" component="p">
+              {gameText}
+            </Typography>
+            {gameImg}
           </Typography>
-          <Typography variant="body2" component="p">
-            {gameText}
-          </Typography>
-          {gameImg}
-        </Typography>
-      </Link>
+        </Link>
+      )
     );
   });
 

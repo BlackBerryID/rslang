@@ -65,7 +65,11 @@ export const TextbookCard = ({
           ? DIFFICULTY.learning
           : DIFFICULTY.learned;
     }
-    await UpdateUserWord(body(difficultyLevel));
+    if (wordItem.userWord) {
+      await UpdateUserWord(body(difficultyLevel));
+    } else {
+      await AddUserWord(body(difficultyLevel));
+    }
     updateWords(wordItem.word, difficultyLevel);
   };
 

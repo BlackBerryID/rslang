@@ -38,9 +38,11 @@ type GetWord = {
       sprintStreak: string;
     };
   };
+  _id: string;
 };
 
 type TextbookCardProps = {
   words: Array<GetWord> | null;
   activeCardIndex: number;
+  updateWords: (wordName: string, difficultyLevel: string) => void;
 };

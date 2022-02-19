@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Grid, Typography, Box, CircularProgress } from '@mui/material';
 import { colors } from '../../../app/constants';
+import { DIFFICULTY } from '../constants';
 
 import FlashOnOutlinedIcon from '@mui/icons-material/FlashOnOutlined';
 import SchoolIcon from '@mui/icons-material/School';
@@ -51,10 +52,10 @@ export const TextbookWords = ({
                 <h4>{wordItem.word}</h4>
                 <p>{wordItem.wordTranslate}</p>
                 <Box className="textbook_words__icon">
-                  {wordItemUserInfo?.difficulty === 'difficult' && (
+                  {wordItemUserInfo?.difficulty === DIFFICULTY.difficult && (
                     <FlashOnOutlinedIcon color="action" />
                   )}
-                  {wordItemUserInfo?.difficulty === 'learned' && (
+                  {wordItemUserInfo?.difficulty === DIFFICULTY.learned && (
                     <SchoolIcon color="action" />
                   )}
                 </Box>

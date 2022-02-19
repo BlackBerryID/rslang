@@ -25,10 +25,38 @@ export const Textbook = () => {
       ? JSON.parse(localStorage.getItem('page') as string)
       : 0
   );
-  const [words, setWords] = useState(null);
+  const [words, setWords] = useState<Array<GetWord> | null>(null);
 
   const reducer = useDispatch();
   const user = useSelector((state: RootState) => state.user);
+
+  // we use this method only to avoid calling 'GetUserAgrWords' after each 'word difficulty' update. Instead we work with local state variable 'words'.
+  const updateWords = (wordName: string, difficultyLevel: string) => {
+    if (!words) return;
+    setWords((words) => {
+      if (words) {
+        return words?.map((wordItem) => {
+          if (wordItem.word !== wordName) return wordItem;
+          return {
+            ...wordItem,
+            userWord: wordItem.userWord
+              ? {
+                  ...wordItem.userWord,
+                  difficulty: difficultyLevel,
+                }
+              : {
+                  difficulty: difficultyLevel,
+                  optional: {
+                    audioStreak: ' ',
+                    sprintStreak: ' ',
+                  },
+                },
+          };
+        });
+      }
+      return null;
+    });
+  };
 
   const getWords = useCallback(async () => {
     let response = await GetWords(group, page);
@@ -46,7 +74,6 @@ export const Textbook = () => {
       userToken,
       wpp,
     });
-    console.log(response[0]?.paginatedResults);
     setWords(response[0]?.paginatedResults);
   }, [group, page, user]);
 
@@ -92,7 +119,11 @@ export const Textbook = () => {
           />
           <TextbookGames group={group} />
         </Box>
-        <TextbookCard words={words} activeCardIndex={activeCardIndex} />
+        <TextbookCard
+          words={words}
+          activeCardIndex={activeCardIndex}
+          updateWords={updateWords}
+        />
       </Box>
     </Container>
   );

@@ -11,16 +11,57 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { base } from '../../../api';
+import { DIFFICULTY } from '../constants';
+import { UpdateUserWord } from '../../../api/update-user_word';
+import { AddUserWord } from '../../../api/add-user_word';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../../store';
 
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 import CallIcon from '@mui/icons-material/Call';
 
-export const TextbookCard = ({ words, activeCardIndex }: TextbookCardProps) => {
+export const TextbookCard = ({
+  words,
+  activeCardIndex,
+  updateWords,
+}: TextbookCardProps) => {
   const prepareGameResults = (result: string) => {
-    console.log(result);
     // prettier-ignore
     return `${result.split('').filter((item) => item === '1').length} / ${result.length}`;
+  };
+
+  const user = useSelector((state: RootState) => state.user);
+
+  const changeWordDifficulty = async (
+    wordItem: GetWord,
+    difficulty: string | undefined,
+    action: string
+  ) => {
+    const body = (difficultyLevel: string) => {
+      return {
+        userId: user.userId,
+        userToken: user.token,
+        wordId: wordItem._id,
+        updateReq: {
+          difficulty: difficultyLevel,
+        },
+      };
+    };
+    let difficultyLevel = 'learning';
+    if (action === 'changeDifficultyLevel') {
+      difficultyLevel =
+        difficulty === DIFFICULTY.difficult
+          ? DIFFICULTY.learning
+          : DIFFICULTY.difficult;
+    } else if (action === 'changeIsLearned') {
+      difficultyLevel =
+        difficulty === DIFFICULTY.learned
+          ? DIFFICULTY.learning
+          : DIFFICULTY.learned;
+    }
+    await UpdateUserWord(body(difficultyLevel));
+    updateWords(wordItem.word, difficultyLevel);
   };
 
   if (!words) {
@@ -84,12 +125,19 @@ export const TextbookCard = ({ words, activeCardIndex }: TextbookCardProps) => {
             <VolumeUpIcon />
           </IconButton>
           <Stack spacing={1} direction="row" sx={{ display: 'flex' }}>
-            {difficulty !== 'learned' && (
+            {difficulty !== DIFFICULTY.learned && (
               <Button
                 variant="contained"
                 sx={{ fontSize: '11px', p: '5px', flex: '1 0 50%' }}
+                onClick={() =>
+                  changeWordDifficulty(
+                    wordItem,
+                    difficulty,
+                    'changeDifficultyLevel'
+                  )
+                }
               >
-                {difficulty === undefined || difficulty === 'learning'
+                {difficulty === undefined || difficulty === DIFFICULTY.learning
                   ? 'Добавить в сложные'
                   : 'Удалить из сложных'}
               </Button>
@@ -97,8 +145,11 @@ export const TextbookCard = ({ words, activeCardIndex }: TextbookCardProps) => {
             <Button
               variant="contained"
               sx={{ fontSize: '11px', p: '5px', flex: '1 0 50%' }}
+              onClick={() =>
+                changeWordDifficulty(wordItem, difficulty, 'changeIsLearned')
+              }
             >
-              {difficulty === 'learned'
+              {difficulty === DIFFICULTY.learned
                 ? 'Удалить из изученных'
                 : 'Добавить в изученные'}
             </Button>

@@ -1,17 +1,17 @@
 import { Stack, Typography, Chip, Avatar } from '@mui/material';
 import { colors } from '../../../app/constants';
-import { levels, shortLevels } from '../constants';
+import { LEVELS, SHORT_LEVELS } from '../constants';
 
 export const TextbookLevels = ({ group, changeGroup }: TextbookLevelsProps) => {
-  const chipList = levels.map((level, index) => {
+  const chipList = LEVELS.map((level, index) => {
     return (
       <Chip
         id={String(index)}
-        key={shortLevels[index]}
+        key={SHORT_LEVELS[index]}
         className="textbook_chip"
         avatar={
           <Avatar sx={{ backgroundColor: colors[index] }}>
-            <p className="textbook_level__avatar">{shortLevels[index]}</p>
+            <p className="textbook_level__avatar">{SHORT_LEVELS[index]}</p>
           </Avatar>
         }
         label={level}

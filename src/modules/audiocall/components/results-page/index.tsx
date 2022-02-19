@@ -1,13 +1,16 @@
-import React, { useState } from "react";
-import { Box, Button} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Box, Button } from "@mui/material";
 import { ResultsInfo } from "../results-info";
 import { ResultsList } from "../results-list";
 import { Paths } from "../../../../app/constants"
 import { NavLink } from "react-router-dom";
 import ReplayIcon from '@mui/icons-material/Replay';
 import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
+import { UpdateGameStats } from "../../../../api/update-game_stats";
 
 import './results-page.scss';
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../store";
 
 const ResultsPage = ({ answeredWords, setIsGameStarted }: {
   answeredWords: { word: Word, flag: boolean }[],
@@ -15,6 +18,26 @@ const ResultsPage = ({ answeredWords, setIsGameStarted }: {
 }) => {
 
   const [isInfoView, setIsInfoView] = useState(true);
+  const { userId, token } = useSelector((state: RootState) => state.user);
+
+
+  useEffect(() => {
+    if (answeredWords.length) {
+      const correct = answeredWords.filter((word) => word.flag).length;
+      const amount = answeredWords.length;
+      const streak = answeredWords.map((item) => item.flag ? 1 : 0).join('').match(/1*/gi)?.reduce((a, b) => {
+        return a.length > b.length ? a : b;
+      }).length || 0;
+      UpdateGameStats({
+        userId: userId,
+        userToken: token,
+        game: 'audiocall',
+        streak: streak,
+        correct: correct,
+        amount: amount,
+      });
+    }
+  }, [answeredWords]);
 
   return (
 

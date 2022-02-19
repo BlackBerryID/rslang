@@ -7,6 +7,7 @@ import { UpdateUserWord } from "../../../../api/update-user_word";
 import { AddUserWord } from "../../../../api/add-user_word";
 import { RootState } from "../../../../store";
 import './answers.scss';
+import { formatDate } from "../../../../utils/format-date";
 
 const answerStats = {
   userId: '',
@@ -16,6 +17,10 @@ const answerStats = {
     difficulty: '',
     optional: {
       audioStreak: '',
+      learned: {
+        date: '',
+        game: '',
+      }
     },
   },
 }
@@ -84,11 +89,15 @@ const Answers = ({ options, isAnswered, setNextQuestion, setAnsweredWords, setIs
     answerStats.wordId = correctAnswer?._id as string;
     answerStats.updateReq.optional.audioStreak = flag;
     if ((correctAnswer as Word).userWord) {
-      if ((correctAnswer as Word).userWord?.optional?.audioStreak) {
+      if ((correctAnswer as Word).userWord?.optional) {
         const answers = (correctAnswer as Word).userWord?.optional?.audioStreak + flag;
         answerStats.updateReq.optional.audioStreak = answers;
         if (checkIsLearned(answers)) {
           answerStats.updateReq.difficulty = 'learned';
+          answerStats.updateReq.optional.learned = {
+            date: formatDate(),
+            game: 'audiocall',
+          }
         } else {
           answerStats.updateReq.difficulty = 'learning';
         }

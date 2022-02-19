@@ -3,6 +3,8 @@ import audiocall from '../assets/audiocall.jpg';
 import { Box, Typography } from '@mui/material';
 import { Pages } from '../../../app/constants';
 import { colors } from '../../../app/constants';
+import { Link } from 'react-router-dom';
+import { Paths } from '../../../app/constants';
 
 export const TextbookGames = ({
   group,
@@ -12,6 +14,7 @@ export const TextbookGames = ({
     let gameName = item;
     let gameText;
     let gameImg;
+    let path;
 
     switch (item) {
       case Pages.mgSprint:
@@ -23,6 +26,7 @@ export const TextbookGames = ({
             alt="mini-game sprint"
           ></img>
         );
+        path = Paths.mgSprint;
         break;
       case Pages.mgAudioCall:
         gameText = 'Попробуйте понять, какое слово было произнесено.';
@@ -33,27 +37,31 @@ export const TextbookGames = ({
             alt="mini-game audiocall"
           ></img>
         );
+        path = Paths.mgAudioCall;
         break;
     }
 
     return (
-      <Typography
-        key={gameName}
+      <Link
+        to={path || '/'}
         className="textbook_games__button"
-        component="button"
-        sx={{
-          '&:hover': { color: colors[group], borderColor: colors[group] },
-        }}
+        key={gameName}
         onClick={prepareGameData}
       >
-        <Typography variant="h5" component="h3" sx={{ fontWeight: '700' }}>
-          {gameName}
+        <Typography
+          component="button"
+          className="textbook_games__title"
+          sx={{ '&:hover': { color: colors[group] } }}
+        >
+          <Typography variant="h5" component="h3" sx={{ fontWeight: '700' }}>
+            {gameName}
+          </Typography>
+          <Typography variant="body2" component="p">
+            {gameText}
+          </Typography>
+          {gameImg}
         </Typography>
-        <Typography variant="body2" component="p">
-          {gameText}
-        </Typography>
-        {gameImg}
-      </Typography>
+      </Link>
     );
   });
 

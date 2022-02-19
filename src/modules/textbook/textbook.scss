@@ -69,11 +69,15 @@
     &__button {
       display: flex;
       flex-direction: column;
+      text-decoration: none;
       text-align: start;
       width: 45%;
-      padding: 10px 20px;
       border: 1px solid grey;
       border-radius: 15px;
+    }
+
+    &__title {
+      padding: 10px 20px;
       transition: 0.2s;
     }
     

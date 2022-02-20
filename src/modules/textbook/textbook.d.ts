@@ -66,7 +66,11 @@ type TextbookCardProps = {
   updateWords: (wordName: string, difficultyLevel: string) => void;
   page: number;
   group: number;
-  getUserWords: (isDataToWrite?: boolean, pageNumber?: number) => Promise<any>;
+  getUserWords: (
+    isDataToWrite?: boolean,
+    pageNumber?: number,
+    isWordsForVocabulary?: boolean
+  ) => Promise<any>;
   setActiveCardIndex: React.Dispatch<React.SetStateAction<number>>;
   vocabularyWords: never[];
   vocabularyGroup: number;

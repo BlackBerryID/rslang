@@ -76,6 +76,10 @@ export const TextbookCard = ({
         getUserWords();
         setActiveCardIndex(0);
         return;
+      } else if (isVocabularyActive) {
+        getUserWords(false, 0, true);
+        setActiveCardIndex(0);
+        return;
       }
     } else {
       await AddUserWord(body(difficultyLevel));

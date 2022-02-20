@@ -2,6 +2,7 @@ import { base } from '.';
 import { formatDate } from '../utils/format-date';
 import { GetUserStats } from './get-user_stats';
 import { GetUserAgrWords } from './get-user_words';
+import { UpdateUserToken } from './update-user_token';
 
 
 export const UpdateUserStats = async (
@@ -101,7 +102,7 @@ export const UpdateUserStats = async (
       case 400:
         throw new Error('Bad request');
       case 401:
-        throw new Error('Access token is missing or invalid');
+        UpdateUserToken(userId);
     }
   }
   catch (err) {

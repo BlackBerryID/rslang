@@ -1,4 +1,5 @@
 import { base } from './api';
+import { UpdateUserToken } from './update-user_token';
 
 export const GetUserStats = async (userId: string, userToken: string) => {
   try {
@@ -12,10 +13,10 @@ export const GetUserStats = async (userId: string, userToken: string) => {
       },
     });
     switch (rawResponse.status) {
-      case 401:
-        throw new Error('Access token is missing or invalid');
       case 404:
         return {};
+      case 401:
+        UpdateUserToken(userId);
     }
     return await rawResponse.json();
   }

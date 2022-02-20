@@ -1,4 +1,5 @@
 import { base } from '.';
+import { UpdateUserToken } from './update-user_token';
 
 export const GetUserWord = async ({
   userId,
@@ -23,12 +24,10 @@ export const GetUserWord = async ({
         throw new Error(
           'Please, check word ID-pattern, we recommend to try another word ID.'
         );
-      case 401:
-        throw new Error(
-          'Please, check your user-token state, we recommend to relogin.'
-        );
       case 404:
         throw new Error(`Word with this id not found in user's colleciton.`);
+      case 401:
+        UpdateUserToken(userId);
     }
 
     return await rawResponse.json();

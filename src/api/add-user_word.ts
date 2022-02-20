@@ -1,4 +1,5 @@
 import { base } from '.';
+import { UpdateUserToken } from './update-user_token';
 
 export const AddUserWord = async ({
   userId,
@@ -47,14 +48,12 @@ export const AddUserWord = async ({
         throw new Error(
           'Please, check word ID-pattern, we recommend to try another word ID.'
         );
-      case 401:
-        throw new Error(
-          'Please, check your user-token state, we recommend to relogin.'
-        );
       case 404:
         throw new Error(`Word with this id not found in user's colleciton.`);
       case 417:
         throw new Error(`Sorry, but such user word already exists.`);
+      case 401:
+        UpdateUserToken(userId);
     }
   } catch (err) {
     if (err instanceof Error)

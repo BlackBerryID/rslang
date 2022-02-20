@@ -1,4 +1,5 @@
 import { base } from './api';
+import { UpdateUserToken } from './update-user_token';
 
 type AgregatedFilter = {
   $and?: Array<object>;
@@ -14,20 +15,6 @@ type AgregatedReq = {
   filter?: AgregatedFilter;
 };
 
-// Request example:
-// GetUserAgrWords({
-//   // group: 0 - optional!,
-//   // page: 0 - optional!,
-//   userId: 'id',
-//   userToken: 'token',
-//   wpp: 20,
-//   filter: {
-//     $and: [{ ['userWord.difficulty']: 'learning' }],
-//   },
-// })
-
-// Pages and groups http-query parameters don't work correctly, they must be passed with filters..
-
 export const GetUserAgrWords = async ({
   group,
   page,
@@ -36,41 +23,52 @@ export const GetUserAgrWords = async ({
   wpp,
   filter,
 }: AgregatedReq) => {
-  let paginated;
-  if (page !== undefined && group !== undefined) {
-    paginated = { $and: [{ page }, { group }] };
-  } else if (group !== undefined) {
-    paginated = {
-      $and: [{ group }],
-    };
-  } else {
-    paginated = null;
+  try {
+    let paginated;
+    if (page !== undefined && group !== undefined) {
+      paginated = { $and: [{ page }, { group }] };
+    } else if (group !== undefined) {
+      paginated = {
+        $and: [{ group }],
+      };
+    } else {
+      paginated = null;
+    }
+
+    let filtResult = '&filter=';
+
+    if (filter && paginated) {
+      filtResult += encodeURIComponent(
+        JSON.stringify({
+          [Object.keys(filter)[0]]: [...Object.values(filter)[0], paginated],
+        })
+      );
+    } else if (paginated || filter) {
+      filtResult += encodeURIComponent(JSON.stringify(paginated || filter));
+    }
+
+    const url = `${base}/users/${userId}/aggregatedWords?wordsPerPage=${wpp}${filtResult}`;
+    const rawResponse = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    });
+    switch (rawResponse.status) {
+      case 401:
+        UpdateUserToken(userId);
+        throw new Error
+    }
+    return await rawResponse.json();
+  } catch (err) {
+    if (err instanceof Error)
+      console.log(
+        `%c Caught >>>> ${err.message}`,
+        'font-size: 18px; font-weight: bold; color: orange;'
+      );
   }
-
-  let filtResult = '&filter=';
-
-  if (filter && paginated) {
-    filtResult += encodeURIComponent(
-      JSON.stringify({
-        [Object.keys(filter)[0]]: [...Object.values(filter)[0], paginated],
-      })
-    );
-  } else if (paginated || filter) {
-    filtResult += encodeURIComponent(JSON.stringify(paginated || filter));
-  }
-
-  const url = `${base}/users/${userId}/aggregatedWords?wordsPerPage=${wpp}${filtResult}`;
-  const rawResponse = await fetch(url, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${userToken}`,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-  });
-  return rawResponse.status > 299
-    ? rawResponse.status
-    : { ...(await rawResponse.json()) };
 };
 
 export type { AgregatedReq };

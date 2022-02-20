@@ -2,6 +2,7 @@ import { base } from '.';
 import { formatDate } from '../utils/format-date';
 import { GetUserStats } from './get-user_stats';
 import { GetUserAgrWords } from './get-user_words';
+import { UpdateUserToken } from './update-user_token';
 
 type GameTypes = 'audiocall' | 'sprint';
 
@@ -32,7 +33,7 @@ export const UpdateGameStats = async ({
       wpp: 20,
       filter: {
         "$and": [
-          { "userWord.optional.learned.game": `${game}` }, 
+          { "userWord.optional.learned.game": `${game}` },
           { "userWord.optional.learned.date": `${today}` },
           { "userWord.difficulty": "learned" }
         ]
@@ -83,7 +84,7 @@ export const UpdateGameStats = async ({
       case 400:
         throw new Error('Bad request');
       case 401:
-        throw new Error('Access token is missing or invalid');
+        UpdateUserToken(userId);
     }
   }
   catch (err) {

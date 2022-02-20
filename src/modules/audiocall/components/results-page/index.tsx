@@ -20,7 +20,6 @@ const ResultsPage = ({ answeredWords, setIsGameStarted }: {
   const [isInfoView, setIsInfoView] = useState(true);
   const { userId, token } = useSelector((state: RootState) => state.user);
 
-
   useEffect(() => {
     if (answeredWords.length) {
       const correct = answeredWords.filter((word) => word.flag).length;
@@ -37,7 +36,7 @@ const ResultsPage = ({ answeredWords, setIsGameStarted }: {
         amount: amount,
       });
     }
-  }, [answeredWords]);
+  }, [answeredWords, userId, token]);
 
   return (
 

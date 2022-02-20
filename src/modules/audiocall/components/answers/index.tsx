@@ -52,6 +52,9 @@ const Answers = ({ options, isAnswered, setNextQuestion, setAnsweredWords, setIs
 
   useEffect(() => {
     if (correctAnswer) {
+      if (isAnswered) {
+        setCollapsed(true);
+      }
       if (collapsed) {
         return;
       }
@@ -65,7 +68,7 @@ const Answers = ({ options, isAnswered, setNextQuestion, setAnsweredWords, setIs
       window.addEventListener("keyup", handleKeyUp);
       return () => window.removeEventListener("keyup", handleKeyUp);
     }
-  }, [correctAnswer, collapsed]);
+  }, [correctAnswer, isAnswered, collapsed]);
 
   useEffect(() => {
     setAnswer('');
@@ -76,11 +79,11 @@ const Answers = ({ options, isAnswered, setNextQuestion, setAnsweredWords, setIs
       setIsAnswered(true);
       if (word === (correctAnswer as Word).wordTranslate) {
         setAnsweredWords({ word: (correctAnswer as Word), flag: true });
-        if (mode === 'textbook') saveAnswer('1');
+        if (userId) saveAnswer('1');
       } else {
         setAnswer(word);
         setAnsweredWords({ word: (correctAnswer as Word), flag: false });
-        if (mode === 'textbook') saveAnswer('0');
+        if (userId) saveAnswer('0');
       }
     }
   };
@@ -91,15 +94,17 @@ const Answers = ({ options, isAnswered, setNextQuestion, setAnsweredWords, setIs
     if ((correctAnswer as Word).userWord) {
       if ((correctAnswer as Word).userWord?.optional) {
         const answers = (correctAnswer as Word).userWord?.optional?.audioStreak + flag;
+        const status = (correctAnswer as Word).userWord?.difficulty || 'learning';
         answerStats.updateReq.optional.audioStreak = answers;
-        if (checkIsLearned(answers)) {
+        if (checkIsLearned(answers, status)) {
           answerStats.updateReq.difficulty = 'learned';
+          answerStats.updateReq.optional.audioStreak = ' ';
           answerStats.updateReq.optional.learned = {
             date: formatDate(),
             game: 'audiocall',
           }
         } else {
-          answerStats.updateReq.difficulty = 'learning';
+          answerStats.updateReq.difficulty = status;
         }
       }
       UpdateUserWord(answerStats);
@@ -109,9 +114,11 @@ const Answers = ({ options, isAnswered, setNextQuestion, setAnsweredWords, setIs
   }
 
   const skipQuestion = (): void => {
-    setIsAnswered(true);
-    if (mode === 'textbook') saveAnswer('0');
-    setAnsweredWords({ word: (correctAnswer as Word), flag: false });
+    if (!isAnswered) {
+      setIsAnswered(true);
+      if (userId) saveAnswer('0');
+      setAnsweredWords({ word: (correctAnswer as Word), flag: false });
+    }
   };
 
   const showNextQuestion = (): void => {

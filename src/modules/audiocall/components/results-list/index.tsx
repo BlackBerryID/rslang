@@ -4,8 +4,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import React from "react";
 
 import './results-list.scss';
-import { base } from "../../../../api";
-import { AudioPlayer } from "../../helpers/audio-player";
+import { AudioPlayer } from "../../../../utils/audio-player";
 
 const ResultsList = ({ answeredWords }: { answeredWords: { word: Word, flag: boolean }[] }) => {
 
@@ -16,7 +15,7 @@ const ResultsList = ({ answeredWords }: { answeredWords: { word: Word, flag: boo
       <List>
         {answeredWords.map((item, index) => {
           return <ListItem disablePadding key={index}>
-            <ListItemButton onClick={() => { audio.playEffect(`${base}/${item.word.audio}`) }}>
+            <ListItemButton onClick={() => { audio.playEffect(`${item.word.audio}`) }}>
               <ListItemIcon>
                 {item.flag ? <CheckIcon color="success" /> : <ClearIcon color="error" />}
               </ListItemIcon>

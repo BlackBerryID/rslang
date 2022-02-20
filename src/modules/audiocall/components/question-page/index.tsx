@@ -11,7 +11,7 @@ import { ResultsPage } from "../results-page";
 import { WordInfo } from "../word-info";
 import { ShuffleArray } from "../../../../utils/shuffle-array";
 import { Answers } from "../answers";
-import { AudioPlayer } from "../../helpers/audio-player";
+import { AudioPlayer } from "../../../../utils/audio-player";
 import { RootState } from "../../../../store";
 
 import './question-page.scss';
@@ -41,7 +41,8 @@ const QuestionPage = ({ difficulty, setIsGameStarted }: {
     try {
       if (mode === 'textbook') {
         if (deck?.length) {
-          setWords(ShuffleArray(deck));
+          const temp = [...deck];
+          setWords(ShuffleArray(temp));
           setIsLoading(false);
         } else {
           throw new Error();
@@ -128,7 +129,7 @@ const QuestionPage = ({ difficulty, setIsGameStarted }: {
         <IconButton
           className="play-icon"
           aria-label="volume"
-          onClick={() => { audio.playEffect(`${base}/${(currentAnswer as Word).audio}`) }}
+          onClick={() => { audio.playEffect(`${(currentAnswer as Word).audio}`) }}
         >
           <VolumeUp sx={{ fontSize: 80 }} />
         </IconButton>

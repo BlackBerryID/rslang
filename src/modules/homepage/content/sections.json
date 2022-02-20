@@ -1,0 +1,67 @@
+{
+  "sections": {
+    "greetings": {
+      "title": "Пополняйте лексический запас английского через игры.",
+      "subtitle": "Веб-сервис для изучения английских слов любого уровня. От Вас необходимо только время, желание и никаких подписок.",
+      "button": "Полетели"
+    },
+    "advantages": {
+      "title": "Что мы предлагаем",
+      "data": [
+        {
+          "id": "01",
+          "img": "https://images.unsplash.com/photo-1622555063306-9930f396f051?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=930&q=80",
+          "title": "Учебник",
+          "text": "Более 3000 тысяч слов для изучения, разбитых на разделы по уровню вашей подготовки с удобной навигацией."
+        },
+        {
+          "id": "02",
+          "img": "https://images.unsplash.com/photo-1524639064490-254e0a1db723?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
+          "title": "Словарь",
+          "text": "Создайте персональный словарь для изучения слов — добавляй слова, которым хотите уделять особое внимание и удаляйте уже изученные."
+        },
+        {
+          "id": "03",
+          "img": "https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
+          "title": "Статистика",
+          "text": "Отслеживайте свой прогресс в индивидуальной статистике, ставьте цели и вдохновляйся на достижение новых результатов каждый день!"
+        },
+        {
+          "id": "04",
+          "img": "https://images.unsplash.com/photo-1611996575749-79a3a250f948?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
+          "title": "Игры",
+          "text": "2 игры на развитие запоминания слов, восприятия на слух и письма."
+        }
+      ]
+    },
+    "team": {
+      "title": "Кто это сделал?",
+      "data": [
+        {
+          "id": "01-dima",
+          "name": "Дмитрий",
+          "avatar": "../../../assets/img/team/dima.png",
+          "github": "https://github.com/BlackBerryID",
+          "badge": "developer | team leader",
+          "description": "Гасит, топчет, пашет и презентует."
+        },
+        {
+          "id": "02-artur",
+          "name": "Артур",
+          "avatar": "../../../assets/img/team/artur.png",
+          "github": "https://github.com/saratovkin",
+          "badge": "developer | true programmer",
+          "description": "Придумывает и реализует. Делает как положено."
+        },
+        {
+          "id": "03-jan",
+          "name": "Ян",
+          "avatar": "../../../assets/img/team/jan.png",
+          "github": "https://github.com/shadowinhaze",
+          "badge": "drooling on IT",
+          "description": "Заноза и главный токсик команды. Без него закончили бы за день, душнит рефакторингом."
+        }
+      ]
+    }
+  }
+}

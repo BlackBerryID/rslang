@@ -107,14 +107,14 @@ export const Textbook = () => {
   }, [getWords, getUserWords, user]);
 
   const changeGroup = (group: number) => {
-    localStorage.setItem('group', JSON.stringify(group));
-    localStorage.setItem('page', JSON.stringify(0));
+    localStorage.setItem('group', group.toString());
+    localStorage.setItem('page', (0).toString());
     setGroup(group);
     setPage(0);
   };
 
   const changePage = (e: React.ChangeEvent<unknown>, page: number) => {
-    localStorage.setItem('page', JSON.stringify(page - 1));
+    localStorage.setItem('page', (page - 1).toString());
     setPage(page - 1);
   };
 
@@ -129,6 +129,7 @@ export const Textbook = () => {
     let wordsArray = words;
     let isLoop = false;
     let currentSearchPage = page;
+    let isFirstIteration = true;
 
     while (gameWords.length < 20) {
       if (isLoop && currentSearchPage === page) break;
@@ -137,20 +138,7 @@ export const Textbook = () => {
         isLoop = true;
       }
       currentSearchPage -= 1;
-
-      const tempArray =
-        wordsArray?.filter((wordItem) => {
-          if (
-            wordItem.userWord === undefined ||
-            wordItem.userWord.difficulty !== DIFFICULTY.learned
-          ) {
-            return true;
-          } else {
-            return false;
-          }
-        }) || [];
-      gameWords = gameWords.concat(tempArray);
-      if (gameWords.length < 20) {
+      if (!isFirstIteration) {
         user.userId
           ? await getUserWords(true, currentSearchPage).then(
               (data) => (wordsArray = data)
@@ -159,6 +147,14 @@ export const Textbook = () => {
               (data) => (wordsArray = data)
             );
       }
+      const tempArray =
+        wordsArray?.filter(
+          (wordItem) =>
+            wordItem.userWord === undefined ||
+            wordItem.userWord.difficulty !== DIFFICULTY.learned
+        ) || [];
+      gameWords = gameWords.concat(tempArray);
+      isFirstIteration = false;
     }
     gameWords = gameWords.slice(0, 20);
     reducer(setStatus({ mode: 'textbook', deck: gameWords, langLevel: group }));

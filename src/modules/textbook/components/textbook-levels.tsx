@@ -21,7 +21,10 @@ export const TextbookLevels = ({
   isVocabularyActive,
   vocabularyWords,
 }: TextbookLevelsProps) => {
-  const chipList = LEVELS.map((level, index) => {
+  const levels = isVocabularyActive
+    ? LEVELS.slice(0, LEVELS.length - 1)
+    : LEVELS;
+  const chipList = levels.map((level, index) => {
     return (
       <Chip
         id={String(index)}

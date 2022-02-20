@@ -32,11 +32,6 @@ export const Textbook = () => {
   const [words, setWords] = useState<Array<GetWord> | null>(null);
   const [isVocabularyActive, setIsVocabularyActive] = useState(false);
   const [vocabularyGroup, setVocabularyGroup] = useState(0);
-  // const [vocabularyWords, setVocabularyWords] = useState({
-  //   learning: [],
-  //   difficult: [],
-  //   learned: [],
-  // });
   const [vocabularyWords, setVocabularyWords] = useState([]);
 
   const reducer: AppDispatch = useDispatch();
@@ -115,13 +110,6 @@ export const Textbook = () => {
         };
       }
       if (isWordsForVocabulary) {
-        // setVocabularyWords({
-        //   learning: await GetUserAgrWords(bodyConstructor(DIFFICULTY.learning)),
-        //   difficult: await GetUserAgrWords(
-        //     bodyConstructor(DIFFICULTY.difficult)
-        //   ),
-        //   learned: await GetUserAgrWords(bodyConstructor(DIFFICULTY.learned)),
-        // });
         const learning = await GetUserAgrWords(
           bodyConstructor(DIFFICULTY.learning)
         );
@@ -173,6 +161,16 @@ export const Textbook = () => {
       );
       return;
     }
+    if (isVocabularyActive) {
+      reducer(
+        setStatus({
+          mode: 'textbook',
+          deck: vocabularyWords[vocabularyGroup] || [],
+          langLevel: group,
+        })
+      );
+      return;
+    }
     let gameWords: Array<GetWord> = [];
     let wordsArray = words;
     let isLoop = false;
@@ -214,7 +212,7 @@ export const Textbook = () => {
 
   useEffect(() => {
     if (isVocabularyActive) getUserWords(false, 0, true);
-  }, [isVocabularyActive, getUserWords]);
+  }, [isVocabularyActive, getUserWords, group]);
 
   return (
     <Container className="textbook_container">

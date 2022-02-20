@@ -5,6 +5,8 @@ import { LEVELS, SHORT_LEVELS } from '../constants';
 import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 import FlashOnOutlinedIcon from '@mui/icons-material/FlashOnOutlined';
 import SchoolIcon from '@mui/icons-material/School';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store';
 
 const vocabularyIcons = [
   <LocalLibraryIcon />,
@@ -21,9 +23,11 @@ export const TextbookLevels = ({
   isVocabularyActive,
   vocabularyWords,
 }: TextbookLevelsProps) => {
-  const levels = isVocabularyActive
-    ? LEVELS.slice(0, LEVELS.length - 1)
-    : LEVELS;
+  const user = useSelector((state: RootState) => state.user);
+  const levels =
+    isVocabularyActive || !user.userId
+      ? LEVELS.slice(0, LEVELS.length - 1)
+      : LEVELS;
   const chipList = levels.map((level, index) => {
     return (
       <Chip

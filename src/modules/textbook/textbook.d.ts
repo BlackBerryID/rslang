@@ -1,5 +1,7 @@
 type TextbookHeaderProp = {
   group: number;
+  isVocabularyActive: boolean;
+  setIsVocabularyActive: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 type TextbookGamesProp = {
@@ -11,6 +13,9 @@ type TextbookGamesProp = {
 type TextbookLevelsProps = {
   group: number;
   changeGroup: (number) => void;
+  vocabularyGroup: number;
+  changeVocabularyGroup: (number) => void;
+  isVocabularyActive: boolean;
 };
 
 declare module '*.jpg';
@@ -20,6 +25,9 @@ type TextbookWordsProps = {
   words: Array<GetWord> | null;
   activeCardIndex: number;
   setActiveCardIndex: React.Dispatch<React.SetStateAction<number>>;
+  vocabularyWords: never[];
+  vocabularyGroup: number;
+  isVocabularyActive: boolean;
 };
 
 type GetWord = {

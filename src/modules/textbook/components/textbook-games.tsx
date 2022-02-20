@@ -10,6 +10,9 @@ export const TextbookGames = ({
   group,
   words,
   prepareGameData,
+  isVocabularyActive,
+  vocabularyGroup,
+  vocabularyWords,
 }: TextbookGamesProp) => {
   const games = [Pages.mgSprint, Pages.mgAudioCall].map((item) => {
     let gameName = item;
@@ -42,8 +45,12 @@ export const TextbookGames = ({
         break;
     }
 
+    const localWords = isVocabularyActive
+      ? vocabularyWords[vocabularyGroup]
+      : words;
+
     return (
-      ((group === 6 && words?.length !== 0) || group !== 6) && (
+      localWords?.length !== 0 && (
         <Link
           to={path || '/'}
           className="textbook_games__button"

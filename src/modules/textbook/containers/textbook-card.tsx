@@ -30,6 +30,9 @@ export const TextbookCard = ({
   group,
   getUserWords,
   setActiveCardIndex,
+  isVocabularyActive,
+  vocabularyWords,
+  vocabularyGroup,
 }: TextbookCardProps) => {
   const [audio] = useState(new Audio());
 
@@ -101,12 +104,16 @@ export const TextbookCard = ({
     audio.currentTime = 0;
   }, [activeCardIndex, page, group, audio]);
 
-  if (!words) {
+  const localWords = isVocabularyActive
+    ? vocabularyWords[vocabularyGroup]
+    : words;
+
+  if (!localWords) {
     return <CircularProgress />;
-  } else if (group === 6 && words.length === 0) {
+  } else if (localWords.length === 0) {
     return null;
   } else {
-    const wordItem = words[activeCardIndex];
+    const wordItem = localWords[activeCardIndex];
     const difficulty = wordItem?.userWord?.difficulty;
     const optional = wordItem?.userWord?.optional;
     const gameSprint = optional?.sprintStreak?.trim();

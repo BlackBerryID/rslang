@@ -8,6 +8,9 @@ type TextbookGamesProp = {
   group: number;
   words: Array<GetWord> | null;
   prepareGameData: () => void;
+  vocabularyWords: never[];
+  vocabularyGroup: number;
+  isVocabularyActive: boolean;
 };
 
 type TextbookLevelsProps = {
@@ -65,4 +68,7 @@ type TextbookCardProps = {
   group: number;
   getUserWords: (isDataToWrite?: boolean, pageNumber?: number) => Promise<any>;
   setActiveCardIndex: React.Dispatch<React.SetStateAction<number>>;
+  vocabularyWords: never[];
+  vocabularyGroup: number;
+  isVocabularyActive: boolean;
 };

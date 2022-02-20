@@ -62,7 +62,7 @@ export const TextbookLevels = ({
           </Avatar>
         }
         label={`${vocabularyText[index]} (Слов: ${
-          (vocabularyWords[index] as Array<GetWord>).length
+          (vocabularyWords[index] as Array<GetWord>)?.length
         })`}
         sx={{
           backgroundColor:

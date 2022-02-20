@@ -211,7 +211,10 @@ export const Textbook = () => {
   };
 
   useEffect(() => {
-    if (isVocabularyActive) getUserWords(false, 0, true);
+    if (isVocabularyActive) {
+      getUserWords(false, 0, true);
+      setActiveCardIndex(0);
+    }
   }, [isVocabularyActive, getUserWords, group]);
 
   return (
@@ -241,7 +244,7 @@ export const Textbook = () => {
             vocabularyGroup={vocabularyGroup}
             isVocabularyActive={isVocabularyActive}
           />
-          {group !== 6 && (
+          {group !== 6 && !isVocabularyActive && (
             <Pagination
               count={30}
               page={page + 1}
@@ -254,6 +257,9 @@ export const Textbook = () => {
             group={group}
             words={words}
             prepareGameData={prepareGameData}
+            vocabularyWords={vocabularyWords}
+            vocabularyGroup={vocabularyGroup}
+            isVocabularyActive={isVocabularyActive}
           />
         </Box>
         <TextbookCard
@@ -264,6 +270,9 @@ export const Textbook = () => {
           group={group}
           getUserWords={getUserWords}
           setActiveCardIndex={setActiveCardIndex}
+          vocabularyWords={vocabularyWords}
+          vocabularyGroup={vocabularyGroup}
+          isVocabularyActive={isVocabularyActive}
         />
       </Box>
     </Container>

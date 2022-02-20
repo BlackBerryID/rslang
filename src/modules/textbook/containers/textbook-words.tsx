@@ -32,6 +32,14 @@ export const TextbookWords = ({
         "сложные".
       </Typography>
     );
+  } else if (group !== 6 && localWords.length === 0) {
+    return (
+      <Typography variant="h5" component="h2" sx={{ textAlign: 'center' }}>
+        Здесь пока ещё нет слов, но вы можете пополнить эти категории словами
+        поиграв в игры или отметив некоторые слова на страницах учебника как
+        'сложные' или 'изученные'.
+      </Typography>
+    );
   } else {
     return (
       <Grid container spacing={{ xs: 1, md: 1.5 }}>

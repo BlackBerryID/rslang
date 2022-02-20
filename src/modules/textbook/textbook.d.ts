@@ -16,6 +16,7 @@ type TextbookLevelsProps = {
   vocabularyGroup: number;
   changeVocabularyGroup: (number) => void;
   isVocabularyActive: boolean;
+  vocabularyWords: never[];
 };
 
 declare module '*.jpg';

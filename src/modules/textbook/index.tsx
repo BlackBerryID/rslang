@@ -227,6 +227,7 @@ export const Textbook = () => {
         vocabularyGroup={vocabularyGroup}
         changeVocabularyGroup={changeVocabularyGroup}
         isVocabularyActive={isVocabularyActive}
+        vocabularyWords={vocabularyWords}
       />
       <div className="textbook_words__title">Слова</div>
       <Box className="textbook_main" sx={{ pt: '20px' }}>

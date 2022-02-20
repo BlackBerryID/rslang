@@ -19,6 +19,7 @@ export const TextbookLevels = ({
   changeVocabularyGroup,
   vocabularyGroup,
   isVocabularyActive,
+  vocabularyWords,
 }: TextbookLevelsProps) => {
   const chipList = LEVELS.map((level, index) => {
     return (
@@ -60,7 +61,9 @@ export const TextbookLevels = ({
             <p className="textbook_level__avatar">{icon}</p>
           </Avatar>
         }
-        label={vocabularyText[index]}
+        label={`${vocabularyText[index]} (Слов: ${
+          (vocabularyWords[index] as Array<GetWord>).length
+        })`}
         sx={{
           backgroundColor:
             colors[vocabularyGroup + 1] === colors[index + 1]

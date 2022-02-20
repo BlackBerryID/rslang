@@ -1,10 +1,14 @@
-type TextbookColorProp = {
-  color: string;
+type TextbookHeaderProp = {
+  group: number;
+};
+
+type TextbookGamesProp = {
+  group: number;
+  words: Array<GetWord> | null;
+  prepareGameData: () => void;
 };
 
 type TextbookLevelsProps = {
-  color: string;
-  setColor: React.Dispatch<React.SetStateAction<string>>;
   group: number;
   changeGroup: (number) => void;
 };
@@ -12,13 +16,14 @@ type TextbookLevelsProps = {
 declare module '*.jpg';
 
 type TextbookWordsProps = {
-  color: string;
+  group: number;
   words: Array<GetWord> | null;
   activeCardIndex: number;
   setActiveCardIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 
 type GetWord = {
+  [key: string];
   id: string;
   group: number;
   page: number;
@@ -33,9 +38,22 @@ type GetWord = {
   wordTranslate: string;
   textMeaningTranslate: string;
   textExampleTranslate: string;
+  userWord?: {
+    difficulty: string;
+    optional: {
+      audioStreak: string;
+      sprintStreak: string;
+    };
+  };
+  _id: string;
 };
 
 type TextbookCardProps = {
   words: Array<GetWord> | null;
   activeCardIndex: number;
+  updateWords: (wordName: string, difficultyLevel: string) => void;
+  page: number;
+  group: number;
+  getUserWords: (isDataToWrite?: boolean, pageNumber?: number) => Promise<any>;
+  setActiveCardIndex: React.Dispatch<React.SetStateAction<number>>;
 };

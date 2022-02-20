@@ -65,3 +65,5 @@ export const GetUserAgrWords = async ({
     ? rawResponse.status
     : { ...(await rawResponse.json()) };
 };
+
+export type { AgregatedReq };

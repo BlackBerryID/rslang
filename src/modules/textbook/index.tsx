@@ -1,17 +1,23 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Container, Box, Pagination } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
 
 import './textbook.scss';
 import { TextbookHeader } from './components/textbook-header';
 import { TextbookLevels } from './components/textbook-levels';
 import { TextbookWords } from './containers/textbook-words';
-import { TextbookCard } from './components/textbook-card';
+import { TextbookCard } from './containers/textbook-card';
 import { TextbookGames } from './components/textbook-games';
 import { GetWords } from '../../api';
 import { GetUserAgrWords } from '../../api/get-user_words';
+import { DIFFICULTY } from './constants';
+
+import type { RootState, AppDispatch } from '../../store';
+import { setStatus } from '../../store/reducers/watch-status';
+
+import type { AgregatedReq } from '../../api/get-user_words';
 
 export const Textbook = () => {
-  const [currentColor, setCurrentColor] = useState('#fdd835');
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const [group, setGroup] = useState(
     localStorage.getItem('group')
@@ -23,76 +29,174 @@ export const Textbook = () => {
       ? JSON.parse(localStorage.getItem('page') as string)
       : 0
   );
-  const [words, setWords] = useState(null);
+  const [words, setWords] = useState<Array<GetWord> | null>(null);
 
-  const getWords = useCallback(async () => {
-    let response = await GetWords(group, page);
-    setWords(response);
-  }, [group, page]);
+  const reducer: AppDispatch = useDispatch();
+  const user = useSelector((state: RootState) => state.user);
+
+  // we use this method only to avoid calling 'GetUserAgrWords' after each 'word difficulty' update. Instead we work with local state variable 'words'.
+  const updateWords = (wordName: string, difficultyLevel: string) => {
+    if (!words) return;
+    setWords((words) => {
+      if (words) {
+        return words?.map((wordItem) => {
+          if (wordItem.word !== wordName) return wordItem;
+          return {
+            ...wordItem,
+            userWord: wordItem.userWord
+              ? {
+                  ...wordItem.userWord,
+                  difficulty: difficultyLevel,
+                }
+              : {
+                  difficulty: difficultyLevel,
+                  optional: {
+                    audioStreak: ' ',
+                    sprintStreak: ' ',
+                  },
+                },
+          };
+        });
+      }
+      return null;
+    });
+  };
+
+  const getWords = useCallback(
+    async (isDataToWrite = false, pageNumber = page) => {
+      let response = await GetWords(group, pageNumber);
+      if (isDataToWrite) return response;
+      setWords(response);
+    },
+    [group, page]
+  );
+
+  const getUserWords = useCallback(
+    async (isDataToWrite: boolean = false, pageNumber: number = page) => {
+      let body: AgregatedReq = {
+        group,
+        page: pageNumber,
+        userId: user.userId,
+        userToken: user.token,
+        wpp: 20,
+      };
+      if (group === 6) {
+        body = {
+          userId: user.userId,
+          userToken: user.token,
+          wpp: 3600,
+          filter: {
+            $and: [{ ['userWord.difficulty']: DIFFICULTY.difficult }],
+          },
+        };
+      }
+      const response = await GetUserAgrWords(body);
+      console.log(response);
+      if (isDataToWrite) return response[0]?.paginatedResults;
+      setWords(response[0]?.paginatedResults);
+    },
+    [group, page, user]
+  );
 
   useEffect(() => {
-    getWords();
-  }, [getWords]);
+    if (user.userId) {
+      getUserWords();
+    } else {
+      getWords();
+    }
+  }, [getWords, getUserWords, user]);
 
   const changeGroup = (group: number) => {
+    localStorage.setItem('group', group.toString());
+    localStorage.setItem('page', (0).toString());
     setGroup(group);
     setPage(0);
   };
 
   const changePage = (e: React.ChangeEvent<unknown>, page: number) => {
+    localStorage.setItem('page', (page - 1).toString());
     setPage(page - 1);
   };
 
-  useEffect(() => {
-    setPage(0);
-  }, [group]);
+  const prepareGameData = async () => {
+    if (group === 6) {
+      reducer(
+        setStatus({ mode: 'textbook', deck: words || [], langLevel: group })
+      );
+      return;
+    }
+    let gameWords: Array<GetWord> = [];
+    let wordsArray = words;
+    let isLoop = false;
+    let currentSearchPage = page;
+    let isFirstIteration = true;
 
-  // const getUserWords = useCallback(async () => {
-  //   const user = JSON.parse(localStorage.getItem('user')!);
-  //   const userToken = user.token;
-  //   const userId = user.userId;
-  //   const response = await GetUserAgrWords({
-  //     group: 3,
-  //     page: 3,
-  //     userId,
-  //     userToken,
-  //     wpp: 20,
-  //   });
-  //   console.log('RESPONSE', response);
-  // }, []);
-
-  // useEffect(() => {
-  //   getUserWords();
-  // }, [getUserWords]);
+    while (gameWords.length < 20) {
+      if (isLoop && currentSearchPage === page) break;
+      if (currentSearchPage < 0) {
+        currentSearchPage = 29;
+        isLoop = true;
+      }
+      currentSearchPage -= 1;
+      if (!isFirstIteration) {
+        user.userId
+          ? await getUserWords(true, currentSearchPage).then(
+              (data) => (wordsArray = data)
+            )
+          : await getWords(true, currentSearchPage).then(
+              (data) => (wordsArray = data)
+            );
+      }
+      const tempArray =
+        wordsArray?.filter(
+          (wordItem) =>
+            wordItem.userWord === undefined ||
+            wordItem.userWord.difficulty !== DIFFICULTY.learned
+        ) || [];
+      gameWords = gameWords.concat(tempArray);
+      isFirstIteration = false;
+    }
+    gameWords = gameWords.slice(0, 20);
+    reducer(setStatus({ mode: 'textbook', deck: gameWords, langLevel: group }));
+  };
 
   return (
     <Container className="textbook_container">
-      <TextbookHeader color={currentColor} />
-      <TextbookLevels
-        color={currentColor}
-        setColor={setCurrentColor}
-        group={group}
-        changeGroup={changeGroup}
-      />
+      <TextbookHeader group={group} />
+      <TextbookLevels group={group} changeGroup={changeGroup} />
       <div className="textbook_words__title">Слова</div>
       <Box className="textbook_main" sx={{ pt: '20px' }}>
         <Box className="textbook_main__left">
           <TextbookWords
-            color={currentColor}
+            group={group}
             words={words}
             activeCardIndex={activeCardIndex}
             setActiveCardIndex={setActiveCardIndex}
           />
-          <Pagination
-            count={30}
-            page={page + 1}
-            color="primary"
-            sx={{ mt: '30px' }}
-            onChange={changePage}
+          {group !== 6 && (
+            <Pagination
+              count={30}
+              page={page + 1}
+              color="primary"
+              sx={{ mt: '30px' }}
+              onChange={changePage}
+            />
+          )}
+          <TextbookGames
+            group={group}
+            words={words}
+            prepareGameData={prepareGameData}
           />
-          <TextbookGames color={currentColor} />
         </Box>
-        <TextbookCard words={words} activeCardIndex={activeCardIndex} />
+        <TextbookCard
+          words={words}
+          activeCardIndex={activeCardIndex}
+          updateWords={updateWords}
+          page={page}
+          group={group}
+          getUserWords={getUserWords}
+          setActiveCardIndex={setActiveCardIndex}
+        />
       </Box>
     </Container>
   );

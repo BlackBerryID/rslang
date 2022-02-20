@@ -1,16 +1,11 @@
-import { base } from "../api";
+import { base } from '../api';
 
 class AudioPlayer {
+  static audio: HTMLAudioElement = new Audio();
 
-  private audio: HTMLAudioElement;
-
-  constructor() {
-    this.audio = new Audio();
-  }
-
-  public playEffect(src: string): void {
-    this.audio.src = `${base}/${src}`;
-    this.audio.play();
+  static playEffect(src: string): void {
+    AudioPlayer.audio.src = `${base}/${src}`;
+    AudioPlayer.audio.play();
   }
 }
 

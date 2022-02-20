@@ -8,14 +8,12 @@ import { AudioPlayer } from "../../../../utils/audio-player";
 
 const ResultsList = ({ answeredWords }: { answeredWords: { word: Word, flag: boolean }[] }) => {
 
-  const audio = new AudioPlayer();
-
   return (
     <div className="results-list">
       <List>
         {answeredWords.map((item, index) => {
           return <ListItem disablePadding key={index}>
-            <ListItemButton onClick={() => { audio.playEffect(`${item.word.audio}`) }}>
+            <ListItemButton onClick={() => { AudioPlayer.playEffect(`${item.word.audio}`) }}>
               <ListItemIcon>
                 {item.flag ? <CheckIcon color="success" /> : <ClearIcon color="error" />}
               </ListItemIcon>

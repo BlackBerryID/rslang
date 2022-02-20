@@ -8,7 +8,6 @@ import { AudioPlayer } from "../../../../utils/audio-player";
 
 const WordInfo = ({ word }: { word: Word }) => {
 
-  const audio = new AudioPlayer()
   return (
     <Card sx={{ width: 400, height: 300 }}>
       <CardMedia
@@ -30,7 +29,7 @@ const WordInfo = ({ word }: { word: Word }) => {
         <IconButton
           aria-label="volume"
           sx={{ p: 2 }}
-          onClick={() => { audio.playEffect(`${word.audio}`) }}
+          onClick={() => { AudioPlayer.playEffect(`${word.audio}`) }}
         >
           <VolumeUp sx={{ fontSize: 40 }} />
         </IconButton>

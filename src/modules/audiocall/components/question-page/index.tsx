@@ -22,7 +22,6 @@ const QuestionPage = ({ difficulty, setIsGameStarted }: {
 }) => {
 
   const { mode, deck } = useSelector((state: RootState) => state.appStatus);
-  const audio = useMemo(() => new AudioPlayer(), []);
 
   const [words, setWords] = useState<Word[]>([]);
   const [answeredWords, setAnsweredWords] = useState<{ word: Word, flag: boolean }[]>([]);
@@ -85,9 +84,9 @@ const QuestionPage = ({ difficulty, setIsGameStarted }: {
 
   useEffect(() => {
     if (currentAnswer && !isGameEnded) {
-      audio.playEffect(`${base}/${currentAnswer.audio}`);
+      AudioPlayer.playEffect(`${base}/${currentAnswer.audio}`);
     }
-  }, [audio, currentAnswer, isGameEnded]);
+  }, [currentAnswer, isGameEnded]);
 
   useEffect(() => {
     if (words.length) {
@@ -129,7 +128,7 @@ const QuestionPage = ({ difficulty, setIsGameStarted }: {
         <IconButton
           className="play-icon"
           aria-label="volume"
-          onClick={() => { audio.playEffect(`${(currentAnswer as Word).audio}`) }}
+          onClick={() => { AudioPlayer.playEffect(`${(currentAnswer as Word).audio}`) }}
         >
           <VolumeUp sx={{ fontSize: 80 }} />
         </IconButton>

@@ -4,7 +4,6 @@ import AudioCallConst from "../../constants";
 import { Box, CircularProgress, IconButton } from "@mui/material";
 import { GetWords } from "../../../../api/get-words";
 import { GetRandomNum } from "../../../../utils/get-random-num";
-import { base } from "../../../../api";
 import { VolumeUp } from "@mui/icons-material";
 import { ErrorAlert } from "../error-alert";
 import { ResultsPage } from "../results-page";
@@ -84,7 +83,7 @@ const QuestionPage = ({ difficulty, setIsGameStarted }: {
 
   useEffect(() => {
     if (currentAnswer && !isGameEnded) {
-      AudioPlayer.playEffect(`${base}/${currentAnswer.audio}`);
+      AudioPlayer.playEffect(`${currentAnswer.audio}`);
     }
   }, [currentAnswer, isGameEnded]);
 

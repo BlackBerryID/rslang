@@ -7,10 +7,10 @@ import { NavLink } from "react-router-dom";
 import ReplayIcon from '@mui/icons-material/Replay';
 import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 import { UpdateGameStats } from "../../../../api/update-game_stats";
-
-import './results-page.scss';
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
+
+import './results-page.scss';
 
 const ResultsPage = ({ answeredWords, setIsGameStarted }: {
   answeredWords: { word: Word, flag: boolean }[],
@@ -41,7 +41,7 @@ const ResultsPage = ({ answeredWords, setIsGameStarted }: {
   return (
 
     <div className="results-page">
-      <Box sx={{ display: 'flex', columnGap: '20px' }}>
+      <Box sx={{ display: 'flex', columnGap: '20px', mb: 5 }}>
         <Button
           variant={isInfoView ? "contained" : "outlined"}
           onClick={() => setIsInfoView(true)}
@@ -59,7 +59,7 @@ const ResultsPage = ({ answeredWords, setIsGameStarted }: {
           <ResultsInfo answersCount={answeredWords.length} correctAnswers={answeredWords.filter((word) => word.flag).length} /> :
           <ResultsList answeredWords={answeredWords} />
       }
-      <Box sx={{ display: 'flex', flexDirection: 'column', rowGap: '20px' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', rowGap: '20px', mt: 5 }}>
         <Button
           variant="outlined"
           startIcon={<ReplayIcon />}

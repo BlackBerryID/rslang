@@ -33,7 +33,6 @@ const Answers = ({ options, isAnswered, setNextQuestion, setAnsweredWords, setIs
   setIsAnswered: (flag: boolean) => void,
 }) => {
 
-  const { mode } = useSelector((state: RootState) => state.appStatus);
   const { userId, token } = useSelector((state: RootState) => state.user);
   answerStats.userId = userId;
   answerStats.userToken = token;

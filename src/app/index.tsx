@@ -11,6 +11,7 @@ import MiniGameAudioCall from '../modules/audiocall';
 import { MiniGameSprint } from '../modules/mg-sprint';
 import { NotFoundPage } from '../modules/404';
 import { Textbook } from '../modules/textbook';
+import { Statistics } from '../modules/statistics';
 
 export const App = () => {
   return (
@@ -22,6 +23,7 @@ export const App = () => {
             <Route path={Paths.textBook} element={<Textbook />} />
             <Route path={Paths.mgAudioCall} element={<MiniGameAudioCall />} />
             <Route path={Paths.mgSprint} element={<MiniGameSprint />} />
+            <Route path={Paths.statistic} element={<Statistics />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>

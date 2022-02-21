@@ -1,0 +1,8 @@
+.results-page {
+  width: calc(100% - 100px);
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}

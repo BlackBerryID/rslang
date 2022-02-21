@@ -1,0 +1,61 @@
+.statistic-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-areas:
+  'result result' 
+  'wrong right'
+  'action action';
+  gap: 2em;
+
+  &__column {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1em;
+
+    &_wrong {
+      grid-area: wrong;
+    }
+
+    &_right {
+      grid-area: right;
+    }
+
+    &__header {
+      display: flex;
+      align-items: center;
+      column-gap: 1em;
+    }
+
+  }
+
+  &__actions {
+    grid-area: action;
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1em 1em;
+  }
+
+  &__result {
+    grid-area: result;
+  }
+
+  @media only screen and (max-width: 700px) {
+    width: 80%;
+    grid-template-columns: 1fr;
+    justify-items: stretch;
+    column-gap: 0;
+    
+    grid-template-areas:
+    'result' 
+    'wrong'
+    'right'
+    'action';
+
+    &__actions {
+      grid-template-columns: 1fr;
+      row-gap: 1em;
+    }
+  }
+};

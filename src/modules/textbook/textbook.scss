@@ -1,0 +1,141 @@
+.textbook {
+  &_container {
+    height: 100%;
+  }
+
+  &_button {
+    font-weight: 500;
+    transition: 0.2s;
+  }
+
+  &_levels-list {
+    margin: 20px 0 0 0;
+    width: 100%;
+    flex-wrap: wrap;
+    row-gap: 1em;
+    column-gap: 1em;
+  }
+
+  &_words {
+
+    &__title {
+      font-size: 32px;
+      font-weight: 500;
+      margin-top: 20px;
+    }
+
+    &__item {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 120px;
+      width: 300px;
+    }
+
+    &__icon {
+      position: absolute;
+      right: 10px;
+      bottom: 0;
+    }
+
+    &__button {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 10px 20px;
+      width: 100%;
+      height: 100%;
+      border-radius: 15px;
+      background-color: rgb(241, 241, 241);
+      transition: 0.2s;
+
+      h4 {
+        font-size: 18px;
+        margin-bottom: 3px;
+      }
+
+      p {
+        font-size: 16px;
+        text-align: start;
+      }
+    }
+  }
+
+  &_level__avatar { color: white; font-weight: 700; }
+
+  &_games {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    margin: 30px 0;
+    flex-wrap: wrap;
+    row-gap: 1em;
+
+    &__button {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      text-align: start;
+      width: 45%;
+      border: 1px solid grey;
+      border-radius: 15px;
+      @media only screen and (max-width: 600px) {
+        width: 100%;
+      }
+    }
+
+    &__title {
+      padding: 10px 20px;
+      transition: 0.2s;
+    }
+    
+    &__image {
+      align-self: center;
+      width: 100%;
+    }
+  }
+
+  &_main {
+    display: flex;
+    // flex-direction: row;
+    @media only screen and (max-width: 730px) {
+      flex-direction: column-reverse;
+      flex-wrap: wrap;
+      row-gap: 1em;
+    }
+  }
+
+  &_card {
+    display: block;
+    height: fit-content;
+    width: 350px;
+    flex-shrink: 0;
+    @media only screen and (max-width: 730px) {
+      width: 100%;
+    }
+  }
+
+  &_main {
+    &__left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+}
+
+
+button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.card {
+  &_games {
+    width: 165px;
+    display: flex;
+    justify-content: space-between;
+  }
+}

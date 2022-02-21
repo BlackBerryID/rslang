@@ -23,11 +23,6 @@ export const SideMenu = ({ isMenuOpen, toggleSideMenu }: SideMenuProps) => {
           text={Pages.statistic}
           toggleSideMenu={toggleSideMenu}
         />
-        <SideMenuItem
-          path={Paths.team}
-          text={Pages.team}
-          toggleSideMenu={toggleSideMenu}
-        />
       </List>
     </Drawer>
   );

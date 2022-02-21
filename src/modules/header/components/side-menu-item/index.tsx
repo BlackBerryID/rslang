@@ -8,9 +8,7 @@ export const SideMenuItem = ({
 }: SideMenuItemProps) => {
   return (
     <ListItemButton
-      sx={{
-        padding: '15px 0 15px 60px',
-      }}
+      sx={{ p: '0' }}
       onClick={toggleSideMenu(false)}
       onKeyDown={(e) => toggleSideMenu(false)}
     >

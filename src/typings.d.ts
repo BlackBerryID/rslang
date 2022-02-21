@@ -58,6 +58,7 @@ type SideMenuItemProps = {
   path: string;
   text: string;
   toggleSideMenu: ToggleSideMenuFunc;
+  isGameLink?: boolean;
 };
 
 type SideMenuProps = {
@@ -66,7 +67,8 @@ type SideMenuProps = {
 };
 
 type ToggleSideMenuFunc = (
-  open: boolean
+  open: boolean,
+  isGameDirection?: boolean
 ) => (event: React.KeyboardEvent | React.MouseEvent) => void;
 
 type MUIVariant =

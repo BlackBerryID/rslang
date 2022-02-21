@@ -5,11 +5,12 @@ export const SideMenuItem = ({
   path,
   text,
   toggleSideMenu,
+  isGameLink,
 }: SideMenuItemProps) => {
   return (
     <ListItemButton
       sx={{ p: '0' }}
-      onClick={toggleSideMenu(false)}
+      onClick={isGameLink ? toggleSideMenu(false, true) : toggleSideMenu(false)}
       onKeyDown={(e) => toggleSideMenu(false)}
     >
       <NavLink path={path} text={text} size="h5" />

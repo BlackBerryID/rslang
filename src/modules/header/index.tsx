@@ -8,12 +8,17 @@ import { SideMenu } from './components/side-menu';
 import { Login } from './containers/login';
 
 import './header.scss';
+import { useDispatch } from 'react-redux';
+import { setStatus } from '../../store/reducers/watch-status';
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const reducer = useDispatch();
+
   const toggleSideMenu =
-    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+    (open: boolean, isGameDirection: boolean = false) =>
+    (event: React.KeyboardEvent | React.MouseEvent) => {
       if (
         event.type === 'keydown' &&
         ((event as React.KeyboardEvent).key === 'Tab' ||
@@ -22,6 +27,9 @@ export const Header = () => {
         return;
       }
       setIsMenuOpen(open);
+      if (isGameDirection) {
+        reducer(setStatus({ mode: 'anon' }));
+      }
     };
 
   return (

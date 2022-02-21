@@ -93,7 +93,7 @@ export const Textbook = () => {
           userToken: user.token,
           wpp: 3600,
           filter: {
-            $and: [{ ['userWord.difficulty']: DIFFICULTY.difficult }],
+            $and: [{ 'userWord.difficulty': DIFFICULTY.difficult }],
           },
         };
       }
@@ -105,7 +105,7 @@ export const Textbook = () => {
           userToken: user.token,
           wpp: 600,
           filter: {
-            $and: [{ ['userWord.difficulty']: filterDifficulty }],
+            $and: [{ 'userWord.difficulty': filterDifficulty }],
           },
         };
       }
@@ -172,7 +172,6 @@ export const Textbook = () => {
       return;
     }
     let gameWords: Array<GetWord> = [];
-    let wordsArray = words;
     let isLoop = false;
     let currentSearchPage = page;
     let isFirstIteration = true;
@@ -184,6 +183,7 @@ export const Textbook = () => {
         isLoop = true;
       }
       currentSearchPage -= 1;
+      let wordsArray = words;
       if (!isFirstIteration) {
         user.userId
           ? await getUserWords(true, currentSearchPage).then(
@@ -218,7 +218,7 @@ export const Textbook = () => {
   }, [isVocabularyActive, getUserWords, group]);
 
   return (
-    <Container className="textbook_container">
+    <Container className="textbook_container" sx={{ mt: '20px' }}>
       <TextbookHeader
         group={group}
         isVocabularyActive={isVocabularyActive}

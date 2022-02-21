@@ -2,13 +2,16 @@ import { Container, ThemeProvider } from '@mui/material';
 import { theme } from '../../app/material-ui-theme';
 import { Outlet } from 'react-router-dom';
 import { Header } from '../header';
+import { Footer } from '../footer';
 
 export const BaseTemplate = () => {
   return (
     <>
       <ThemeProvider theme={theme}>
         <Header />
-        <main style={{ minHeight: '100%' }}>
+        <main
+          style={{ display: 'flex', alignItems: 'center', flex: '1 0 auto' }}
+        >
           <Container
             maxWidth="lg"
             sx={{
@@ -16,15 +19,13 @@ export const BaseTemplate = () => {
               justifyContent: 'center',
               alignItems: 'center',
               flexDirection: 'column',
-              minHeight: '80vh', // Until we haven't footer, after fluid its height between header and footer.
-              marginTop: '5em',
+              height: '100%',
             }}
           >
             <Outlet />
           </Container>
         </main>
-        {/* TO DO Footer @BlackBerryID */}
-        {/* <Footer /> */}
+        <Footer />
       </ThemeProvider>
     </>
   );

@@ -33,7 +33,7 @@ export const Header = () => {
     };
 
   return (
-    <AppBar>
+    <AppBar sx={{ position: 'relative', top: '0' }}>
       <Container
         sx={{
           display: 'flex',

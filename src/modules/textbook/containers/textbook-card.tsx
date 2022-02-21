@@ -48,17 +48,25 @@ export const TextbookCard = ({
     difficulty: string | undefined,
     action: string
   ) => {
-    const body = (difficultyLevel: string) => {
+    const body = (difficultyLevel: string, tempOptional: object) => {
       return {
         userId: user.userId,
         userToken: user.token,
         wordId: wordItem._id,
         updateReq: {
           difficulty: difficultyLevel,
+          optional: tempOptional,
         },
       };
     };
     let difficultyLevel = 'learning';
+    let tempOptional =
+      action === 'changeIsLearned'
+        ? {
+            audioStreak: ' ',
+            sprintStreak: ' ',
+          }
+        : {};
     if (action === 'changeDifficultyLevel') {
       difficultyLevel =
         difficulty === DIFFICULTY.difficult
@@ -71,7 +79,7 @@ export const TextbookCard = ({
           : DIFFICULTY.learned;
     }
     if (wordItem.userWord) {
-      await UpdateUserWord(body(difficultyLevel));
+      await UpdateUserWord(body(difficultyLevel, tempOptional));
       if (group === 6) {
         getUserWords();
         setActiveCardIndex(0);
@@ -82,7 +90,7 @@ export const TextbookCard = ({
         return;
       }
     } else {
-      await AddUserWord(body(difficultyLevel));
+      await AddUserWord(body(difficultyLevel, tempOptional));
     }
     updateWords(wordItem.word, difficultyLevel);
   };

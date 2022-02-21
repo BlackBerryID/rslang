@@ -42,24 +42,24 @@
           "name": "Дмитрий",
           "avatar": "../../../assets/img/team/dima.png",
           "github": "https://github.com/BlackBerryID",
-          "badge": "developer | team leader",
-          "description": "Гасит, топчет, пашет и презентует."
+          "badge": "developer",
+          "description": "Учебник и словарь. Создание API. Авторизация."
         },
         {
           "id": "02-artur",
           "name": "Артур",
           "avatar": "../../../assets/img/team/artur.png",
           "github": "https://github.com/saratovkin",
-          "badge": "developer | true programmer",
-          "description": "Придумывает и реализует. Делает как положено."
+          "badge": "developer",
+          "description": "Игра «Аудио вызов». Создание API. Страница 'Статистика'."
         },
         {
           "id": "03-jan",
           "name": "Ян",
           "avatar": "../../../assets/img/team/jan.png",
           "github": "https://github.com/shadowinhaze",
-          "badge": "drooling on IT",
-          "description": "Заноза и главный токсик команды. Без него закончили бы за день, душнит рефакторингом."
+          "badge": "developer",
+          "description": "Игра 'Спринт'. Создание API. Главная страница."
         }
       ]
     }

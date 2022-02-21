@@ -1,6 +1,8 @@
 import React from "react";
 import { Card, CardContent, Typography } from "@mui/material";
 import { calcPersentage } from "../../helpers/calc-percentage";
+import CallIcon from '@mui/icons-material/Call';
+import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 
 const MgStats = ({ title, stats }: { title: string, stats: GameStats }) => {
   return (
@@ -8,6 +10,7 @@ const MgStats = ({ title, stats }: { title: string, stats: GameStats }) => {
       sx={{ width: 300 }}
     >
       <CardContent>
+        {title === 'Спринт' ? <DirectionsRunIcon /> : <CallIcon />}
         <Typography variant="h5" sx={{ mb: 1 }}>
           {title}
         </Typography>

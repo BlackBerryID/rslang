@@ -1,10 +1,22 @@
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, Container, Typography } from "@mui/material";
-
+import SchoolIcon from '@mui/icons-material/School';
+import NewReleasesIcon from '@mui/icons-material/NewReleases';
+import PieChartIcon from '@mui/icons-material/PieChart';
+import {
+  deepOrange,
+  lightBlue,
+  lime,
+} from '@mui/material/colors';
 import './today-stats.scss';
 import { MgStats } from "../mg-stats-card";
 import { calcPersentage } from "../../helpers/calc-percentage";
+const colors = [
+  lightBlue['400'],
+  lime['A400'],
+  deepOrange['400'],
+];
 
 const TodayStats = ({ stats, today }: {
   stats: DayStats[],
@@ -56,9 +68,10 @@ const TodayStats = ({ stats, today }: {
       <Typography variant="h2" >Статистика за сегодня</Typography>
       <Box sx={{ display: "flex", columnGap: 5, justifyContent: "center" }}>
         <Card
-          sx={{ width: 300 }}
+          sx={{ width: 300, color: '#fff', backgroundColor: colors[0] }}
         >
           <CardContent>
+            <SchoolIcon />
             <Typography variant="h5" >
               Изучено слов:
             </Typography>
@@ -68,9 +81,10 @@ const TodayStats = ({ stats, today }: {
           </CardContent>
         </Card>
         <Card
-          sx={{ width: 300 }}
+          sx={{ width: 300, backgroundColor: colors[1] }}
         >
-          <CardContent>
+          <CardContent >
+            <NewReleasesIcon />
             <Typography variant="h5" >
               Новых слов:
             </Typography>
@@ -80,9 +94,10 @@ const TodayStats = ({ stats, today }: {
           </CardContent>
         </Card>
         <Card
-          sx={{ width: 300 }}
+          sx={{ width: 300, color: '#fff', backgroundColor: colors[2] }}
         >
           <CardContent>
+            <PieChartIcon />
             <Typography variant="h5" >
               Верных ответов:
             </Typography>

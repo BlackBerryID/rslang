@@ -4,6 +4,9 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import IconButton from '@mui/material/IconButton';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import { AudioPlayer } from '../../../utils/audio-player';
 
 export const MGSprintStatTable = ({
   elements,
@@ -27,7 +30,17 @@ export const MGSprintStatTable = ({
               key={item.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell component="td" scope="row">
+              <TableCell
+                component="td"
+                scope="row"
+                sx={{ display: 'flex', alignItems: 'center' }}
+              >
+                <IconButton
+                  aria-label="say word"
+                  onClick={() => AudioPlayer.playEffect(item.audio)}
+                >
+                  <VolumeUpIcon />
+                </IconButton>
                 {item.word}
               </TableCell>
               <TableCell align="right">{item.translate}</TableCell>

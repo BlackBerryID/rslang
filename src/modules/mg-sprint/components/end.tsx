@@ -13,12 +13,26 @@ export const MGSprintEnd = ({
   statistic,
   onResetAction,
 }: {
-  statistic: { wrong: Array<GameResult>; right: Array<GameResult> };
+  statistic: {
+    wrong: Array<GameResult>;
+    right: Array<GameResult>;
+    score: number;
+  };
   onResetAction: () => void;
 }) => {
   return (
     <Box className={s['statistic-container']}>
-      <Box className={s['statistic-container__column']}>
+      <Typography
+        variant="h4"
+        component="h3"
+        textAlign="center"
+        className={s['statistic-container__result']}
+      >
+        Ваш результат: {statistic.score} очков.
+      </Typography>
+      <Box
+        className={`${s['statistic-container__column']} ${s['statistic-container__column_wrong']}`}
+      >
         <Box className={s['statistic-container__column__header']}>
           <Chip
             icon={<DangerousIcon />}
@@ -32,7 +46,9 @@ export const MGSprintEnd = ({
         </Box>
         <MGSprintStatTable elements={statistic.wrong} />
       </Box>
-      <Box className={s['statistic-container__column']}>
+      <Box
+        className={`${s['statistic-container__column']} ${s['statistic-container__column_right']}`}
+      >
         <Box className={s['statistic-container__column__header']}>
           <Chip
             icon={<SchoolIcon />}
@@ -46,7 +62,7 @@ export const MGSprintEnd = ({
         </Box>
         <MGSprintStatTable elements={statistic.right} />
       </Box>
-      <Box className={s['statistic-container__actions']}>
+      <Box className={`${s['statistic-container__actions']}`}>
         <Button
           variant="outlined"
           size="large"

@@ -25,6 +25,7 @@ export const TeamMate = ({
             rel="noreferrer"
             href={github}
             target="_blank"
+            rel="noreferrer"
             style={{ display: 'block' }}
             className={s['team__cards__mate__content_link']}
           >

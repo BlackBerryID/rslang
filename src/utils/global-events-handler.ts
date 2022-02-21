@@ -14,4 +14,4 @@ function removeListener(
   window.removeEventListener(customEvent, callback);
 }
 
-export {};
+export { addListener, removeListener };

@@ -9,4 +9,4 @@ class AudioPlayer {
   }
 }
 
-export { AudioPlayer }
+export { AudioPlayer };

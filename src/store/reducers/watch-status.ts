@@ -12,8 +12,6 @@ export const WatchStatus = createSlice({
   initialState: {
     mode: 'anon',
     deck: undefined,
-    langLevel: 0,
-    deckPage: 0,
   } as GameStatus,
   reducers: {
     setStatus: (state, action: PayloadAction<GameStatus>) => {

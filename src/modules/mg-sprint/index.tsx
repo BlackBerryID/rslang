@@ -16,15 +16,24 @@ export function MiniGameSprint() {
 
   const gameStatus = useSelector((state: RootState) => state.appStatus);
   const user = useSelector((state: RootState) => state.user);
-  if (user.userId) {
-    game.auth = { userId: user.userId, userToken: user.token };
-  }
-
   const isAnonimGame = gameStatus.mode === 'anon';
-  if (!isAnonimGame && gameStatus.langLevel && gameStatus.deckPage) {
-    game.langLevel = gameStatus.langLevel;
-    game.page = gameStatus.deckPage;
-  }
+
+  useEffect(() => {
+    if (user.userId) {
+      game.auth = { userId: user.userId, userToken: user.token };
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (
+      !isAnonimGame &&
+      gameStatus.langLevel !== undefined &&
+      gameStatus.deck !== undefined
+    ) {
+      game.langLevel = gameStatus.langLevel;
+      game.deck = gameStatus.deck;
+    }
+  }, [gameStatus, isAnonimGame]);
 
   const startGame = (): void => {
     game.start({
@@ -37,6 +46,9 @@ export function MiniGameSprint() {
 
   const reset = (): void => {
     game.reset();
+    if (!isAnonimGame) {
+      game.deck = gameStatus.deck!;
+    }
     setGameMode(false);
     endGame(false);
   };

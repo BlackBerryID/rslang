@@ -5,6 +5,7 @@ import { UpdateGameStats } from '../../../api/update-game_stats';
 import { UpdateUserStats } from '../../../api/update-user_stats';
 import { UpdateUserWord } from '../../../api/update-user_word';
 import { checkIsLearnedRed } from '../../../utils/check-is-learned';
+import { formatDate } from '../../../utils/format-date';
 import { GetRandomNum } from '../../../utils/get-random-num';
 import { ShuffleArray } from '../../../utils/shuffle-array';
 import {
@@ -130,12 +131,19 @@ export class MGSprintEngine {
           streakResult,
           item.userWord?.difficulty as string
         );
+        const optionalLearned = isLearned
+          ? {
+              date: formatDate(),
+              game: 'sprint',
+            }
+          : {};
         UpdateUserWord({
           ...base,
           updateReq: {
             difficulty: isLearned ? 'learned' : 'learning',
             optional: {
               sprintStreak: isLearned ? ' ' : streakResult,
+              learned: optionalLearned,
             },
           },
         });

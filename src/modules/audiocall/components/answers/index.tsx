@@ -95,15 +95,19 @@ const Answers = ({ options, isAnswered, setNextQuestion, setAnsweredWords, setIs
         const answers = (correctAnswer as Word).userWord?.optional?.audioStreak + flag;
         const status = (correctAnswer as Word).userWord?.difficulty || 'learning';
         answerStats.updateReq.optional.audioStreak = answers;
-        if (checkIsLearned(answers, status)) {
-          answerStats.updateReq.difficulty = 'learned';
-          answerStats.updateReq.optional.audioStreak = ' ';
-          answerStats.updateReq.optional.learned = {
-            date: formatDate(),
-            game: 'audiocall',
-          }
+        if (flag === '0') {
+          answerStats.updateReq.difficulty = status === 'learned' ? 'learning' : status;
         } else {
-          answerStats.updateReq.difficulty = status;
+          if (checkIsLearned(answers, status)) {
+            answerStats.updateReq.difficulty = 'learned';
+            answerStats.updateReq.optional.audioStreak = ' ';
+            answerStats.updateReq.optional.learned = {
+              date: formatDate(),
+              game: 'audiocall',
+            }
+          } else {
+            answerStats.updateReq.difficulty = status;
+          }
         }
       }
       UpdateUserWord(answerStats);

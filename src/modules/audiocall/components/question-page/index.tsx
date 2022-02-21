@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import AudioCallConst from "../../constants";
 import { Box, CircularProgress, IconButton } from "@mui/material";
@@ -23,6 +23,7 @@ const QuestionPage = ({ difficulty, setIsGameStarted }: {
   const { mode, deck } = useSelector((state: RootState) => state.appStatus);
 
   const [words, setWords] = useState<Word[]>([]);
+  const [extraWords, setExtraWords] = useState<Word[]>([]);
   const [answeredWords, setAnsweredWords] = useState<{ word: Word, flag: boolean }[]>([]);
 
   const [isGameEnded, setIsGameEnded] = useState(false);
@@ -39,8 +40,20 @@ const QuestionPage = ({ difficulty, setIsGameStarted }: {
     try {
       if (mode === 'textbook') {
         if (deck?.length) {
-          const temp = [...deck];
-          setWords(ShuffleArray(temp));
+          if (deck.length < AudioCallConst.ANSWERS_AMOUNT) {
+            GetWords(GetRandomNum(0, 5), GetRandomNum(0, AudioCallConst.MAX_PAGES_INDEX)).then((words: Word[]) => {
+              setExtraWords(ShuffleArray(words.map(word => { word._id = word.id; return word })));
+            }).catch(() => {
+              setIsError(true);
+              setIsLoading(false);
+            });
+          }
+          setWords(ShuffleArray(deck.map(word => {
+            return {
+              ...word,
+              _id: word._id || word.id
+            }
+          })));
           setIsLoading(false);
         } else {
           throw new Error();
@@ -63,23 +76,35 @@ const QuestionPage = ({ difficulty, setIsGameStarted }: {
   }, [difficulty, deck, mode]);
 
   useEffect(() => {
-    if (words.length && answeredWords.length !== AudioCallConst.QUESTIONS_AMOUNT) {
+    const amount = Math.min(AudioCallConst.QUESTIONS_AMOUNT, words.length);
+    if (words.length && answeredWords.length !== amount) {
       const options: Word[] = [];
       let answer = words[GetRandomNum(0, words.length - 1)];
       let option: Word;
       while (answeredWords.map(item => item.word).indexOf(answer) !== -1) {
         answer = words[GetRandomNum(0, words.length - 1)];
       }
-      while (options.length !== AudioCallConst.ANSWERS_AMOUNT - 1) {
-        option = words[GetRandomNum(0, words.length - 1)];
-        if (options.indexOf(option) === -1 && option.word !== answer.word) {
-          options.push(option);
+      if (amount >= AudioCallConst.ANSWERS_AMOUNT) {
+        while (options.length !== AudioCallConst.ANSWERS_AMOUNT - 1) {
+          option = words[GetRandomNum(0, words.length - 1)];
+          if (options.indexOf(option) === -1 && option.word !== answer.word) {
+            options.push(option);
+          }
+        }
+      } else if (extraWords.length) {
+        while (options.length !== AudioCallConst.ANSWERS_AMOUNT - 1) {
+          option = extraWords[GetRandomNum(0, extraWords.length - 1)];
+          if (options.indexOf(option) === -1 && option.word !== answer.word) {
+            options.push(option);
+          }
         }
       }
-      setCurrentAnswer(answer);
-      setAnswerOptions(options);
+      if (options.length) {
+        setCurrentAnswer(answer);
+        setAnswerOptions(options);
+      }
     }
-  }, [words, questionNum]);
+  }, [words, extraWords, questionNum]);
 
   useEffect(() => {
     if (currentAnswer && !isGameEnded) {

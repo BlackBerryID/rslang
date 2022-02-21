@@ -27,14 +27,16 @@ const ResultsPage = ({ answeredWords, setIsGameStarted }: {
       const streak = answeredWords.map((item) => item.flag ? 1 : 0).join('').match(/1*/gi)?.reduce((a, b) => {
         return a.length > b.length ? a : b;
       }).length || 0;
-      UpdateGameStats({
-        userId: userId,
-        userToken: token,
-        game: 'audiocall',
-        streak: streak,
-        correct: correct,
-        amount: amount,
-      });
+      if (userId) {
+        UpdateGameStats({
+          userId: userId,
+          userToken: token,
+          game: 'audiocall',
+          streak: streak,
+          correct: correct,
+          amount: amount,
+        });
+      }
     }
   }, [answeredWords, userId, token]);
 

@@ -57,6 +57,27 @@ export const Textbook = () => {
       if (words) {
         return words?.map((wordItem) => {
           if (wordItem.word !== wordName) return wordItem;
+          if (difficultyLevel === 'learned') {
+            return {
+              ...wordItem,
+              userWord: wordItem.userWord
+                ? {
+                    ...wordItem.userWord,
+                    difficulty: difficultyLevel,
+                    optional: {
+                      audioStreak: ' ',
+                      sprintStreak: ' ',
+                    },
+                  }
+                : {
+                    difficulty: difficultyLevel,
+                    optional: {
+                      audioStreak: ' ',
+                      sprintStreak: ' ',
+                    },
+                  },
+            };
+          }
           return {
             ...wordItem,
             userWord: wordItem.userWord

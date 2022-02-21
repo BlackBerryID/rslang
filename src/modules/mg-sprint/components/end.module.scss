@@ -47,7 +47,8 @@
     justify-items: stretch;
     column-gap: 0;
     
-    grid-template-areas: 
+    grid-template-areas:
+    'result' 
     'wrong'
     'right'
     'action';

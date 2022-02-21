@@ -1,0 +1,40 @@
+.school-logo {
+  display: flex;
+  font-size: 20px;
+  color: #000;
+  font-weight: 700;
+
+  &_link {
+    display: block; 
+    width: 80px;
+  }
+
+  &_img {
+    width: 100%;
+  }
+
+  &_year {
+    margin-top: 10px;
+    margin-left: 10px;
+    pointer-events: none;
+  }
+}
+
+.footer {
+  &_githubs {
+    display: flex;
+    justify-content: space-between;
+    text-decoration: none;
+    width: 400px;
+  }
+
+  &_github {
+    text-decoration: none;
+    color: #000;
+    transition: 0.3s;
+
+    &:hover {
+      color: #fff;
+    }
+  }
+}

@@ -1,8 +1,11 @@
-import { AppBar, Container, Toolbar, IconButton } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
+import { AppBar, Container, Toolbar } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Paths } from '../../app/constants';
+import data from '../homepage/content/sections.json';
+import RsLogo from './assets/rs.svg';
+
+import './footer.scss';
 
 export const Footer = () => {
   const [isFooterHidden, setIsFooterHidden] = useState<boolean>(false);
@@ -18,7 +21,7 @@ export const Footer = () => {
   }, [location, setIsFooterHidden]);
 
   const footerTemplate = !isFooterHidden && (
-    <AppBar sx={{ position: 'relative', bottom: '0' }}>
+    <AppBar component="footer" sx={{ position: 'relative', bottom: '0' }}>
       <Container
         sx={{
           display: 'flex',
@@ -27,17 +30,26 @@ export const Footer = () => {
           textDecoration: 'none',
         }}
       >
-        <Toolbar>
-          <div>
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              sx={{ mr: 2 }}
-            >
-              <MenuIcon />
-            </IconButton>
-          </div>
+        <Toolbar className="school-logo">
+          <a href="https://rs.school/js/" className="school-logo_link">
+            <img
+              src={RsLogo}
+              alt="rs school logo"
+              className="school-logo_img"
+            />
+          </a>
+          <span className="school-logo_year">2022</span>
+        </Toolbar>
+        <Toolbar className="footer_githubs">
+          <a href={data.sections.team.data[0].github} className="footer_github">
+            BlackBerryID
+          </a>
+          <a href={data.sections.team.data[1].github} className="footer_github">
+            saratovkin
+          </a>
+          <a href={data.sections.team.data[2].github} className="footer_github">
+            shadowinhaze
+          </a>
         </Toolbar>
       </Container>
     </AppBar>

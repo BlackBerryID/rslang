@@ -22,6 +22,7 @@ export const TeamMate = ({
         <Box className={s['team__cards__mate__content_badge']}>
           <Chip label={badge} color="success" variant="outlined" size="small" />
           <a
+            rel="noreferrer"
             href={github}
             target="_blank"
             style={{ display: 'block' }}

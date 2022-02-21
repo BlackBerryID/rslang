@@ -1,5 +1,3 @@
-import { Value } from 'sass';
-
 export const LEVELS = [
   'Beginner',
   'Elementary',

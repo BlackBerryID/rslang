@@ -3,12 +3,18 @@ import { useState } from 'react';
 import { Button, Avatar, Menu, MenuItem } from '@mui/material';
 import { LoginPopup } from '../login-popup';
 import { deepOrange } from '@mui/material/colors';
+import { Link } from 'react-router-dom';
+import { Paths } from '../../../../app/constants';
+import { useDispatch } from 'react-redux';
+import { removeUser } from '../../../../store/reducers/watch-auth';
 
 export function Login() {
   const [open, setOpen] = useState(false);
   const [isOnline, setIsOnline] = useState(
     Boolean(localStorage.getItem('user'))
   );
+
+  const reduce = useDispatch();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
@@ -19,7 +25,8 @@ export function Login() {
 
   const handleExitPanelClose = (exit: boolean) => {
     if (exit) {
-      localStorage.removeItem('user');
+      reduce(removeUser());
+      localStorage.clear();
       setIsOnline(false);
     }
     setAnchorEl(null);
@@ -69,7 +76,9 @@ export function Login() {
           onClick={() => handleExitPanelClose(true)}
           sx={{ fontSize: '14px' }}
         >
-          Выйти из профиля
+          <Link to={Paths.home} className="exit-link">
+            Выйти из профиля
+          </Link>
         </MenuItem>
       </Menu>
     </>

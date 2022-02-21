@@ -10,7 +10,7 @@ type GameStatus = {
 export const WatchStatus = createSlice({
   name: 'app-status',
   initialState: {
-    mode: 'textbook',
+    mode: 'anon',
     deck: undefined,
     langLevel: 0,
     deckPage: 0,

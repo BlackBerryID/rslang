@@ -12,10 +12,15 @@ export const WatchAuth = createSlice({
   },
   reducers: {
     putUser: (state, action: PayloadAction<User>) => {
-      state = action.payload;
+      return (state = action.payload);
     },
     removeUser: (state) => {
-      state = WatchAuth.getInitialState();
+      return (state = {
+        userId: '',
+        token: '',
+        refreshToken: '',
+        name: '',
+      });
     },
   },
 });

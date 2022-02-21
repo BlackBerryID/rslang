@@ -11,6 +11,8 @@ import {
   Typography,
 } from '@mui/material';
 import { loginUser, createUser } from '../../../../api';
+import { useDispatch } from 'react-redux';
+import { putUser } from '../../../../store/reducers/watch-auth';
 
 export const LoginPopup = (props: LoginPopupProps) => {
   const { onClose, open, setIsOnline } = props;
@@ -23,6 +25,8 @@ export const LoginPopup = (props: LoginPopupProps) => {
     isAlreadySubmit: false,
   });
   const [errorMessage, setErrorMessage] = useState<ErrorMessage>(null);
+
+  const reduce = useDispatch();
 
   const handleClose = () => {
     onClose();
@@ -72,15 +76,14 @@ export const LoginPopup = (props: LoginPopupProps) => {
       setErrorMessage('Неверный пароль');
       return;
     }
-    localStorage.setItem(
-      'user',
-      JSON.stringify({
-        name: response.name,
-        token: response.token,
-        refreshToken: response.refreshToken,
-        userId: response.userId,
-      })
-    );
+    const body = {
+      name: response.name,
+      token: response.token,
+      refreshToken: response.refreshToken,
+      userId: response.userId,
+    };
+    localStorage.setItem('user', JSON.stringify(body));
+    reduce(putUser(body));
     setIsOnline(true);
     handleClose();
   };

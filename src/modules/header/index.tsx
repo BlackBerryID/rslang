@@ -7,6 +7,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { SideMenu } from './components/side-menu';
 import { Login } from './containers/login';
 
+import './header.scss';
+
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 

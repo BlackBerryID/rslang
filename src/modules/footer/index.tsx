@@ -21,7 +21,10 @@ export const Footer = () => {
   }, [location, setIsFooterHidden]);
 
   const footerTemplate = !isFooterHidden && (
-    <AppBar component="footer" sx={{ position: 'relative', bottom: '0' }}>
+    <AppBar
+      component="footer"
+      sx={{ position: 'relative', bottom: '0', padding: '1em' }}
+    >
       <Container
         sx={{
           display: 'flex',

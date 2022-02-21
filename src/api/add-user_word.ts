@@ -32,34 +32,16 @@ export const AddUserWord = async ({
     defCreqationReq.optional = patchOptional;
   }
 
-  try {
-    const rawResponse = await fetch(url, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${userToken}`,
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(defCreqationReq),
-    });
-
-    switch (rawResponse.status) {
-      case 400:
-        throw new Error(
-          'Please, check word ID-pattern, we recommend to try another word ID.'
-        );
-      case 404:
-        throw new Error(`Word with this id not found in user's colleciton.`);
-      case 417:
-        throw new Error(`Sorry, but such user word already exists.`);
-      case 401:
-        UpdateUserToken(userId);
-    }
-  } catch (err) {
-    if (err instanceof Error)
-      console.log(
-        `%c Caught >>>> ${err.message}`,
-        'font-size: 18px; font-weight: bold; color: orange;'
-      );
+  const rawResponse = await fetch(url, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${userToken}`,
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(defCreqationReq),
+  });
+  if (rawResponse.status === 401) {
+    UpdateUserToken(userId);
   }
 };

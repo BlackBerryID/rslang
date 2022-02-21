@@ -10,6 +10,5 @@ export const GetWords = async (group = 0, page = 0) => {
       throw new Error('Check your request >>>>> Beyond the textbook');
     return words;
   } catch (error) {
-    if (error instanceof Error) console.error('Error caught >>>>> ' + error);
   }
 };

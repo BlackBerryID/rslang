@@ -23,51 +23,44 @@ export const GetUserAgrWords = async ({
   wpp,
   filter,
 }: AgregatedReq) => {
-  try {
-    let paginated;
-    if (page !== undefined && group !== undefined) {
-      paginated = { $and: [{ page }, { group }] };
-    } else if (group !== undefined) {
-      paginated = {
-        $and: [{ group }],
-      };
-    } else {
-      paginated = null;
-    }
 
-    let filtResult = '&filter=';
+  let paginated;
+  if (page !== undefined && group !== undefined) {
+    paginated = { $and: [{ page }, { group }] };
+  } else if (group !== undefined) {
+    paginated = {
+      $and: [{ group }],
+    };
+  } else {
+    paginated = null;
+  }
 
-    if (filter && paginated) {
-      filtResult += encodeURIComponent(
-        JSON.stringify({
-          [Object.keys(filter)[0]]: [...Object.values(filter)[0], paginated],
-        })
-      );
-    } else if (paginated || filter) {
-      filtResult += encodeURIComponent(JSON.stringify(paginated || filter));
-    }
+  let filtResult = '&filter=';
 
-    const url = `${base}/users/${userId}/aggregatedWords?wordsPerPage=${wpp}${filtResult}`;
-    const rawResponse = await fetch(url, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${userToken}`,
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-    });
-    switch (rawResponse.status) {
-      case 402:
-        UpdateUserToken(userId);
-        throw new Error
-    }
+  if (filter && paginated) {
+    filtResult += encodeURIComponent(
+      JSON.stringify({
+        [Object.keys(filter)[0]]: [...Object.values(filter)[0], paginated],
+      })
+    );
+  } else if (paginated || filter) {
+    filtResult += encodeURIComponent(JSON.stringify(paginated || filter));
+  }
+
+  const url = `${base}/users/${userId}/aggregatedWords?wordsPerPage=${wpp}${filtResult}`;
+  const rawResponse = await fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${userToken}`,
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  });
+  if (rawResponse.ok) {
     return await rawResponse.json();
-  } catch (err) {
-    if (err instanceof Error)
-      console.log(
-        `%c Caught >>>> ${err.message}`,
-        'font-size: 18px; font-weight: bold; color: orange;'
-      );
+  }
+  if (rawResponse.status === 401) {
+    UpdateUserToken(userId);
   }
 };
 

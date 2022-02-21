@@ -41,7 +41,7 @@ type AdditionUserWord = {
 // ===== ===== ===== //
 
 type User = {
-  message: string;
+  message?: string;
   token: string;
   refreshToken: string;
   userId: string;

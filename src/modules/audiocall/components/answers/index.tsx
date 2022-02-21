@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Box, Button, Stack } from "@mui/material";
 import { ShuffleArray } from "../../../../utils/shuffle-array";
 import { checkIsLearned } from "../../../../utils/check-is-learned";
-
-import './answers.scss';
 import { UpdateUserWord } from "../../../../api/update-user_word";
 import { AddUserWord } from "../../../../api/add-user_word";
+import { RootState } from "../../../../store";
+import './answers.scss';
+import { formatDate } from "../../../../utils/format-date";
 
 const answerStats = {
   userId: '',
@@ -15,18 +17,26 @@ const answerStats = {
     difficulty: '',
     optional: {
       audioStreak: '',
+      learned: {
+        date: '',
+        game: '',
+      }
     },
   },
 }
 
-const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnonimStart, isAnswered, setIsAnswered }: {
+const Answers = ({ options, isAnswered, setNextQuestion, setAnsweredWords, setIsAnswered }: {
   options: Word[],
+  isAnswered: boolean,
   setNextQuestion: () => void,
   setAnsweredWords: (word: { word: Word, flag: boolean }) => void,
-  isAnonimStart: boolean,
-  isAnswered: boolean,
   setIsAnswered: (flag: boolean) => void,
 }) => {
+
+  const { userId, token } = useSelector((state: RootState) => state.user);
+  answerStats.userId = userId;
+  answerStats.userToken = token;
+
   const [words, setWords] = useState<Word[]>([]);
   const [correctAnswer, setCorrectAnswer] = useState<Word>();
   const [answer, setAnswer] = useState('');
@@ -41,6 +51,9 @@ const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnonimStart, is
 
   useEffect(() => {
     if (correctAnswer) {
+      if (isAnswered) {
+        setCollapsed(true);
+      }
       if (collapsed) {
         return;
       }
@@ -48,13 +61,13 @@ const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnonimStart, is
         const selectedIdx = Number.parseInt(event.key)
         if (selectedIdx > 0 && selectedIdx < 6) {
           setCollapsed(true);
-          checkAnswer(options[selectedIdx - 1].wordTranslate);
+          checkAnswer(words[selectedIdx - 1].wordTranslate);
         }
       }
       window.addEventListener("keyup", handleKeyUp);
       return () => window.removeEventListener("keyup", handleKeyUp);
     }
-  }, [correctAnswer, collapsed]);
+  }, [correctAnswer, isAnswered, collapsed]);
 
   useEffect(() => {
     setAnswer('');
@@ -65,11 +78,11 @@ const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnonimStart, is
       setIsAnswered(true);
       if (word === (correctAnswer as Word).wordTranslate) {
         setAnsweredWords({ word: (correctAnswer as Word), flag: true });
-        if (!isAnonimStart) saveAnswer('1');
+        if (userId) saveAnswer('1');
       } else {
         setAnswer(word);
         setAnsweredWords({ word: (correctAnswer as Word), flag: false });
-        if (!isAnonimStart) saveAnswer('0');
+        if (userId) saveAnswer('0');
       }
     }
   };
@@ -78,13 +91,23 @@ const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnonimStart, is
     answerStats.wordId = correctAnswer?._id as string;
     answerStats.updateReq.optional.audioStreak = flag;
     if ((correctAnswer as Word).userWord) {
-      if ((correctAnswer as Word).userWord?.optional?.audioStreak) {
+      if ((correctAnswer as Word).userWord?.optional) {
         const answers = (correctAnswer as Word).userWord?.optional?.audioStreak + flag;
+        const status = (correctAnswer as Word).userWord?.difficulty || 'learning';
         answerStats.updateReq.optional.audioStreak = answers;
-        if (checkIsLearned(answers)) {
-          answerStats.updateReq.difficulty = 'learned';
+        if (flag === '0') {
+          answerStats.updateReq.difficulty = status === 'learned' ? 'learning' : status;
         } else {
-          answerStats.updateReq.difficulty = 'learning';
+          if (checkIsLearned(answers, status)) {
+            answerStats.updateReq.difficulty = 'learned';
+            answerStats.updateReq.optional.audioStreak = ' ';
+            answerStats.updateReq.optional.learned = {
+              date: formatDate(),
+              game: 'audiocall',
+            }
+          } else {
+            answerStats.updateReq.difficulty = status;
+          }
         }
       }
       UpdateUserWord(answerStats);
@@ -94,9 +117,11 @@ const Answers = ({ options, setNextQuestion, setAnsweredWords, isAnonimStart, is
   }
 
   const skipQuestion = (): void => {
-    setIsAnswered(true);
-    if (!isAnonimStart) saveAnswer('0');
-    setAnsweredWords({ word: (correctAnswer as Word), flag: false });
+    if (!isAnswered) {
+      setIsAnswered(true);
+      if (userId) saveAnswer('0');
+      setAnsweredWords({ word: (correctAnswer as Word), flag: false });
+    }
   };
 
   const showNextQuestion = (): void => {

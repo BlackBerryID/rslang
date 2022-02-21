@@ -1,9 +1,10 @@
-import React, { BaseSyntheticEvent, useEffect, useState } from "react";
+import React, { BaseSyntheticEvent, useState } from "react";
 import { Button, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Typography, Box } from "@mui/material";
 import { QuestionPage } from "../question-page";
 import CallIcon from '@mui/icons-material/Call';
-
-import './start-page.scss';
+import { RootState } from "../../../../store";
+import { getLevel } from "../../helpers/get-english-level";
+import { useSelector } from "react-redux";
 import {
   deepOrange,
   indigo,
@@ -12,7 +13,8 @@ import {
   purple,
   yellow,
 } from '@mui/material/colors';
-import { getLevel } from "../../helpers/get-english-level";
+import './start-page.scss';
+
 
 const colors = [
   yellow['600'],
@@ -24,16 +26,9 @@ const colors = [
 ];
 
 const StartPage = () => {
-  // TODO get words from redux @saratovkin
-  const [words, setWords] = useState<Word[]>([]);
+  const { mode } = useSelector((state: RootState) => state.appStatus);
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [difficulty, setDifficulty] = useState(-1);
-
-  useEffect(() => {
-    if (words.length) {
-      setDifficulty(6);
-    }
-  }, [words]);
 
   if (isGameStarted) {
     return (
@@ -41,22 +36,21 @@ const StartPage = () => {
         difficulty={difficulty}
         setIsGameStarted={setIsGameStarted}
       />
-    )
+    );
   }
   return (
     <Box
       display="flex"
       flexDirection="column"
       alignItems="center"
-      rowGap="2em"
-    >
+      rowGap="2em">
       <Typography variant="h1" component="h1" textAlign="center">
         Аудиовызов
       </Typography>
       <Typography variant="h5" gutterBottom component="p" textAlign="center">
         Вам необходимо выбрать правильный перевод слова основываясь на услышанном аудио
       </Typography>
-      {difficulty !== 6 ?
+      {mode === 'anon' ?
         <FormControl>
           <FormLabel>Выберите уровень языка:</FormLabel>
           <RadioGroup
@@ -83,7 +77,7 @@ const StartPage = () => {
         </Typography>}
       <Button
         variant="outlined"
-        disabled={difficulty === -1}
+        disabled={difficulty === -1 && mode === 'anon'}
         size="large"
         endIcon={<CallIcon />}
         onClick={() => setIsGameStarted(true)}
@@ -91,7 +85,7 @@ const StartPage = () => {
         Начать
       </Button>
     </Box >
-  )
+  );
 };
 
 export { StartPage };

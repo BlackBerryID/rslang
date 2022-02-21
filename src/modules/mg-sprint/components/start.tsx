@@ -1,6 +1,6 @@
 import { Box, Button, Typography } from '@mui/material';
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LangLevelSelector } from './level-select';
 
 export const MGSprintStart = ({
@@ -17,6 +17,10 @@ export const MGSprintStart = ({
     selectLangAction(val);
     activeBtnStart(false);
   };
+
+  useEffect(() => {
+    activeBtnStart(anonGame);
+  }, [anonGame]);
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center" rowGap="2em">

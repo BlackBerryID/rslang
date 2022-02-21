@@ -24,7 +24,9 @@ export function checkIsLearned(answers: string, status: string): boolean {
 
 export function checkIsLearnedRed(answers: string, mode: string): boolean {
   const slice =
-    mode === 'hard' ? AnswersToChangeStatus.hard : AnswersToChangeStatus.simple;
+    mode === 'difficult'
+      ? AnswersToChangeStatus.hard
+      : AnswersToChangeStatus.simple;
   return (
     answers
       .split('')

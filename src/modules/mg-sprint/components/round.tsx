@@ -1,5 +1,6 @@
-import { KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { KeyboardEvent, useEffect, useState, useRef } from 'react';
 import { MGSprintTimer } from './timer';
+import { MGSprintMultiplier } from './multiplier';
 import {
   Box,
   Card,
@@ -10,6 +11,8 @@ import {
   Button,
 } from '@mui/material';
 import TimerIcon from '@mui/icons-material/Timer';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
+import { GAME_SCORE_BASE } from '../constants';
 
 export const MGSprintRound = ({
   attempt,
@@ -20,17 +23,23 @@ export const MGSprintRound = ({
 }) => {
   const [isTrueSelected, selectTrueBtn] = useState<boolean>(false);
   const [isFalseSelected, selectFalseBtn] = useState<boolean>(false);
+  const timer = useRef<undefined | ReturnType<typeof setTimeout>>();
 
-  let settedTimeOut: undefined | ReturnType<typeof setTimeout>;
+  useEffect(() => {
+    timer.current = setTimeout(() => {
+      if (isTrueSelected) {
+        selectTrueBtn(false);
+      } else {
+        selectFalseBtn(false);
+      }
+    }, 70);
+  }, [isTrueSelected, isFalseSelected]);
 
   const btnActivator = (
     action: React.Dispatch<React.SetStateAction<boolean>>,
     param: boolean
   ) => {
     action(true);
-    settedTimeOut = setTimeout(() => {
-      action(false);
-    }, 70);
     attempt.giveAnswer(param);
   };
 
@@ -47,8 +56,8 @@ export const MGSprintRound = ({
 
   useEffect(() => {
     return () => {
-      if (settedTimeOut) {
-        clearTimeout(settedTimeOut);
+      if (timer.current) {
+        clearTimeout(timer.current);
       }
     };
   }, []);
@@ -71,6 +80,23 @@ export const MGSprintRound = ({
           >
             <TimerIcon />
             <MGSprintTimer time={time} />
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              columnGap: '.5em',
+              fontSize: 16,
+            }}
+            color="text.secondary"
+            component="div"
+          >
+            <DoneAllIcon />
+            <MGSprintMultiplier
+              base={GAME_SCORE_BASE}
+              coef={attempt.currentMultiplier}
+              score={attempt.currentScore}
+            />
           </Box>
           <Typography
             variant="h3"

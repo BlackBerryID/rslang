@@ -1,7 +1,8 @@
 .statistic-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-areas: 
+  grid-template-areas:
+  'result result' 
   'wrong right'
   'action action';
   gap: 2em;
@@ -32,6 +33,10 @@
     grid-column: span 2;
     display: grid;
     grid-template-columns: subgrid;
+  }
+
+  &__result {
+    grid-area: result;
   }
 
   @media only screen and (max-width: 700px) {

@@ -13,11 +13,23 @@ export const MGSprintEnd = ({
   statistic,
   onResetAction,
 }: {
-  statistic: { wrong: Array<GameResult>; right: Array<GameResult> };
+  statistic: {
+    wrong: Array<GameResult>;
+    right: Array<GameResult>;
+    score: number;
+  };
   onResetAction: () => void;
 }) => {
   return (
     <Box className={s['statistic-container']}>
+      <Typography
+        variant="h4"
+        component="h3"
+        textAlign="center"
+        className={s['statistic-container__result']}
+      >
+        Ваш результат: {statistic.score} очков.
+      </Typography>
       <Box
         className={`${s['statistic-container__column']} ${s['statistic-container__column_wrong']}`}
       >

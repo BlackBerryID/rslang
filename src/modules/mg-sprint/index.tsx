@@ -18,11 +18,9 @@ export function MiniGameSprint() {
   const user = useSelector((state: RootState) => state.user);
   const isAnonimGame = gameStatus.mode === 'anon';
 
-  useEffect(() => {
-    if (user.userId) {
-      game.auth = { userId: user.userId, userToken: user.token };
-    }
-  }, [user]);
+  if (user.userId !== undefined) {
+    game.auth = { userId: user.userId, userToken: user.token };
+  }
 
   useEffect(() => {
     if (
@@ -36,6 +34,10 @@ export function MiniGameSprint() {
   }, [gameStatus, isAnonimGame]);
 
   const startGame = (): void => {
+    game.reset();
+    if (gameStatus.deck !== undefined) {
+      game.deck = gameStatus.deck;
+    }
     game.start({
       anonGame: isAnonimGame,
       switchMode: () => setGameMode(true),

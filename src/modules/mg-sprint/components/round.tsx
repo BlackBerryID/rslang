@@ -71,33 +71,42 @@ export const MGSprintRound = ({
           <Box
             sx={{
               display: 'flex',
-              alignItems: 'center',
-              columnGap: '.5em',
-              fontSize: 16,
+              alignItmes: 'center',
+              justifyContent: 'space-between',
             }}
-            color="text.secondary"
-            component="div"
           >
-            <TimerIcon />
-            <MGSprintTimer time={time} />
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                columnGap: '.5em',
+                fontSize: 16,
+              }}
+              color="text.secondary"
+              component="div"
+            >
+              <TimerIcon />
+              <MGSprintTimer time={time} />
+            </Box>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                columnGap: '.5em',
+                fontSize: 16,
+              }}
+              color="text.secondary"
+              component="div"
+            >
+              <DoneAllIcon />
+              <MGSprintMultiplier
+                base={GAME_SCORE_BASE}
+                coef={attempt.currentMultiplier}
+                score={attempt.currentScore}
+              />
+            </Box>
           </Box>
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              columnGap: '.5em',
-              fontSize: 16,
-            }}
-            color="text.secondary"
-            component="div"
-          >
-            <DoneAllIcon />
-            <MGSprintMultiplier
-              base={GAME_SCORE_BASE}
-              coef={attempt.currentMultiplier}
-              score={attempt.currentScore}
-            />
-          </Box>
+
           <Typography
             variant="h3"
             component="div"

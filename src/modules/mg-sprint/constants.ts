@@ -1,4 +1,4 @@
-const GAME_TIMER = 30;
+const GAME_TIMER = 5;
 const MAX_PAGES_INDEX = 29;
 const MAX_WORDS_INDEX = 19;
 const GAME_SCORE_BASE = 10;

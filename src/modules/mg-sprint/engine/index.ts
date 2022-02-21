@@ -51,18 +51,7 @@ export class MGSprintEngine {
     const wrong = this.game.score.filter((item) => !item.result);
     const right = this.game.score.filter((item) => item.result);
 
-    UpdateGameStats({
-      userId: this.game.auth.userId,
-      userToken: this.game.auth.userToken,
-      game: 'sprint',
-      streak: Math.max(...this.game.streaks),
-      correct: right.length,
-      amount: this.game.score.length,
-    });
-
-    UpdateUserStats(this.game.auth.userId, this.game.auth.userToken);
-
-    return { wrong, right };
+    return { wrong, right, score: this.game.currentRound.currentScore };
   }
 
   set langLevel(val: number) {
@@ -236,9 +225,10 @@ export class MGSprintEngine {
   }
 
   private stopTimer(action: () => void): void {
+    action();
+    this.updateDBStatistic();
     clearInterval(this.game.timer);
     this._timer = GAME_TIMER;
-    action();
   }
 
   start({
@@ -259,6 +249,7 @@ export class MGSprintEngine {
         this.startTimer(timerAction, endAction);
       });
     } else {
+      this.game.deck = ShuffleArray(this.game.deck);
       switchMode();
       this.startTimer(timerAction, endAction);
     }
@@ -296,16 +287,38 @@ export class MGSprintEngine {
           });
   }
 
-  reset() {
+  reset(): void {
     this.game = {
-      ...this.game,
-      deck: [],
+      ...defaultObj,
+      score: [],
       decksSeq: new Set(),
       wordsSeq: new Set(),
-      score: [],
+      deck: [],
       streaks: [],
-      timer: undefined,
-      currentRound: defaultObj.currentRound,
+      // timer: undefined,
+      // currentRound: defaultObj.currentRound,
     };
+    console.log(this.game);
+  }
+
+  updateDBStatistic() {
+    if (this.game.auth.userId) {
+      this.game.streaks.push(this.game.currentRound.currentStreak);
+      const correct = this.game.score.reduce(
+        (acc, item) => acc + +item.result,
+        0
+      );
+
+      UpdateGameStats({
+        userId: this.game.auth.userId,
+        userToken: this.game.auth.userToken,
+        game: 'sprint',
+        streak: Math.max(...this.game.streaks),
+        correct: correct,
+        amount: this.game.score.length,
+      });
+
+      UpdateUserStats(this.game.auth.userId, this.game.auth.userToken);
+    }
   }
 }

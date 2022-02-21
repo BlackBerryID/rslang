@@ -30,6 +30,9 @@ export const TextbookCard = ({
   group,
   getUserWords,
   setActiveCardIndex,
+  isVocabularyActive,
+  vocabularyWords,
+  vocabularyGroup,
 }: TextbookCardProps) => {
   const [audio] = useState(new Audio());
 
@@ -73,6 +76,10 @@ export const TextbookCard = ({
         getUserWords();
         setActiveCardIndex(0);
         return;
+      } else if (isVocabularyActive) {
+        getUserWords(false, 0, true);
+        setActiveCardIndex(0);
+        return;
       }
     } else {
       await AddUserWord(body(difficultyLevel));
@@ -101,43 +108,50 @@ export const TextbookCard = ({
     audio.currentTime = 0;
   }, [activeCardIndex, page, group, audio]);
 
-  if (!words) {
+  const localWords = isVocabularyActive
+    ? vocabularyWords[vocabularyGroup]
+    : words;
+
+  if (!localWords) {
     return <CircularProgress />;
-  } else if (group === 6 && words.length === 0) {
+  } else if (localWords.length === 0) {
     return null;
   } else {
-    const wordItem = words[activeCardIndex];
+    const wordItem = localWords[activeCardIndex];
     const difficulty = wordItem?.userWord?.difficulty;
     const optional = wordItem?.userWord?.optional;
     const gameSprint = optional?.sprintStreak?.trim();
     const gameAudioCall = optional?.audioStreak?.trim();
-    const gamesInfoTemplate = wordItem?.userWord ? (
-      <>
-        <Typography
-          variant="h6"
-          component="h3"
-          sx={{ m: '15px 0 10px', fontSize: '18px' }}
-        >
-          Правильные ответы в играх
-        </Typography>
-        <Box className="card_games">
-          {gameSprint && (
-            <Chip
-              icon={<DirectionsRunIcon />}
-              label={prepareGameResults(gameSprint)}
-              variant="outlined"
-            />
-          )}
-          {gameAudioCall && (
-            <Chip
-              icon={<CallIcon />}
-              label={prepareGameResults(gameAudioCall)}
-              variant="outlined"
-            />
-          )}
-        </Box>
-      </>
-    ) : null;
+    const gamesInfoTemplate =
+      (wordItem?.userWord?.optional?.audioStreak?.trim() ||
+        wordItem?.userWord?.optional?.sprintStreak?.trim()) &&
+      user.userId ? (
+        <>
+          <Typography
+            variant="h6"
+            component="h3"
+            sx={{ m: '15px 0 10px', fontSize: '18px' }}
+          >
+            Правильные ответы в играх
+          </Typography>
+          <Box className="card_games">
+            {gameSprint && (
+              <Chip
+                icon={<DirectionsRunIcon />}
+                label={prepareGameResults(gameSprint)}
+                variant="outlined"
+              />
+            )}
+            {gameAudioCall && (
+              <Chip
+                icon={<CallIcon />}
+                label={prepareGameResults(gameAudioCall)}
+                variant="outlined"
+              />
+            )}
+          </Box>
+        </>
+      ) : null;
     return (
       <Card className="textbook_card" sx={{ ml: '10px' }}>
         <CardMedia
@@ -164,36 +178,39 @@ export const TextbookCard = ({
           >
             <VolumeUpIcon />
           </IconButton>
-          <Stack spacing={1} direction="row" sx={{ display: 'flex' }}>
-            {difficulty !== DIFFICULTY.learned && (
+          {user.userId && (
+            <Stack spacing={1} direction="row" sx={{ display: 'flex' }}>
+              {difficulty !== DIFFICULTY.learned && (
+                <Button
+                  variant="contained"
+                  sx={{ fontSize: '11px', p: '5px', flex: '1 0 50%' }}
+                  onClick={() =>
+                    changeWordDifficulty(
+                      wordItem,
+                      difficulty,
+                      'changeDifficultyLevel'
+                    )
+                  }
+                >
+                  {difficulty === undefined ||
+                  difficulty === DIFFICULTY.learning
+                    ? 'Добавить в сложные'
+                    : 'Удалить из сложных'}
+                </Button>
+              )}
               <Button
                 variant="contained"
                 sx={{ fontSize: '11px', p: '5px', flex: '1 0 50%' }}
                 onClick={() =>
-                  changeWordDifficulty(
-                    wordItem,
-                    difficulty,
-                    'changeDifficultyLevel'
-                  )
+                  changeWordDifficulty(wordItem, difficulty, 'changeIsLearned')
                 }
               >
-                {difficulty === undefined || difficulty === DIFFICULTY.learning
-                  ? 'Добавить в сложные'
-                  : 'Удалить из сложных'}
+                {difficulty === DIFFICULTY.learned
+                  ? 'Удалить из изученных'
+                  : 'Добавить в изученные'}
               </Button>
-            )}
-            <Button
-              variant="contained"
-              sx={{ fontSize: '11px', p: '5px', flex: '1 0 50%' }}
-              onClick={() =>
-                changeWordDifficulty(wordItem, difficulty, 'changeIsLearned')
-              }
-            >
-              {difficulty === DIFFICULTY.learned
-                ? 'Удалить из изученных'
-                : 'Добавить в изученные'}
-            </Button>
-          </Stack>
+            </Stack>
+          )}
           <Stack>
             <Typography
               variant="h6"

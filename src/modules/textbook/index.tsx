@@ -30,6 +30,9 @@ export const Textbook = () => {
       : 0
   );
   const [words, setWords] = useState<Array<GetWord> | null>(null);
+  const [isVocabularyActive, setIsVocabularyActive] = useState(false);
+  const [vocabularyGroup, setVocabularyGroup] = useState(0);
+  const [vocabularyWords, setVocabularyWords] = useState([]);
 
   const reducer: AppDispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user);
@@ -72,7 +75,11 @@ export const Textbook = () => {
   );
 
   const getUserWords = useCallback(
-    async (isDataToWrite: boolean = false, pageNumber: number = page) => {
+    async (
+      isDataToWrite: boolean = false,
+      pageNumber: number = page,
+      isWordsForVocabulary: boolean = false
+    ) => {
       let body: AgregatedReq = {
         group,
         page: pageNumber,
@@ -90,8 +97,37 @@ export const Textbook = () => {
           },
         };
       }
+
+      function bodyConstructor(filterDifficulty: string): AgregatedReq {
+        return {
+          group,
+          userId: user.userId,
+          userToken: user.token,
+          wpp: 600,
+          filter: {
+            $and: [{ ['userWord.difficulty']: filterDifficulty }],
+          },
+        };
+      }
+      if (isWordsForVocabulary) {
+        const learning = await GetUserAgrWords(
+          bodyConstructor(DIFFICULTY.learning)
+        );
+        const difficult = await GetUserAgrWords(
+          bodyConstructor(DIFFICULTY.difficult)
+        );
+        const learned = await GetUserAgrWords(
+          bodyConstructor(DIFFICULTY.learned)
+        );
+        setVocabularyWords([
+          learning[0]?.paginatedResults as never,
+          difficult[0]?.paginatedResults as never,
+          learned[0]?.paginatedResults as never,
+        ]);
+        return;
+      }
+
       const response = await GetUserAgrWords(body);
-      console.log(response);
       if (isDataToWrite) return response[0]?.paginatedResults;
       setWords(response[0]?.paginatedResults);
     },
@@ -122,6 +158,16 @@ export const Textbook = () => {
     if (group === 6) {
       reducer(
         setStatus({ mode: 'textbook', deck: words || [], langLevel: group })
+      );
+      return;
+    }
+    if (isVocabularyActive) {
+      reducer(
+        setStatus({
+          mode: 'textbook',
+          deck: vocabularyWords[vocabularyGroup] || [],
+          langLevel: group,
+        })
       );
       return;
     }
@@ -160,10 +206,32 @@ export const Textbook = () => {
     reducer(setStatus({ mode: 'textbook', deck: gameWords, langLevel: group }));
   };
 
+  const changeVocabularyGroup = (index: number) => {
+    setVocabularyGroup(index);
+  };
+
+  useEffect(() => {
+    if (isVocabularyActive) {
+      getUserWords(false, 0, true);
+      setActiveCardIndex(0);
+    }
+  }, [isVocabularyActive, getUserWords, group]);
+
   return (
     <Container className="textbook_container">
-      <TextbookHeader group={group} />
-      <TextbookLevels group={group} changeGroup={changeGroup} />
+      <TextbookHeader
+        group={group}
+        isVocabularyActive={isVocabularyActive}
+        setIsVocabularyActive={setIsVocabularyActive}
+      />
+      <TextbookLevels
+        group={group}
+        changeGroup={changeGroup}
+        vocabularyGroup={vocabularyGroup}
+        changeVocabularyGroup={changeVocabularyGroup}
+        isVocabularyActive={isVocabularyActive}
+        vocabularyWords={vocabularyWords}
+      />
       <div className="textbook_words__title">Слова</div>
       <Box className="textbook_main" sx={{ pt: '20px' }}>
         <Box className="textbook_main__left">
@@ -172,8 +240,11 @@ export const Textbook = () => {
             words={words}
             activeCardIndex={activeCardIndex}
             setActiveCardIndex={setActiveCardIndex}
+            vocabularyWords={vocabularyWords}
+            vocabularyGroup={vocabularyGroup}
+            isVocabularyActive={isVocabularyActive}
           />
-          {group !== 6 && (
+          {group !== 6 && !isVocabularyActive && (
             <Pagination
               count={30}
               page={page + 1}
@@ -186,6 +257,9 @@ export const Textbook = () => {
             group={group}
             words={words}
             prepareGameData={prepareGameData}
+            vocabularyWords={vocabularyWords}
+            vocabularyGroup={vocabularyGroup}
+            isVocabularyActive={isVocabularyActive}
           />
         </Box>
         <TextbookCard
@@ -196,6 +270,9 @@ export const Textbook = () => {
           group={group}
           getUserWords={getUserWords}
           setActiveCardIndex={setActiveCardIndex}
+          vocabularyWords={vocabularyWords}
+          vocabularyGroup={vocabularyGroup}
+          isVocabularyActive={isVocabularyActive}
         />
       </Box>
     </Container>

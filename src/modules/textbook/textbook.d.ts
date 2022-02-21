@@ -1,16 +1,25 @@
 type TextbookHeaderProp = {
   group: number;
+  isVocabularyActive: boolean;
+  setIsVocabularyActive: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 type TextbookGamesProp = {
   group: number;
   words: Array<GetWord> | null;
   prepareGameData: () => void;
+  vocabularyWords: never[];
+  vocabularyGroup: number;
+  isVocabularyActive: boolean;
 };
 
 type TextbookLevelsProps = {
   group: number;
   changeGroup: (number) => void;
+  vocabularyGroup: number;
+  changeVocabularyGroup: (number) => void;
+  isVocabularyActive: boolean;
+  vocabularyWords: never[];
 };
 
 declare module '*.jpg';
@@ -20,6 +29,9 @@ type TextbookWordsProps = {
   words: Array<GetWord> | null;
   activeCardIndex: number;
   setActiveCardIndex: React.Dispatch<React.SetStateAction<number>>;
+  vocabularyWords: never[];
+  vocabularyGroup: number;
+  isVocabularyActive: boolean;
 };
 
 type GetWord = {
@@ -54,6 +66,13 @@ type TextbookCardProps = {
   updateWords: (wordName: string, difficultyLevel: string) => void;
   page: number;
   group: number;
-  getUserWords: (isDataToWrite?: boolean, pageNumber?: number) => Promise<any>;
+  getUserWords: (
+    isDataToWrite?: boolean,
+    pageNumber?: number,
+    isWordsForVocabulary?: boolean
+  ) => Promise<any>;
   setActiveCardIndex: React.Dispatch<React.SetStateAction<number>>;
+  vocabularyWords: never[];
+  vocabularyGroup: number;
+  isVocabularyActive: boolean;
 };

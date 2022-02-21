@@ -1,7 +1,14 @@
 import { Stack, Typography, Divider } from '@mui/material';
+import { useSelector } from 'react-redux';
 import { colors } from '../../../app/constants';
+import { RootState } from '../../../store';
 
-export const TextbookHeader = ({ group }: TextbookHeaderProp) => {
+export const TextbookHeader = ({
+  group,
+  isVocabularyActive,
+  setIsVocabularyActive,
+}: TextbookHeaderProp) => {
+  const user = useSelector((state: RootState) => state.user);
   return (
     <Stack
       className="textbook_header"
@@ -14,18 +21,28 @@ export const TextbookHeader = ({ group }: TextbookHeaderProp) => {
         variant="h4"
         component="button"
         className="textbook_button"
-        sx={{ '&:hover': { color: colors[group] } }}
+        sx={{
+          '&:hover': { color: colors[group] },
+          color: `${isVocabularyActive ? '#ccc' : '#000'}`,
+        }}
+        onClick={() => setIsVocabularyActive(false)}
       >
         Учебник
       </Typography>
-      <Typography
-        variant="h4"
-        component="button"
-        className="textbook_button"
-        sx={{ '&:hover': { color: colors[group] } }}
-      >
-        Словарь
-      </Typography>
+      {user.userId && (
+        <Typography
+          variant="h4"
+          component="button"
+          className="textbook_button"
+          sx={{
+            '&:hover': { color: colors[group] },
+            color: `${isVocabularyActive ? '#000' : '#ccc'}`,
+          }}
+          onClick={() => setIsVocabularyActive(true)}
+        >
+          Словарь
+        </Typography>
+      )}
     </Stack>
   );
 };

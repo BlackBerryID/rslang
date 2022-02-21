@@ -24,7 +24,7 @@ export const UpdateUserToken = async (userId: string) => {
       })
     );
     switch (rawResponse.status) {
-      case 401:
+      case 403:
       // token is expired
       // TODO: logout and refresh page @saratovkin
     }

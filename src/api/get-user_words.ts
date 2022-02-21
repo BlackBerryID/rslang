@@ -57,7 +57,7 @@ export const GetUserAgrWords = async ({
       },
     });
     switch (rawResponse.status) {
-      case 401:
+      case 402:
         UpdateUserToken(userId);
         throw new Error
     }

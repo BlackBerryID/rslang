@@ -17,6 +17,7 @@ type SideMenuItemProps = {
   path: string;
   text: string;
   toggleSideMenu: ToggleSideMenuFunc;
+  isGameLink?: boolean;
 };
 
 interface LoginPopupProps {

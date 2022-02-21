@@ -26,11 +26,13 @@ export const NavGames = ({ toggleSideMenu }: NavGamesProps) => {
           path={Paths.mgSprint}
           text={Pages.mgSprint}
           toggleSideMenu={toggleSideMenu}
+          isGameLink={true}
         />
         <SideMenuItem
           path={Paths.mgAudioCall}
           text={Pages.mgAudioCall}
           toggleSideMenu={toggleSideMenu}
+          isGameLink={true}
         />
       </TreeItem>
     </TreeView>

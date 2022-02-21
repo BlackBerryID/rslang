@@ -14,7 +14,11 @@ export const UpdateUserStats = async (
       userId: userId,
       userToken: userToken,
       wpp: 20,
-      filter: { "$or": [{ "userWord.difficulty": "learning" }] }
+      filter: { "$or": [
+        { "userWord.difficulty": "learned" },
+        { "userWord.difficulty": "learning" },
+        { "userWord.difficulty": "difficult" },
+      ] }
     });
     const learnedWords = await GetUserAgrWords({
       userId: userId,
@@ -28,18 +32,16 @@ export const UpdateUserStats = async (
 
     const body = {
       learnedWords: totalLearned,
-      optional: stats.optional,
+      optional: { ...stats.optional },
     };
-    if (!body.optional) {
-      body.optional = {
-        stats: {
-          0: {
-            date: today,
-            learnedToday: totalLearned,
-            totalLearned: totalLearned,
-            learningToday: totalLearning,
-            totalLearning: totalLearning,
-          }
+    if (!body.optional.stats) {
+      body.optional.stats = {
+        0: {
+          date: today,
+          learnedToday: totalLearned,
+          totalLearned: totalLearned,
+          learningToday: totalLearning,
+          totalLearning: totalLearning,
         }
       }
     } else {
@@ -64,7 +66,7 @@ export const UpdateUserStats = async (
         if (lastDay.date === today) {
           days[days.length - 1].learnedToday = totalLearned - days[days.length - 2].totalLearned;
           days[days.length - 1].totalLearned = totalLearned;
-          days[days.length - 1].learningToday = totalLearning - days[days.length - 2].learningToday;
+          days[days.length - 1].learningToday = totalLearning - days[days.length - 2].totalLearning;
           days[days.length - 1].totalLearning = totalLearning;
         } else {
           days.push({
@@ -77,6 +79,13 @@ export const UpdateUserStats = async (
         }
       }
       body.optional.stats = { ...days };
+    }
+    if (body.optional.today && body.optional.today.date !== today) {
+      body.optional.today = {
+        date: '',
+        audiocall: {},
+        sprint: {}
+      }
     }
     const url = `${base}/users/${userId}/statistics`;
     const rawResponse = await fetch(url, {

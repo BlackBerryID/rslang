@@ -12,8 +12,17 @@ import {
   Tooltip,
 } from "recharts";
 
+import {
+  deepOrange,
+  lightBlue,
+} from '@mui/material/colors';
+
 import './long-stats.scss';
 
+const colors = [
+  lightBlue['400'],
+  deepOrange['400'],
+];
 
 const LongStats = ({ stats }: { stats: DayStats[] }) => {
 
@@ -71,7 +80,7 @@ const LongStats = ({ stats }: { stats: DayStats[] }) => {
             <Line
               type="monotone"
               dataKey="Всего изучено"
-              stroke="#8ca9d3"
+              stroke={colors[0]}
               activeDot={{ r: 8 }}
             />
           </LineChart>
@@ -92,7 +101,7 @@ const LongStats = ({ stats }: { stats: DayStats[] }) => {
             <XAxis dataKey="date" />
             <YAxis />
             <Tooltip />
-            <Bar dataKey="Новых слов" fill="#8ca9d3" />
+            <Bar dataKey="Новых слов" fill={colors[1]} />
           </BarChart>
         </ResponsiveContainer>
       }

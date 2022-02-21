@@ -14,6 +14,7 @@ export const TextbookWords = ({
   vocabularyWords,
   vocabularyGroup,
   isVocabularyActive,
+  isCurrentPageLearned,
 }: TextbookWordsProps) => {
   useEffect(() => {
     setActiveCardIndex(0);
@@ -22,6 +23,11 @@ export const TextbookWords = ({
   const localWords = isVocabularyActive
     ? vocabularyWords[vocabularyGroup]
     : words;
+
+  const borderStyle =
+    isCurrentPageLearned && !isVocabularyActive
+      ? '5px solid lightgreen'
+      : 'none';
 
   if (!localWords) {
     return <CircularProgress />;
@@ -42,7 +48,11 @@ export const TextbookWords = ({
     );
   } else {
     return (
-      <Grid container spacing={{ xs: 1, md: 1.5 }}>
+      <Grid
+        container
+        spacing={{ xs: 1, md: 1.5 }}
+        sx={{ border: borderStyle, borderRadius: '15px' }}
+      >
         {localWords.map((wordItem, index) => {
           const wordItemUserInfo = wordItem.userWord;
           const addActiveClass = index === activeCardIndex ? ' active' : '';

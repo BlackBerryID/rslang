@@ -13,6 +13,7 @@ export const TextbookGames = ({
   isVocabularyActive,
   vocabularyGroup,
   vocabularyWords,
+  isCurrentPageLearned,
 }: TextbookGamesProp) => {
   const games = [Pages.mgSprint, Pages.mgAudioCall].map((item) => {
     let gameName = item;
@@ -49,11 +50,16 @@ export const TextbookGames = ({
       ? vocabularyWords[vocabularyGroup]
       : words;
 
+    const linkClassNames =
+      isCurrentPageLearned && !isVocabularyActive
+        ? 'textbook_games__button disable'
+        : 'textbook_games__button';
+
     return (
       localWords?.length !== 0 && (
         <Link
           to={path || '/'}
-          className="textbook_games__button"
+          className={linkClassNames}
           key={gameName}
           onClick={prepareGameData}
         >

@@ -30,9 +30,22 @@ export const Textbook = () => {
       : 0
   );
   const [words, setWords] = useState<Array<GetWord> | null>(null);
+  const [isCurrentPageLearned, setIsCurrentPageLearned] = useState<
+    boolean | undefined
+  >(false);
   const [isVocabularyActive, setIsVocabularyActive] = useState(false);
   const [vocabularyGroup, setVocabularyGroup] = useState(0);
   const [vocabularyWords, setVocabularyWords] = useState([]);
+
+  useEffect(() => {
+    setIsCurrentPageLearned(
+      words?.every(
+        (word) =>
+          word.userWord !== undefined &&
+          word.userWord?.difficulty !== DIFFICULTY.learning
+      )
+    );
+  }, [words, setIsCurrentPageLearned]);
 
   const reducer: AppDispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user);
@@ -243,12 +256,13 @@ export const Textbook = () => {
             vocabularyWords={vocabularyWords}
             vocabularyGroup={vocabularyGroup}
             isVocabularyActive={isVocabularyActive}
+            isCurrentPageLearned={isCurrentPageLearned}
           />
           {group !== 6 && !isVocabularyActive && (
             <Pagination
               count={30}
               page={page + 1}
-              color="primary"
+              color={isCurrentPageLearned ? 'secondary' : 'primary'}
               sx={{ mt: '30px' }}
               onChange={changePage}
             />
@@ -260,6 +274,7 @@ export const Textbook = () => {
             vocabularyWords={vocabularyWords}
             vocabularyGroup={vocabularyGroup}
             isVocabularyActive={isVocabularyActive}
+            isCurrentPageLearned={isCurrentPageLearned}
           />
         </Box>
         <TextbookCard

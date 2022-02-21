@@ -93,7 +93,7 @@ export const TextbookLevels = ({
   return (
     <div className="textbook_levels">
       <Typography>Уровни сложности слов</Typography>
-      <Stack className="textbook_levels-list" direction="row" spacing={1}>
+      <Stack className="textbook_levels-list" direction="row">
         {chipList}
       </Stack>
       <Stack className="textbook_levels-list" direction="row" spacing={1}>

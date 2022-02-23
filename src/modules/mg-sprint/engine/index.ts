@@ -12,7 +12,7 @@ import {
   GAME_SCORE_BASE,
   GAME_TIMER,
   MAX_PAGES_INDEX,
-  MAX_WORDS_INDEX,
+  // MAX_WORDS_INDEX,
 } from '../constants';
 
 const defaultObj: Game = {
@@ -40,7 +40,30 @@ const defaultObj: Game = {
   },
 };
 export class MGSprintEngine {
-  private game: Game = { ...defaultObj };
+  private game: Game = {
+    langLevel: 0,
+    bookPage: 0,
+    deck: [],
+    decksSeq: new Set(),
+    wordsSeq: new Set(),
+    score: [],
+    streaks: [],
+    timer: undefined,
+    currentRound: {
+      activeWord: '',
+      translation: '',
+      currentStreak: 0,
+      currentMultiplier: 1,
+      currentScore: 0,
+      giveAnswer: (val: boolean): void => {
+        throw new Error('Function not implemented.');
+      },
+    },
+    auth: {
+      userId: '',
+      userToken: '',
+    },
+  };
 
   private _timer = GAME_TIMER;
 
@@ -196,7 +219,7 @@ export class MGSprintEngine {
 
   private getRandomWordTranslation(round: number): string {
     const variant =
-      this.game.deck[GetRandomNum(0, MAX_WORDS_INDEX)].wordTranslate;
+      this.game.deck[GetRandomNum(0, this.game.deck.length - 1)].wordTranslate;
     return variant !== this.game.deck[round].wordTranslate
       ? variant
       : this.getRandomWordTranslation(round);
@@ -305,8 +328,8 @@ export class MGSprintEngine {
       streaks: [],
       // timer: undefined,
       // currentRound: defaultObj.currentRound,
+      auth: this.game.auth,
     };
-    console.log(this.game);
   }
 
   updateDBStatistic() {

@@ -2,7 +2,7 @@ import { GetWords } from '../../../api';
 import { AddUserWord } from '../../../api/add-user_word';
 import { GetUserAgrWords } from '../../../api/get-user_words';
 import { UpdateGameStats } from '../../../api/update-game_stats';
-import { UpdateUserStats } from '../../../api/update-user_stats';
+// import { UpdateUserStats } from '../../../api/update-user_stats';
 import { UpdateUserWord } from '../../../api/update-user_word';
 import { checkIsLearnedRed } from '../../../utils/check-is-learned';
 import { formatDate } from '../../../utils/format-date';
@@ -326,8 +326,6 @@ export class MGSprintEngine {
         correct: correct,
         amount: this.game.score.length,
       });
-
-      UpdateUserStats(this.game.auth.userId, this.game.auth.userToken);
     }
   }
 }

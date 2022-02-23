@@ -113,6 +113,7 @@ export class MGSprintEngine {
         wordId: item._id || item.id,
       };
       if (item.hasOwnProperty('userWord')) {
+        if (item.userWord?.difficulty === 'difficult' && result) return;
         if (item.userWord?.difficulty === 'difficult' && !result) {
           UpdateUserWord({
             ...base,

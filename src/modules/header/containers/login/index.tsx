@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { Paths } from '../../../../app/constants';
 import { useDispatch } from 'react-redux';
 import { removeUser } from '../../../../store/reducers/watch-auth';
+import { SnackbarProvider } from 'notistack';
 
 export function Login() {
   const [open, setOpen] = useState(false);
@@ -96,7 +97,13 @@ export function Login() {
   return (
     <>
       {button}
-      <LoginPopup open={open} onClose={handleClose} setIsOnline={setIsOnline} />
+      <SnackbarProvider maxSnack={2}>
+        <LoginPopup
+          open={open}
+          onClose={handleClose}
+          setIsOnline={setIsOnline}
+        />
+      </SnackbarProvider>
     </>
   );
 }

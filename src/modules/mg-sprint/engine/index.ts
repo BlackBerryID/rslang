@@ -40,30 +40,7 @@ const defaultObj: Game = {
   },
 };
 export class MGSprintEngine {
-  private game: Game = {
-    langLevel: 0,
-    bookPage: 0,
-    deck: [],
-    decksSeq: new Set(),
-    wordsSeq: new Set(),
-    score: [],
-    streaks: [],
-    timer: undefined,
-    currentRound: {
-      activeWord: '',
-      translation: '',
-      currentStreak: 0,
-      currentMultiplier: 1,
-      currentScore: 0,
-      giveAnswer: (val: boolean): void => {
-        throw new Error('Function not implemented.');
-      },
-    },
-    auth: {
-      userId: '',
-      userToken: '',
-    },
-  };
+  private game: Game = { ...defaultObj };
 
   private _timer = GAME_TIMER;
 
@@ -329,6 +306,7 @@ export class MGSprintEngine {
       // timer: undefined,
       // currentRound: defaultObj.currentRound,
       auth: this.game.auth,
+      langLevel: this.game.langLevel,
     };
   }
 

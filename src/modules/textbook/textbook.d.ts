@@ -11,6 +11,7 @@ type TextbookGamesProp = {
   vocabularyWords: never[];
   vocabularyGroup: number;
   isVocabularyActive: boolean;
+  isCurrentPageLearned: boolean | undefined;
 };
 
 type TextbookLevelsProps = {
@@ -32,6 +33,7 @@ type TextbookWordsProps = {
   vocabularyWords: never[];
   vocabularyGroup: number;
   isVocabularyActive: boolean;
+  isCurrentPageLearned: boolean | undefined;
 };
 
 type GetWord = {

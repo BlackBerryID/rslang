@@ -25,7 +25,7 @@ export const TextbookWords = ({
     : words;
 
   const borderStyle =
-    isCurrentPageLearned && !isVocabularyActive
+    isCurrentPageLearned && !isVocabularyActive && group !== 6
       ? '5px solid lightgreen'
       : 'none';
 

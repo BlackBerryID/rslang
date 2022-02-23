@@ -13,6 +13,7 @@ export const createUser = async (
     },
     body: JSON.stringify({ name, email, password }),
   });
-  const content = await rawResponse.json();
-  return content;
+  return rawResponse.status > 299
+    ? rawResponse.status
+    : await rawResponse.json();
 };

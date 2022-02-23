@@ -13,6 +13,7 @@ import {
 import { loginUser, createUser } from '../../../../api';
 import { useDispatch } from 'react-redux';
 import { putUser } from '../../../../store/reducers/watch-auth';
+import { VariantType, useSnackbar } from 'notistack';
 
 export const LoginPopup = (props: LoginPopupProps) => {
   const { onClose, open, setIsOnline } = props;
@@ -27,6 +28,15 @@ export const LoginPopup = (props: LoginPopupProps) => {
   const [errorMessage, setErrorMessage] = useState<ErrorMessage>(null);
 
   const reduce = useDispatch();
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const showAuthErrorInfo = (variant: VariantType) => {
+    // variant could be success, error, warning, info, or default
+    enqueueSnackbar('Пользователь с такими данными уже существует.', {
+      variant,
+    });
+  };
 
   const handleClose = () => {
     onClose();
@@ -89,7 +99,11 @@ export const LoginPopup = (props: LoginPopupProps) => {
   };
 
   const signup = async (name: string, email: string, password: string) => {
-    await createUser(name, email, password);
+    const createUserResponse = await createUser(name, email, password);
+    if (createUserResponse === 417) {
+      showAuthErrorInfo('info');
+      return;
+    }
     await login(email, password);
   };
 

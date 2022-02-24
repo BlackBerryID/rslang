@@ -85,6 +85,7 @@ export class MGSprintEngine {
   }
 
   private async getDeck(): Promise<boolean> {
+    if (this.game.langLevel === 6) this.game.langLevel = 5;
     const words = this.game.auth.userId
       ? await GetUserAgrWords({
           page: this.game.bookPage,
@@ -212,8 +213,8 @@ export class MGSprintEngine {
     const nextRound = round + 1;
     if (nextRound === this.game.deck.length) {
       this.setPage();
-      this.getDeck().then(() => {
-        action(0);
+      this.getDeck().then((res) => {
+        if (res) action(0);
       });
     } else {
       action(nextRound);
@@ -238,6 +239,25 @@ export class MGSprintEngine {
     this.updateDBStatistic();
     clearInterval(this.game.timer);
     this._timer = GAME_TIMER;
+  }
+
+  private updateDBStatistic() {
+    if (this.game.auth.userId) {
+      this.game.streaks.push(this.game.currentRound.currentStreak);
+      const correct = this.game.score.reduce(
+        (acc, item) => acc + +item.result,
+        0
+      );
+
+      UpdateGameStats({
+        userId: this.game.auth.userId,
+        userToken: this.game.auth.userToken,
+        game: 'sprint',
+        streak: Math.max(...this.game.streaks),
+        correct: correct,
+        amount: this.game.score.length,
+      });
+    }
   }
 
   start({
@@ -309,24 +329,5 @@ export class MGSprintEngine {
       auth: this.game.auth,
       langLevel: this.game.langLevel,
     };
-  }
-
-  updateDBStatistic() {
-    if (this.game.auth.userId) {
-      this.game.streaks.push(this.game.currentRound.currentStreak);
-      const correct = this.game.score.reduce(
-        (acc, item) => acc + +item.result,
-        0
-      );
-
-      UpdateGameStats({
-        userId: this.game.auth.userId,
-        userToken: this.game.auth.userToken,
-        game: 'sprint',
-        streak: Math.max(...this.game.streaks),
-        correct: correct,
-        amount: this.game.score.length,
-      });
-    }
   }
 }

@@ -63,6 +63,8 @@ export function MiniGameSprint() {
     if (gameOver) setGameRound(0);
   }, [gameOver]);
 
+  useEffect(() => () => game.emergencyShutdown(), []);
+
   return gameMode ? (
     gameOver ? (
       <MGSprintEnd statistic={game.statistic} onResetAction={reset} />

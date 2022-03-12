@@ -1,11 +1,5 @@
 import { GetWords } from '../../../api';
-import { AddUserWord } from '../../../api/add-user_word';
 import { GetUserAgrWords } from '../../../api/get-user_words';
-import { UpdateGameStats } from '../../../api/update-game_stats';
-// import { UpdateUserStats } from '../../../api/update-user_stats';
-import { UpdateUserWord } from '../../../api/update-user_word';
-import { checkIsLearnedRed } from '../../../utils/check-is-learned';
-import { formatDate } from '../../../utils/format-date';
 import { GetRandomNum } from '../../../utils/get-random-num';
 import { ShuffleArray } from '../../../utils/shuffle-array';
 import {
@@ -14,33 +8,39 @@ import {
   MAX_PAGES_INDEX,
   // MAX_WORDS_INDEX,
 } from '../constants';
+import { DBActions } from './db-actions';
 
-const defaultObj: Game = {
+const defaultGameParts = {
   langLevel: 0,
   bookPage: 0,
   deck: [],
-  decksSeq: new Set(),
-  wordsSeq: new Set(),
   score: [],
   streaks: [],
   timer: undefined,
-  currentRound: {
-    activeWord: '',
-    translation: '',
-    currentStreak: 0,
-    currentMultiplier: 1,
-    currentScore: 0,
-    giveAnswer: (val: boolean): void => {
-      throw new Error('Function not implemented.');
-    },
-  },
-  auth: {
-    userId: '',
-    userToken: '',
+  fromBook: false,
+  endGame: () => {},
+};
+
+const defaultGameRound: GameRound = {
+  activeWord: '',
+  translation: '',
+  currentStreak: 0,
+  currentMultiplier: 1,
+  currentScore: 0,
+  giveAnswer: (val: boolean): void => {
+    throw new Error('Function not implemented.');
   },
 };
+
 export class MGSprintEngine {
-  private game: Game = { ...defaultObj };
+  private game: Game = {
+    ...defaultGameParts,
+    decksSeq: new Set(),
+    wordsSeq: new Set(),
+  };
+  private currentRound: GameRound = { ...defaultGameRound };
+  private gameAuth: GameAuth = { userId: '', userToken: '' };
+  private dbConnector: undefined | DBActions;
 
   private _timer = GAME_TIMER;
 
@@ -52,7 +52,7 @@ export class MGSprintEngine {
     const wrong = this.game.score.filter((item) => !item.result);
     const right = this.game.score.filter((item) => item.result);
 
-    return { wrong, right, score: this.game.currentRound.currentScore };
+    return { wrong, right, score: this.currentRound.currentScore };
   }
 
   set langLevel(val: number) {
@@ -63,15 +63,17 @@ export class MGSprintEngine {
     this.game.bookPage = val;
   }
 
-  set auth(user: { userId: string; userToken: string }) {
-    this.game.auth = user;
-  }
-
   set deck(arr: Array<Word>) {
     this.game.deck = [...arr];
     arr.forEach((word) => {
       this.game.wordsSeq.add(word._id || word.id);
     });
+  }
+
+  set auth(user: GameAuth) {
+    this.gameAuth = { ...user };
+    this.dbConnector = new DBActions();
+    this.dbConnector.setAuth = { ...user };
   }
 
   private setPage(): void {
@@ -85,17 +87,16 @@ export class MGSprintEngine {
   }
 
   private async getDeck(): Promise<boolean> {
-    if (this.game.langLevel === 6) this.game.langLevel = 5;
-    const words = this.game.auth.userId
+    const words = this.gameAuth.userId
       ? await GetUserAgrWords({
           page: this.game.bookPage,
           group: this.game.langLevel,
-          userId: this.game.auth.userId,
-          userToken: this.game.auth.userToken,
+          userId: this.gameAuth.userId,
+          userToken: this.gameAuth.userToken,
           wpp: 20,
         })
       : await GetWords(this.game.langLevel, this.game.bookPage);
-    const prepWords: Array<Word> = this.game.auth.userId
+    const prepWords: Array<Word> = this.gameAuth.userId
       ? words[0].paginatedResults
       : words;
     const unicWords = prepWords.filter((word) => {
@@ -106,78 +107,22 @@ export class MGSprintEngine {
     return new Promise((res) => res(true));
   }
 
-  private sendWordToDB(item: Word, result: boolean): void {
-    if (this.game.auth.userId && (item._id || item.id)) {
-      const base = {
-        userId: this.game.auth.userId,
-        userToken: this.game.auth.userToken,
-        wordId: item._id || item.id,
-      };
-      if (item.hasOwnProperty('userWord')) {
-        if (item.userWord?.difficulty === 'difficult' && result) return;
-        if (item.userWord?.difficulty === 'difficult' && !result) {
-          UpdateUserWord({
-            ...base,
-            updateReq: {
-              difficulty: 'learning',
-              optional: {
-                sprintStreak: '0',
-              },
-            },
-          });
-          return;
-        }
-        const streakResult =
-          item.userWord?.optional?.sprintStreak + (result ? '1' : '0');
-        const isLearned = checkIsLearnedRed(
-          streakResult,
-          item.userWord?.difficulty as string
-        );
-        const optionalLearned = isLearned
-          ? {
-              date: formatDate(),
-              game: 'sprint',
-            }
-          : {};
-        UpdateUserWord({
-          ...base,
-          updateReq: {
-            difficulty: isLearned ? 'learned' : 'learning',
-            optional: {
-              sprintStreak: isLearned ? ' ' : streakResult,
-              learned: optionalLearned,
-            },
-          },
-        });
-      } else {
-        AddUserWord({
-          ...base,
-          updateReq: {
-            optional: {
-              sprintStreak: result ? '1' : '0',
-            },
-          },
-        });
-      }
-    }
-  }
-
   private setFlowScore(result: boolean): void {
     if (result) {
-      this.game.currentRound.currentStreak += 1;
-      this.game.currentRound.currentScore +=
-        GAME_SCORE_BASE * this.game.currentRound.currentMultiplier;
-      this.game.currentRound.currentMultiplier *=
-        this.game.currentRound.currentStreak &&
-        this.game.currentRound.currentStreak % 3 === 0
+      this.currentRound.currentStreak += 1;
+      this.currentRound.currentScore +=
+        GAME_SCORE_BASE * this.currentRound.currentMultiplier;
+      this.currentRound.currentMultiplier *=
+        this.currentRound.currentStreak &&
+        this.currentRound.currentStreak % 3 === 0
           ? 2
           : 1;
-      if (this.game.currentRound.currentMultiplier > 8)
-        this.game.currentRound.currentMultiplier = 8;
+      if (this.currentRound.currentMultiplier > 8)
+        this.currentRound.currentMultiplier = 8;
     } else {
-      this.game.streaks.push(this.game.currentRound.currentStreak);
-      this.game.currentRound.currentMultiplier = 1;
-      this.game.currentRound.currentStreak = 0;
+      this.game.streaks.push(this.currentRound.currentStreak);
+      this.currentRound.currentMultiplier = 1;
+      this.currentRound.currentStreak = 0;
     }
   }
 
@@ -185,7 +130,9 @@ export class MGSprintEngine {
     const item = this.game.deck[round];
 
     this.setFlowScore(result);
-    this.sendWordToDB(item, result);
+    if (this.dbConnector) {
+      this.dbConnector.sendWordToDB(item, result);
+    }
 
     this.game.score.push({
       id: item._id || item.id,
@@ -212,52 +159,40 @@ export class MGSprintEngine {
     this.setScore(round, result);
     const nextRound = round + 1;
     if (nextRound === this.game.deck.length) {
-      this.setPage();
-      this.getDeck().then((res) => {
-        if (res) action(0);
-      });
+      if (this.game.fromBook) {
+        this.stopTimer();
+      } else {
+        this.setPage();
+        this.getDeck().then((res) => {
+          if (res) action(0);
+        });
+      }
     } else {
       action(nextRound);
     }
   }
 
-  private startTimer(
-    action: (val: number) => void,
-    endAction: () => void
-  ): void {
-    this.game.timer = setInterval(() => {
+  private startTimer(action: (val: number) => void): void {
+    this.game.timer = window.setInterval(() => {
       this._timer -= 1;
       if (this._timer === 0) {
-        this.stopTimer(endAction);
+        this.stopTimer();
       }
       action(this._timer);
     }, 1000);
   }
 
-  private stopTimer(action: () => void): void {
-    action();
-    this.updateDBStatistic();
+  private stopTimer(): void {
+    this.game.endGame();
+    if (this.dbConnector) {
+      this.dbConnector.updateDBStatistic(
+        this.game.score,
+        this.game.streaks,
+        this.currentRound.currentStreak
+      );
+    }
     clearInterval(this.game.timer);
     this._timer = GAME_TIMER;
-  }
-
-  private updateDBStatistic() {
-    if (this.game.auth.userId) {
-      this.game.streaks.push(this.game.currentRound.currentStreak);
-      const correct = this.game.score.reduce(
-        (acc, item) => acc + +item.result,
-        0
-      );
-
-      UpdateGameStats({
-        userId: this.game.auth.userId,
-        userToken: this.game.auth.userToken,
-        game: 'sprint',
-        streak: Math.max(...this.game.streaks),
-        correct: correct,
-        amount: this.game.score.length,
-      });
-    }
   }
 
   start({
@@ -271,63 +206,68 @@ export class MGSprintEngine {
     timerAction: (val: number) => void;
     endAction: () => void;
   }): void {
+    this.game.endGame = endAction;
     if (anonGame) {
+      this.game.fromBook = false;
       this.setPage();
       this.getDeck().then(() => {
         switchMode();
-        this.startTimer(timerAction, endAction);
+        this.startTimer(timerAction);
       });
     } else {
+      this.game.fromBook = true;
       this.game.deck = ShuffleArray(this.game.deck);
       switchMode();
-      this.startTimer(timerAction, endAction);
+      this.startTimer(timerAction);
     }
   }
 
   getRound(round: number, action: (val: number) => void): GameRound {
     const word = this.game.deck[round].word;
 
-    if (word === this.game.currentRound.activeWord)
-      return this.game.currentRound;
+    if (word === this.currentRound.activeWord) return this.currentRound;
 
     const switcher = (answer: boolean): void => {
       this.endRound(round, answer, action);
     };
 
-    return (this.game.currentRound =
+    const base = {
+      activeWord: word,
+      currentMultiplier: this.currentRound.currentMultiplier,
+      currentScore: this.currentRound.currentScore,
+      currentStreak: this.currentRound.currentStreak,
+    };
+
+    return (this.currentRound =
       Math.random() > 0.5
         ? {
-            activeWord: word,
+            ...base,
             translation: this.getRandomWordTranslation(round),
-            currentMultiplier: this.game.currentRound.currentMultiplier,
-            currentScore: this.game.currentRound.currentScore,
-            currentStreak: this.game.currentRound.currentStreak,
-            giveAnswer: (clickedAnswer: boolean) =>
-              switcher(clickedAnswer === false),
+            giveAnswer: (selectedAnswer: boolean) =>
+              switcher(selectedAnswer === false),
           }
         : {
-            activeWord: word,
+            ...base,
             translation: this.game.deck[round].wordTranslate,
-            currentMultiplier: this.game.currentRound.currentMultiplier,
-            currentScore: this.game.currentRound.currentScore,
-            currentStreak: this.game.currentRound.currentStreak,
-            giveAnswer: (clickedAnswer: boolean) =>
-              switcher(clickedAnswer === true),
+            giveAnswer: (selectedAnswer: boolean) =>
+              switcher(selectedAnswer === true),
           });
   }
 
   reset(): void {
     this.game = {
-      ...defaultObj,
+      ...defaultGameParts,
+      deck: [],
       score: [],
+      streaks: [],
       decksSeq: new Set(),
       wordsSeq: new Set(),
-      deck: [],
-      streaks: [],
-      // timer: undefined,
-      // currentRound: defaultObj.currentRound,
-      auth: this.game.auth,
-      langLevel: this.game.langLevel,
     };
+    this.currentRound = { ...defaultGameRound };
+  }
+
+  emergencyShutdown(): void {
+    clearInterval(this.game.timer);
+    this._timer = GAME_TIMER;
   }
 }

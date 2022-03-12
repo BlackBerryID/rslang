@@ -24,11 +24,13 @@ type Game = {
   score: Array<GameResult>;
   streaks: Array<number>;
   timer: Timer | undefined;
-  currentRound: GameRound;
-  auth: {
-    userId: string;
-    userToken: string;
-  };
+  fromBook: bookean;
+  endGame: () => void;
+};
+
+type GameAuth = {
+  userId: string;
+  userToken: string;
 };
 
 declare module '*.scss';

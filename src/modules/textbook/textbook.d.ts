@@ -37,7 +37,6 @@ type TextbookWordsProps = {
 };
 
 type GetWord = {
-  [key: string];
   id: string;
   group: number;
   page: number;

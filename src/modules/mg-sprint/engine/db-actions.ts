@@ -1,7 +1,7 @@
 import { AddUserWord } from '../../../api/add-user_word';
 import { UpdateGameStats } from '../../../api/update-game_stats';
 import { UpdateUserWord } from '../../../api/update-user_word';
-import { checkIsLearnedRed } from '../../../utils/check-is-learned';
+import { checkIsLearned } from '../../../utils/check-is-learned';
 import { formatDate } from '../../../utils/format-date';
 
 export class DBActions {
@@ -36,7 +36,7 @@ export class DBActions {
         }
         const streakResult =
           item.userWord?.optional?.sprintStreak + (result ? '1' : '0');
-        const isLearned = checkIsLearnedRed(
+        const isLearned = checkIsLearned(
           streakResult,
           item.userWord?.difficulty as string
         );

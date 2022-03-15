@@ -16,10 +16,10 @@ type Word = {
   wordTranslate: string;
   textMeaningTranslate: string;
   textExampleTranslate: string;
-  userWord?: WordOptional;
+  userWord?: WordOptionalType;
 };
 
-type WordOptional = {
+type WordOptionalType = {
   difficulty?: string;
   optional?: {
     audioStreak?: string;
